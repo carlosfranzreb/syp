@@ -1,0 +1,57 @@
+{% extends 'main_layout.html' %}
+{% block content %}
+  <section>
+    <header class="main">
+      <h1>Buscar por temporada</h1>
+      <h4>Por defecto mostramos las recetas de esta temporada,
+        para que cocines con productos frescos y locales</h4>
+    </header>
+    <div class="container" style="max-width: 400px">
+      <form method="post">
+        <div class="row">
+          <div class="col-sm">
+            {{ form.season(style="margin: 0 0 5px 0; min-width: 105px") }}
+          </div>
+          <div class="col-sm">
+            {{ form.submit }}
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section>
+  	<header class="major">
+  		<h2>Recetas para {{season_name}}</h2>
+  	</header>
+  	<div class="posts">
+
+        {% for recipe in recipes.items %}
+          <article>
+      			<a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '-')) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
+      			<h3>{{ recipe.name }}</h3>
+      			<p>{{ recipe.intro }}</p>
+      			<ul class="actions">
+      				<li><a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '-')) }}" class="button">Abrir</a></li>
+      			</ul>
+      		</article>
+        {% endfor %}
+
+  	</div>
+
+    <center>
+      {% for page_num in recipes.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+          {% if recipes.page == page_num %}
+            <a class="btn btn-danger mb-4" href="{{ url_for('seasons.search_season', season_name=season_name, page=page_num) }}">{{ page_num }}</a>
+          {% else %}
+            <a class="btn btn-outline-danger mb-4" href="{{ url_for('seasons.search_season', season_name=season_name, page=page_num) }}">{{ page_num }}</a>
+          {% endif %}
+        {% else %}
+          ...
+        {% endif %}
+      {% endfor %}
+    </center>
+
+  </section>
+{% endblock %}

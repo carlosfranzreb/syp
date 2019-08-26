@@ -1,0 +1,180 @@
+/*
+	Specific CSS for the recipes.
+  Written by charlo.
+*/
+
+#ingredients select {
+  border: 2px solid #f56a6a;
+  font-weight: bold;
+}
+
+#ingredients ol,
+#steps ol {
+  margin: 0;
+}
+
+#ingredients ul li, #steps ol li {
+  padding-left: 0.5em;
+  font-weight: bold;
+  color: #000;
+}
+
+#ingredients ul li::before {
+  color: #f56a6a !important;
+}
+
+ul.ul_pepper {
+  list-style-image: url('../images/icons/pepper_w18.svg');
+}
+
+#steps ol strong,
+#health strong {
+  color: #599A00;
+  text-decoration: underline;
+}
+
+#steps ol {
+  list-style: none;
+  counter-reset: item;
+}
+
+#steps ol li {
+  counter-increment: item;
+}
+
+#steps ol li::before {
+  /* content: counter(item); */
+  content: counters(item, ".") " ";
+  counter-increment: item
+  display: inline-block;
+  width: 1em;
+  margin-left: -1.5em;
+  margin-right: 0.5em;
+  text-align: right;
+  direction: rtl;
+  color: #f56a6a;
+  font-size: 120%;
+  font-weight: bold;
+}
+
+#steps ol ol li::before {
+  color: #00B233;
+}
+
+/* for cooking and prep time icons */
+.container-times {
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+  padding-bottom: 2em;
+}
+
+.item-times {
+  align-items: center;
+}
+
+.time_img {
+  width: 50px;
+}
+
+.time_number {
+  font-size: 200%;
+  font-weight: bolder;
+  padding-right: 2em;
+}
+
+	@media screen and (max-width: 540px) {
+    .time_img {
+      width: 30px;
+    }
+
+    .time_number {
+      font-size: 130%;
+      font-weight: bold;
+      padding-right: 1em;
+    }
+  }
+
+  @media screen and (max-width: 680px) {
+    .time_img {
+      width: 30px;
+    }
+
+    .time_number {
+      font-size: 130%;
+      font-weight: bold;
+      padding-right: 1em;
+    }
+  }
+
+  @media screen and (max-width: 380px) {
+    .time_img {
+      width: 30px;
+    }
+
+    .time_number {
+      font-size: 130%;
+      font-weight: bold;
+      padding-right: 1em;
+    }
+
+    .item-times {
+      display: block;
+    }
+}
+
+/* Fixes to adapt posts of home to recipe */
+@media screen and (max-width: 580px) {
+  #first-posts-recipe {
+    margin: 0 0 2em 0;
+    width: 100%;
+  }
+
+  #first-posts-recipe article {
+    margin: 0 0 4.5em 0;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 880px) {
+  #second-posts-recipe {
+    margin: 0 0 2em 0;
+    width: 100%;
+  }
+
+  #second-posts-recipe article {
+    margin: 0 0 4.5em 0;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 1681px) {
+  .posts article {
+    width: calc(50% - 6em);
+  }
+
+    .posts article:nth-last-child(3) {
+      margin-bottom: 6em;
+    }
+}
+
+/*  For the YouTube video */
+.video-container {
+   position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+.video-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    -moz-box-shadow: 4px 4px 14px #000;
+    -webkit-box-shadow: 4px 4px 14px #000;
+    box-shadow: 4px 4px 14px #000;
+}

@@ -1,0 +1,94 @@
+{% extends 'main_layout.html' %}
+{% block content %}
+
+<section>
+  <header class="main">
+    <h1>Nuestra filosofía</h1>
+  </header>
+  <h2>Recetas veganas y saludables</h2>
+</section>
+<section>
+  <div id="philo-container">
+    <div id="text">
+      <p>
+        En mi casa, la comida siempre ha ocupado un lugar muy importante. A mis padres
+        les encantaba la gastronomía, y a menudo nos llevaban a comer a restaurantes.
+        Mi madre cocinaba muy bien; siempre innovando y escapando de lo común. Mi padre,
+        por otro lado, era más tradicional. Más de cuchara que de otra cosa: le encantaban
+        los potajes, los cocidos, la fabada… En fin, la comida casera de toda la vida. Mi
+        afición a la comida se la debo a ellos.
+      </p>
+      <p>
+        <strong>“Salud y pimienta”</strong> surge de la idea de mi hijo Carlos (nombre que lleva con orgullo en
+        recuerdo de su abuelo, mi padre), de recoger todas las recetas que hago, por si le pueden
+        a interesar a alguien. Tenía claro que al menos a él le iban a resultar útiles.
+      </p>
+      <p>
+        Hace un año y medio tuve un ictus, del que salí con muy pocas secuelas, gracias a Dios.
+        Cambió mi forma de ver la vida, y desde entonces le doy más importancia a <strong>disfrutar
+        la vida intensa y sanamente</strong>. Tras leer varios libros sobre nutrición, participar en
+        cursos y ver vídeos al respecto, llegué a una conclusión tan obvia, tan evidente, que hasta me ruboriza
+        confesar: los alimentos que ingerimos nos nutren o nos enferman. Una buena alimentación
+        puede ayudarnos a vivir más y, sobre todo, mejor. Esto es algo que antes no me había
+        planteado, y ahora ocupa toda mi atención. Me compré un libro de la Dra. Odile Fernández,
+        <a target="_blank" href="https://www.amazon.es/gp/product/8479538724/ref=as_li_tl?ie=UTF8&camp=3638&creative=24630&creativeASIN=8479538724&linkCode=as2&tag=saludypimie0c-21&linkId=5f7bd2d35d3c356ae221e694379d858c">Mis recetas de cocina anticáncer&nbsp; (Nutrición y dietética)</a><img src="//ir-es.amazon-adsystem.com/e/ir?t=saludypimie0c-21&l=am2&o=30&a=8479538724" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />,
+        y descubrí un montón de recetas buenísimas y fáciles de hacer. Ya
+        había abandonado los productos lácteos antes del ictus, y había reducido considerablemente
+        mi consumo de carne y pescado, por lo que mi cambio de alimentación ha sido paulatino. Ahora
+        me siento con mucha más vitalidad; mi digestión ha mejorado, y disfruto ideando qué cocinar
+        cada día.
+      </p>
+      <p>
+        La pimienta del nombre representa <strong>el sabor y la diversión</strong> que todos buscamos en la cocina.
+        A menudo se califica a la comida saludable de sosa y aburrida, y con este blog quiero
+        demostrar que no tiene por qué ser así. Os aseguro que no he perdido la ilusión de comer
+        cada día, y que, con los retos que conlleva la cocina saludable, me divierto entre los
+        fogones incluso más que antes.
+      </p>
+      <p>
+        No todas las recetas publicadas aquí son invenciones mías. Algunas son versiones de otras y
+        <strong>siempre citaré la fuente</strong>. Este blog pretende únicamente aportar ideas fáciles y deliciosas a
+        todos aquellos que quieran adentrarse en una alimentación basada en plantas o ya lo hayan
+        hecho, y a aquellos que les pique la curiosidad.
+      </p>
+      <p>
+        Los principios de este blog son los siguientes:
+        <ul class="ul_pepper">
+          <li>
+            En un sitio donde encontrar <strong>recetas que salen bien, sin secretos</strong>. Si una receta no os ha
+            salido, escribidme y vemos que ha pasado.
+          </li>
+          <li>
+            No hay ninguna pretensión más allá de la de compartir lo que cocino por si a alguien le
+            puede parecer interesante. No soy cocinera de profesión, <strong>cocino únicamente porque me apasiona la comida</strong>.
+          </li>
+          <li>
+            <strong>Cocino con ingredientes de temporada y de cercanía</strong>, o por lo menos lo intento. Alguna vez
+            me lo salto, aunque es algo de lo que también quiero que tomemos conciencia. La yuca que
+            tomamos aquí, por ejemplo, viene en barco desde América con todo lo que conlleva. Seamos
+            conscientes de lo que implica comer un alimento que viene en barco desde allí.
+          </li>
+          <li>
+            <strong>Es un proyecto familiar</strong> que mis hijos y yo realizamos desde tres ciudades distintas y que
+            nos permite estar unidos alrededor de la comida. Es un hilo que nos conecta y nos ilusiona
+            (¡por lo menos a mi!).
+          </li>
+          <li>
+            <strong>Es un homenaje al amor por la cocina que me inculcaron mis padres</strong>, aunque no sé si mi padre
+            estaría muy de acuerdo con una alimentación solo vegetal, que tontería si lo se: ¡no estaría
+            de acuerdo! Aun así, tengo la esperanza de que este blog pueda inspirar a aquellos que gocen de una
+            mente más abierta.
+          </li>
+        </ul>
+      </p>
+      <p>
+        Espero que disfrutéis de las recetas tanto como nosotros, y si tenéis cualquier duda o sugerencia,
+        no dudéis en <a href="mailto:saludypimienta@outlook.com?Subject=Duda o sugerencia" target="_blank" title="Enviar Email a saludypimienta@outlook.com">contactarnos</a>.
+      </p>
+    </div>
+    <img id="leaves" src="{{ url_for('static', filename='images/icons/leaf-column.svg') }}" alt="Hojas"/>
+  </div>
+</section>
+
+
+{% endblock content %}

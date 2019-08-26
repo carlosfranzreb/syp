@@ -1,0 +1,9 @@
+{% extends "main_layout.html" %}
+{% block content %}
+  <center>
+    <div class="content-section">
+        <h1>¡Ups! Esta página no existe.</h1>
+        <a href="{{ url_for('main.get_home') }}"><h3 style="color: #991D1D">Volver a la página de inicio.</h3></a>
+    </div>
+  </center>
+{% endblock content %}

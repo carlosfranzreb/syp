@@ -1,0 +1,116 @@
+{% extends 'main_layout.html' %}
+{% block content %}
+
+		<!-- Banner -->
+<section id="banner">
+	<div class="content">
+		<header>
+      <h3>Esta semana...</h3>
+      <center><h2 style="font-size: 3.25em">{{ last_recipes[0].name }}</h2></center>
+		</header>
+		<p>{{ last_recipes[0].intro }}</p>
+		<ul class="actions">
+			<li><a class="button big" href="{{ url_for('recipes.get_recipe', recipe_name=last_recipes[0].name.replace(' ', '-')) }}">Abrir la receta</a></li>
+		</ul>
+	</div>
+	<span class="image object">
+		<img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(last_recipes[0].name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ last_recipes[0].name }}" />
+	</span>
+</section>
+
+<section>
+	<header class="major">
+		<h1 style="font-size: 1.75em">Recetas veganas y saludables</h1>
+	</header>
+	<div style="display: flex">
+		<p id="filo-text">
+			En mi casa, la comida siempre ha ocupado un lugar muy importante. A mis padres
+			les encantaba la gastronomía, y a menudo nos llevaban a comer a restaurantes.
+			Mi madre cocinaba muy bien; siempre innovando y escapando de lo común. Mi padre,
+			por otro lado, era más tradicional...
+		</p>
+		<img id="filo-img" src="{{ url_for('static', filename='images/icons/pepper_w18.svg') }}" alt="Pimentero de SyP"/>
+	</div>
+	<a href="{{ url_for('main.get_philosophy') }}" class="button">Más</a>
+</section>
+
+<!-- Section -->
+<section>
+	<header class="major">
+		<h2>Buscadores</h2>
+	</header>
+	<div class="features">
+
+		<article>
+			<a href="{{ url_for('search.search_all_recipes') }}" style="border-bottom: none">
+				<span class="icon fa-leaf"></span>
+			</a>
+			<div class="content">
+				<a href="{{ url_for('search.search_all_recipes') }}" style="color: #000">
+					<h3>Buscar receta</h3>
+					<p>Para los que saben lo que quieren.</p>
+				</a>
+			</div>
+		</article>
+
+		<article>
+			<a href="{{ url_for('ingredients.search_all_ingredients') }}" style="border-bottom: none">
+				<span class="icon fa-cutlery"></span>
+			</a>
+			<div class="content">
+				<a href="{{ url_for('ingredients.search_all_ingredients') }}" style="color: #000">
+					<h3>Buscar por ingrediente</h3>
+					<p>Por si tienes algún capricho, o un ingrediente con el que no sabes qué hacer.</p>
+				</a>
+			</div>
+		</article>
+
+		<article>
+			<a href="{{ url_for('times.search_time_undefined') }}" style="border-bottom: none">
+				<span class="icon fa-clock-o"></span>
+			</a>
+			<div class="content">
+				<a href="{{ url_for('times.search_time_undefined') }}" style="color: #000">
+					<h3>Buscar por tiempo</h3>
+					<p>Por si tienes prisa, o buscas un plato más elaborado.</p>
+				</a>
+			</div>
+		</article>
+
+		<article>
+			<a href="{{ url_for('seasons.search_actual_season') }}" style="border-bottom: none">
+				<span class="icon fa-thermometer-4"></span>
+			</a>
+			<div class="content">
+				<a href="{{ url_for('seasons.search_actual_season') }}" style="color: #000">
+					<h3>Buscar por temporada</h3>
+					<p>Tenemos recetas frías y calientes, basadas en productos de temporada.</p>
+				</a>
+			</div>
+		</article>
+
+	</div>
+</section>
+
+<!-- Section -->
+<section>
+	<header class="major">
+		<h2>Últimas recetas</h2>
+	</header>
+	<div class="posts">
+
+      {% for recipe in last_recipes[1:] %}
+        <article>
+    			<a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '-')) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
+    			<h3>{{ recipe.name }}</h3>
+    			<p>{{ recipe.intro }}</p>
+    			<ul class="actions">
+    				<li><a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '-')) }}" class="button">Abrir</a></li>
+    			</ul>
+    		</article>
+      {% endfor %}
+
+	</div>
+</section>
+
+{% endblock content %}

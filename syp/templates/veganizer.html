@@ -1,0 +1,80 @@
+{% extends 'main_layout.html' %}
+{% block content %}
+
+<section>
+  <header class="main">
+    <h1>Veganizador</h1>
+  </header>
+  <h4>
+    Cuando dejamos atrás los productos animales, a veces hay algún plato favorito
+    que cae en el olvido. Eso no tiene por qué ser así: nosotros nos esforzaremos
+    en idear una versión vegana, para que las viejas costumbres no desaparezcan.
+    No te cortes, ¡nos encantan los retos!
+  </h4>
+</section>
+
+<section>
+  <form style="width: 80%; max-width: 800px;" method="post" action="{{ url_for('veganizer.get_veganizer') }}">
+    {{ form.hidden_tag() }}
+    <div class="row gtr-uniform">
+        <div class="col-6 col-12-xsmall">
+          {{ form.name(placeholder="Tu nombre") }}
+        </div>
+    	<div class="col-6 col-12-xsmall">
+        {{ form.email(placeholder="Email", type="email") }}
+    	</div>
+    	<!-- Break -->
+    	<div class="col-12">
+        {% if form.recipe_name.errors %}
+          {{ form.recipe_name(class="is-invalid") }}
+          <div class="invalid-feedback">
+            <span style="color: #991D1D">
+              ¡Tan corto no puede ser el nombre!
+            </span>
+          </div>
+        {% else %}
+    		  {{ form.recipe_name(placeholder="Nombre de la receta", maxlength="40") }}
+        {% endif %}
+    	</div>
+    	<!-- Break -->
+    	<div class="col-12">
+        {% if form.recipe_info.errors %}
+          {{ form.recipe_info(class="is-invalid") }}
+          <div class="invalid-feedback">
+            <span style="color: #991D1D">
+              Para hacer una versión que se parezca a tu propuesta,
+              necesitamos más información: ingredientes, cómo se prepara, etc.
+            </span>
+          </div>
+        {% else %}
+            {{ form.recipe_info(placeholder="Dinos todo lo que sepas sobre la receta", rows="6", maxlength="1000") }}
+        {% endif %}
+      </div>
+      <!-- Break -->
+      <div class="col-12">
+        {% if form.recaptcha.errors %}
+          {{ form.recaptcha(class="is-invalid") }}
+          <div class="invalid-feedback">
+            <span style="color: #991D1D">
+              ¿No serás una máquina?
+            </span>
+          </div>
+        {% else %}
+          {{ form.recaptcha }}
+        {% endif %}
+      </div>
+      <div class="col-12">
+        {{ form.privacy }}
+        <label for="privacy">Estoy de acuerdo con la <a href="{{ url_for('main.get_privacy') }}" target="_blank">política de privacidad</a>.</label>
+      </div>
+    	<!-- Break -->
+    	<div class="col-12">
+    		<ul class="actions">
+    			<li>{{ form.send(class="primary") }}</li>
+    			<li><input type="reset" value="Borrar" /></li>
+    		</ul>
+    	</div>
+    </div>
+  </form>
+</section>
+{% endblock content %}
