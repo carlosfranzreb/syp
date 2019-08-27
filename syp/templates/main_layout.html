@@ -30,15 +30,10 @@
     {% endif %}
 	</head>
 	<body class="is-preload">
-
-		<!-- Wrapper -->
 			<div id="wrapper">
-
-				<!-- Main -->
 				<div id="main">
 					<div class="inner">
 
-						<!-- Header -->
 							<header id="header">
 								<div>
 									<img id="logo" src="{{ url_for('static', filename='images/icons/syp.png') }}" alt="Logo de SyP"/>
@@ -49,6 +44,15 @@
 									<li><a href="#" class="icon fa-instagram" title="Ir a la página de Instagram de SyP"><span class="label">Instagram</span></a></li>
 									<li><a href="#" class="icon fa-youtube-play" title="Ir a la página de YouTube de SyP"><span class="label">YouTube</span></a></li>
 								</ul>
+                {% if title != 'Login' %}
+                  <div id="account_btn">
+                    {% if current_user.is_authenticated %}
+                      <a href="" class="button">{{ current_user.username }}</a>
+                    {% else %}
+                      <a href="{{ url_for('users.login') }}" class="button">Iniciar sesión</a>
+                    {% endif %}
+                  </div>
+                {% endif %}
 							</header>
 
 							<!-- Display Flash messages -->
@@ -88,15 +92,26 @@
 								<h2>Menú</h2>
 							</header>
 							<ul>
+                {% if current_user.is_authenticated %}
+                <li>
+                  <span class="opener">Mi cuenta</span>
+                  <ul>
+                    <li><a href="" title="Ver y editar los datos de mi cuenta.">Mi perfil</a></li>
+                    <li><a href="" title="Ver las recetas que he guardado.">Mis recetas</a></li>
+                  </ul>
+                </li>
+                {% else %}
+                  <li ><a href="{{ url_for('users.login') }}" title="Iniciar sesión.">Iniciar sesión</a></li>
+                {% endif %}
 								<li><a href="{{ url_for('main.get_home') }}">Inicio</a></li>
 								<li><a href="{{ url_for('search.search_all_recipes') }}" title="Ver todas las recetas">Recetas</a></li>
 								<li>
 									<span class="opener">Buscadores</span>
 									<ul>
-										<li><a href="{{ url_for('search.search_all_recipes') }}" title="Ver todas las recetas">Recetas</a></li>
-										<li><a href="{{ url_for('ingredients.search_all_ingredients') }}" title="Buscar recetas por ingrediente">por ingrediente</a></li>
-										<li><a href="{{ url_for('times.search_time_undefined') }}" title="Buscar recetas por tiempo">por tiempo</a></li>
-										<li><a href="{{ url_for('seasons.search_actual_season') }}" title="Buscar recetas por temporada">por temporada</a></li>
+										<li><a href="{{ url_for('search.search_all_recipes') }}" title="Buscar recetas por nombre.">por nombre</a></li>
+										<li><a href="{{ url_for('ingredients.search_all_ingredients') }}" title="Buscar recetas por ingrediente.">por ingrediente</a></li>
+										<li><a href="{{ url_for('times.search_time_undefined') }}" title="Buscar recetas por tiempo.">por tiempo</a></li>
+										<li><a href="{{ url_for('seasons.search_actual_season') }}" title="Buscar recetas por temporada.">por temporada</a></li>
 									</ul>
 								</li>
 								<li><a href="{{ url_for('veganizer.get_veganizer') }}" title="Ir al veganizador">Veganizador</a></li>
