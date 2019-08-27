@@ -1,22 +1,28 @@
 {% extends 'main_layout.html' %}
 {% block content %}
 <section>
-	<header class="main">
-		<h1> {{ recipe.name }} </h1>
+	<header class="main" id="recipe_header">
+    <div id="action_icons_container">
+      <ul class="icons">
+        <li><a href="#" class="icon fas fa-pencil" title="Editar receta."><span class="label">Editar receta.</span></a></li>
+        <li><a href="#" class="icon fas fa-star" title="Guardar receta."><span class="label">Guardar receta.</span></a></li>
+        <li><h1> {{ recipe.name }} </h1></li>
+      </ul>
+    </div>
 	</header>
 
 	<span class="image main"><img src="{{ url_for('static', filename='images/recipes/large/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_opt.jpg' }}" alt="{{ recipe.name }}" /></span>
 
-		<div class="container-times">
-			<div class="item-times">
+		<div class="container_times">
+			<div class="item_times">
 				<img class="time_img" src="{{ url_for('static', filename='images/icons/syp_knife.svg') }}" alt="Tiempo de preparación" title="Tiempo de preparación" />
 				<span class="time_number"> {% block prep_time %} {{ recipe.time_prep }} min. {% endblock %} </span>
 			</div>
-			<div class="item-times">
+			<div class="item_times">
 				<img class="time_img" src="{{ url_for('static', filename='images/icons/syp_stew.svg') }}" alt="Tiempo de cocción" title="Tiempo de cocción" />
 				<span class="time_number"> {% block cook_time %} {{ recipe.time_cook }} min. {% endblock %} </span>
 			</div>
-			<div class="item-times">
+			<div class="item_times">
 				<img class="time_img" src="{{ url_for('static', filename='images/icons/syp_flower.svg') }}" alt="Temporada" title="Temporada" />
 				<span class="time_number"> {{ recipe.season.name }} </span>
 			</div>
