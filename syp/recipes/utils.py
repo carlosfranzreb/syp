@@ -34,13 +34,7 @@ def get_recipe_by_name(recipe_name):
     if recipe is None:
         abort(404)
     else:
-        recipe.real_steps = ast.literal_eval(recipe.steps)
         recipe.ingredients = get_ingredients_of_recipe(recipe.id)
-
-        substeps, subingredients = get_subrecipes_of_recipe(recipe)
-        recipe.substeps = substeps
-        recipe.subingredients = subingredients
-
         return recipe
 
 
@@ -55,50 +49,6 @@ def get_ingredients_of_recipe(id):
         ings.append(ing)
 
     return ings
-
-
-def get_ingredients_of_subrecipe(recipe, id):
-    """
-    Get ingredients of a recipe with: name, amount, unit, health
-    If ingredient already in recipe, mark as duplicate, so it is not
-    shown twice in the health section.
-    """
-    query_quantity = Subquantity.query.filter_by(id_subrecipe=id).all()
-    ingredients = []
-
-    for q in query_quantity:
-        ing = Ingredient.query.filter_by(id=q.id_ingredient).first()
-        ing.amount = simplify(q.amount)
-        if ing in recipe.ingredients:
-            ing.duplicate = True
-        else:
-            ing.duplicate = False
-        ingredients.append(ing)
-
-    return ingredients
-
-
-def get_subrecipes_of_recipe(recipe):
-    """
-    recipe.substeps - dictionary with steps for subrecipes:
-        ['name']: ['title', list of steps]
-        ingredient.name - string
-    recipe.subingredients - list of tuples (title, ingredients (as above))
-        title: "Para el/la subrecipe", used in the ingredient section
-        ingredients:
-            ing.name - string
-            ing.amount - int
-            ingredient.unit.name - string
-            ingredient.health - string
-    """
-    substeps, subingredients = {}, []
-    for sub in recipe.subrecipes:
-        substeps[sub.name] = ast.literal_eval(sub.steps)
-        ings = get_ingredients_of_subrecipe(recipe, sub.id)
-        subingredients.append([f"Para {get_case(sub.case_fem)} \
-                               {sub.name.lower()}:", ings])
-
-    return (substeps, subingredients)
 
 
 def get_last_recipes(limit=None):

@@ -77,20 +77,25 @@
 	<article id="steps">
 	  <h2>Pasos</h2>
 		<ol>
-				{% for step in recipe.real_steps %}
-
-			    {% if step[:10] == 'subrecipe_'%}
-			      <li> {{ recipe.substeps[step[10:]][0] }}:
-							<ol>
-								{% for substep in recipe.substeps[step[10:]][1] %}
-									<li>{{ substep }}</li>
-								{% endfor %}
-							</ol>
-
-			    {% else %}
-			      <li>{{ step }}</li>
-			    {% endif %}
-
+				{% for step in recipe.steps %}
+          {% if step.step|int > 0 %}  <!-- IF CASTING FAILS, RETURNS 0 -->
+            {% for sub in recipe.subrecipes %}
+              {% if sub.id == step.step|int %}
+                {% if sub.case_fem %}
+                  <li>Preparamos la {{ sub.name.lower() }}</li>
+                {% else %}
+                  <li>Preparamos el {{ sub.name.lower() }}</li>
+                {% endif %}
+                <ol>
+                {% for substep in sub.steps %}
+                  <li>{{ substep.step }}</li>
+                {% endfor %}
+                </ol>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+			      <li>{{ step.step }}</li>
+          {% endif %}
 			  {% endfor %}
 	  </ol>
 		<br />

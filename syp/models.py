@@ -24,7 +24,6 @@ class Recipe(db.Model):
     time_cook = db.Column(db.Integer, nullable=False)
     intro = db.Column(db.Text, nullable=False)
     text = db.Column(db.Text, nullable=False)
-    steps = db.Column(db.Text, nullable=False)
     link_video = db.Column(db.String(100), nullable=False)
     health = db.Column(db.Text, nullable=False)
     date_created = db.Column(db.DateTime, nullable=False)
@@ -32,10 +31,20 @@ class Recipe(db.Model):
                           nullable=False)
     subrecipes = db.relationship('Subrecipe', secondary=subrecipes, lazy=True,
                                  backref=db.backref('recipes', lazy=True))
+    steps = db.relationship('RecipeStep', backref='recipe', lazy=True)
+
 
     def __repr__(self):
         return f"Recipe('{self.name}', '{self.intro}')"
 
+
+class RecipeStep(db.Model):
+    __tablename__ = 't_recipe_steps'
+    id = db.Column(db.Integer, primary_key=True)
+    step_nr = db.Column(db.Integer, nullable=False)
+    step = db.Column(db.String(500), nullable=False)
+    id_recipe = db.Column(db.Integer, db.ForeignKey('t_recipes.id'),
+                          nullable=False)
 
 class Subrecipe(db.Model):
     __tablename__ = 't_subrecipes'
@@ -44,9 +53,19 @@ class Subrecipe(db.Model):
     steps = db.Column(db.Text, nullable=False)
     date_created = db.Column(db.DateTime, nullable=False)
     case_fem = db.Column(db.Boolean, nullable=False)  # 0=masc., 1=fem.
+    steps = db.relationship('SubrecipeStep', backref='subrecipe', lazy=True)
 
     def __repr__(self):
         return f"Subrecipe('{self.name}')"
+
+
+class SubrecipeStep(db.Model):
+    __tablename__ = 't_subrecipe_steps'
+    id = db.Column(db.Integer, primary_key=True)
+    step_nr = db.Column(db.Integer, nullable=False)
+    step = db.Column(db.String(500), nullable=False)
+    id_subrecipe = db.Column(db.Integer, db.ForeignKey('t_subrecipes.id'),
+                             nullable=False)
 
 
 class Season(db.Model):
