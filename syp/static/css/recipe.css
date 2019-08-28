@@ -1,5 +1,5 @@
 /*
-	Specific CSS for the recipes.
+	CSS for the recipes.
   Written by charlo.
 */
 
@@ -62,14 +62,14 @@ ul.ul_pepper {
 }
 
 /* for cooking and prep time icons */
-.container-times {
+.container_times {
   display: flex;
   justify-content: center;
   flex-flow: row wrap;
   padding-bottom: 2em;
 }
 
-.item-times {
+.item_times {
   align-items: center;
 }
 
@@ -83,19 +83,7 @@ ul.ul_pepper {
   padding-right: 2em;
 }
 
-	@media screen and (max-width: 540px) {
-    .time_img {
-      width: 30px;
-    }
-
-    .time_number {
-      font-size: 130%;
-      font-weight: bold;
-      padding-right: 1em;
-    }
-  }
-
-  @media screen and (max-width: 680px) {
+  @media screen and (max-width: 780px) {
     .time_img {
       width: 30px;
     }
@@ -108,20 +96,9 @@ ul.ul_pepper {
   }
 
   @media screen and (max-width: 380px) {
-    .time_img {
-      width: 30px;
-    }
-
-    .time_number {
-      font-size: 130%;
-      font-weight: bold;
-      padding-right: 1em;
-    }
-
-    .item-times {
+    .item_times {
       display: block;
     }
-}
 
 /* Fixes to adapt posts of home to recipe */
 @media screen and (max-width: 580px) {

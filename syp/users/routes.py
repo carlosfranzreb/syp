@@ -4,7 +4,7 @@ from syp import db, bcrypt
 from syp.models import User
 from syp.users.forms import LoginForm
 from syp.recipes.utils import get_last_recipes
-from syp.search.forms import RecipesForm
+from syp.search.forms import SearchRecipeForm
 import sys
 
 
@@ -28,5 +28,5 @@ def login():
     return render_template('login.html',
                            title='Login',
                            form=form,
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(4))

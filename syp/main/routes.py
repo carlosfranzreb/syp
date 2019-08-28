@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, send_from_directory
 from syp.recipes.utils import get_last_recipes
-from syp.search.forms import RecipesForm
+from syp.search.forms import SearchRecipeForm
 from syp.search.utils import get_default_keywords
 
 
@@ -16,7 +16,7 @@ def get_home():
             inspirarte con la receta de la semana.'
     return render_template('home.html',
                            title='Inicio',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(9),
                            description=' '.join(desc.split()),
                            keywords=get_default_keywords())
@@ -28,7 +28,7 @@ def get_philosophy():
             sabor para ser vegano, ni para mantener un buen estado de salud.'
     return render_template('philosophy.html',
                            title='Filosofía',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(4),
                            description=' '.join(desc.split()),
                            keywords=get_default_keywords() + ', filosofía')
@@ -40,7 +40,7 @@ def get_privacy():
             Tanto, que no almacenamos ninguno en nuestras bases de datos'
     return render_template('privacy.html',
                            title='Privacidad',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(4),
                            description=' '.join(desc.split()),
                            keywords=get_default_keywords() + ', privacidad')
@@ -52,7 +52,7 @@ def get_donate():
             sostenible y libre de anuncios.'
     return render_template('donate.html',
                            title='Donar',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(4),
                            description=' '.join(desc.split()),
                            keywords=get_default_keywords() + ', donación')

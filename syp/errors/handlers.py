@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from syp.search.forms import RecipesForm
+from syp.search.forms import SearchRecipeForm
 from syp.recipes.utils import get_last_recipes
 
 
@@ -10,7 +10,7 @@ errors = Blueprint('errors', __name__)
 def error_404(error):
     return render_template('errors/404.html',
                            title='404',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(4)), 404
 
 
@@ -18,5 +18,5 @@ def error_404(error):
 def error_500(error):
     return render_template('errors/500.html',
                            title='500',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(4)), 500

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from syp.ingredients.forms import IngredientsForm
 from syp.ingredients import utils
-from syp.search.forms import RecipesForm
+from syp.search.forms import SearchRecipeForm
 from syp.recipes.utils import get_last_recipes
 
 ingredients = Blueprint('ingredients', __name__)
@@ -19,7 +19,7 @@ def search_all_ingredients():
             sabes qué hacer.'
     return render_template('ingredients.html',
                            title='Ingredientes',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            form=form,
                            all_ingredients=utils.get_all_ingredients(),
                            recipes=None,
@@ -44,7 +44,7 @@ def search_ingredient(ing_name):
              {ing_name}, o lo compraste y buscas inspiración.'
     return render_template('ingredients.html',
                            title=ing_name,
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            form=form,
                            all_ingredients=utils.get_all_ingredients(),
                            recipes=recs,
