@@ -24,6 +24,9 @@
 
     {% if is_recipe %}
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/recipe.css') }}">
+    {% elif is_edit_recipe %}
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/recipe.css') }}">
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/edit_recipe.css') }}">
     {% endif %}
 
 		{% if title %}
@@ -134,7 +137,7 @@
                 {% for recipe in last_recipes[:4] %}
 
 									<article>
-										<a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '-')) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/300/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_300_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
+										<a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '_')) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/300/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_300_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
 										<p>{{ recipe.intro }}</p>
 									</article>
 
@@ -170,6 +173,8 @@
 		{% if is_recipe %}
 			<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5c4f12a15338a3ff"></script>
 			<script src="{{url_for('static', filename='js/recipe.js')}}"></script>
+    {% elif is_edit_recipe %}
+      <script src="{{url_for('static', filename='js/edit_recipe.js')}}"></script>
 		{% endif %}
 		<script src="{{url_for('static', filename='js/browser.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/breakpoints.min.js')}}"></script>

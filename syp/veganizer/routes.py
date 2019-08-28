@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
 from syp.recipes.utils import get_last_recipes
-from syp.search.forms import RecipesForm
+from syp.search.forms import SearchRecipeForm
 from syp.veganizer.forms import VeggieForm
 from syp.veganizer.utils import send_veggie_msg, get_veggie_keywords
 
@@ -22,7 +22,7 @@ def get_veganizer():
             las viejas costumbres no desaparezcan"
     return render_template('veganizer.html',
                            title='Veganizador',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            form=form,
                            last_recipes=get_last_recipes(4),
                            description=' '.join(desc.split()),

@@ -130,7 +130,7 @@ def get_recipe_keywords(recipe):
 
 
 def get_real_name(url_name):
-    return url_name.replace("-", " ")
+    return url_name.replace("_", " ")
 
 
 def get_case(case_id):

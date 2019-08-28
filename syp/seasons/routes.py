@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, render_template, url_for
 from syp.recipes.utils import get_last_recipes
-from syp.search.forms import RecipesForm
+from syp.search.forms import SearchRecipeForm
 from syp.seasons.utils import get_actual_season_name, get_season_name, \
                               get_season_recipes, get_season_keywords
 from syp.seasons.forms import SeasonForm
@@ -33,7 +33,7 @@ def search_season(season_name):
              mano al medio ambiente.'
     return render_template('season.html',
                            title=season_name,
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            form=form,
                            season_name=season_name,
                            recipes=recs,

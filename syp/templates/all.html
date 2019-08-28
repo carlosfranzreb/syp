@@ -33,11 +33,11 @@
 
       {% for recipe in recipes.items %}
         <article>
-    			<a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
+    			<a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '_')) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
     			<h3>{{ recipe.name }}</h3>
     			<p>{{ recipe.intro }}</p>
     			<ul class="actions">
-    				<li><a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name) }}" class="button">Abrir</a></li>
+    				<li><a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '_')) }}" class="button">Abrir</a></li>
     			</ul>
     		</article>
       {% endfor %}

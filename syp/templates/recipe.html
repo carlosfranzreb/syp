@@ -4,8 +4,12 @@
 	<header class="main" id="recipe_header">
     <div id="action_icons_container">
       <ul class="icons">
-        <li><a href="#" class="icon fas fa-pencil" title="Editar receta."><span class="label">Editar receta.</span></a></li>
-        <li><a href="#" class="icon fas fa-star" title="Guardar receta."><span class="label">Guardar receta.</span></a></li>
+        {% if current_user.is_authenticated %}
+          <li><a href="#" class="icon fas fa-star" title="Guardar receta."><span class="label">Guardar receta.</span></a></li>
+          {% if current_user.role|int < 3 %}
+            <li><a href="{{ url_for('recipes.edit_recipe', recipe_name=recipe.name.replace(' ', '_')) }}" class="icon fas fa-pencil" title="Editar receta."><span class="label">Editar receta.</span></a></li>
+          {% endif %}
+        {% endif %}
         <li><h1> {{ recipe.name }} </h1></li>
       </ul>
     </div>
