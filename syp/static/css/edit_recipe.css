@@ -1,0 +1,50 @@
+#input_h1 {
+	padding: 0;
+	border: 0;
+	vertical-align: baseline;
+  color: #3d4449;
+  font-family: "Roboto Slab", serif;
+  font-weight: 700;
+  font-size: 4em;
+  margin: 0 0 0.5em 0;
+  line-height: 1.3;
+}
+
+#textarea_h4 {
+	padding: 0;
+	border: 0;
+	font: inherit;
+	vertical-align: baseline;
+  color: #3d4449;
+  font-family: "Roboto Slab", serif;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 1em 0;
+  font-size: 1.1em;
+  height: auto;
+}
+
+#textarea_p {
+	margin: 0 0 2em 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+  line-height: 1.5;
+}
+
+
+.input_time_number {
+  font-size: 1em !important;
+  font-weight: bolder !important;
+  padding-right: .7em !important;
+  width: 4em !important;
+}
+
+@media screen and (max-width: 736px) {
+  #input_h1 {
+    font-size: 2em;
+    line-height: 1.4;
+  }
+}

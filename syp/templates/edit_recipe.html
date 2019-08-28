@@ -1,0 +1,150 @@
+{% extends 'main_layout.html' %}
+{% block content %}
+<form method="post" action="{{ url_for('recipes.save_recipe', recipe_name=recipe.name.replace(' ', '_')) }}">
+  {{ form.hidden_tag() }}
+  <section>
+  	<header class="main" id="recipe_header">
+      {{ form.name(id="input_h1") }}
+  	</header>
+
+  	<span class="image main">
+      <div class="form-group">
+        {{ form.image.label() }}
+        {{ form.image(class="form-control-file") }}
+        {% if form.image.errors %}
+          {% for error in form.image.errors %}
+            <span class="text-danger">{{ error }}</span></br>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <img src="{{ url_for('static', filename='images/recipes/large/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_opt.jpg' }}" alt="{{ recipe.name }}" />
+    </span>
+
+  		<div class="container_times">
+  			<div class="item_times">
+  				<img class="time_img" src="{{ url_for('static', filename='images/icons/syp_knife.svg') }}" alt="Tiempo de preparación" title="Tiempo de preparación" />
+  				<span class="time_number">
+              {{ form.time_prep(class="input_time_number", type="number") }} min.
+          </span>
+  			</div>
+  			<div class="item_times">
+  				<img class="time_img" src="{{ url_for('static', filename='images/icons/syp_stew.svg') }}" alt="Tiempo de cocción" title="Tiempo de cocción" />
+  				<span class="time_number">
+              {{ form.time_cook(class="input_time_number", type="number") }} min.
+          </span>
+  			</div>
+      </div>
+			<center><div class="container_times">
+				<img class="time_img" src="{{ url_for('static', filename='images/icons/syp_flower.svg') }}" alt="Temporada" title="Temporada" />
+        {% set f = form.season.process_data(recipe.season.id) %}
+        <span class="time_number">{{ form.season() }}</span>
+			</div></center>
+
+    {{ form.intro(id="textarea_h4") }}
+    {{ form.text(id="textarea_p") }}
+
+  </section>
+
+
+  <div id="first-posts-recipe" class="posts">
+  	<article id="ingredients">
+  	  <h2>Ingredientes para 2 personas</h2>
+
+  		<ul class="ul_pepper">
+  			{% for ing in recipe.ingredients %}
+  				{% if ing.amount == 0 %}
+  					<li>{{ ing.name }}</li>
+  				{% else %}
+  					<li value="{{ ing.unit.id }}">{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
+  				{% endif %}
+  			{% endfor %}
+  		</ul>
+
+  			{% for subrecipe in recipe.subingredients %}
+  				<h3> {{ subrecipe[0] }} </h3>
+  				<ul class="ul_pepper">
+  					{% for ing in subrecipe[1] %}
+  						{% if ing.amount == 0 %}
+  							<li>{{ ing.name }}</li>
+  						{% else %}
+  							<li value="{{ ing.unit.id }}">{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
+  						{% endif %}
+  					{% endfor %}
+  				</ul>
+  			{% endfor %}
+  	</article>
+
+  	<article id="steps">
+  	  <h2>Pasos</h2>
+  		<ol>
+        {% for step in recipe.real_steps %}
+
+			    {% if step[:10] == 'subrecipe_'%}
+			      <li> {{ recipe.substeps[step[10:]][0] }}:
+							<ol>
+								{% for substep in recipe.substeps[step[10:]][1] %}
+									<li>{{ substep }}</li>
+								{% endfor %}
+							</ol>
+
+			    {% else %}
+			      <li>{{ step }}</li>
+			    {% endif %}
+
+			  {% endfor %}
+  	  </ol>
+  		<br />
+  	  <h3 style="color: #f56a6a">¡Y listo! Que aproveche.</h3>
+  	</article>
+  </div>
+
+  <div id="second-posts-recipe" class="posts">
+  	<article id="video">
+  		<h2>Vídeo</h2>
+  			<div class="video-container">
+  				<iframe class="video-item" allowfullscreen src={{ recipe.link_video }}></iframe>
+  			</div>
+  	</article>
+
+  	<article id="health">
+  		<h2>Beneficios para la salud</h2>
+
+  	  <p> {{ recipe.health }} </p>
+
+  		<h4>Por ingredientes</h4>
+  		<ul class="fa-ul">
+
+  				{% for ing in recipe.ingredients %}
+
+  			    <li>
+  			      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
+  			      <strong>{{ ing.name }}: </strong>{{ ing.health }}
+  			    </li>
+
+  			  {% endfor %}
+
+  				{% for subrecipe in recipe.subingredients %}
+  					{% for ing in subrecipe[1]  %}
+  						{% if not ing.duplicate %}
+  					    <li>
+  					      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
+  					      <strong>{{ ing.name }}: </strong>{{ ing.health }}
+  					    </li>
+  						{% endif %}
+  					{% endfor %}
+  			  {% endfor %}
+
+  		</ul>
+  	</article>
+  </div>
+  <br>
+  <center>
+  	<div>
+  		<h4>¿Te has quedado con hambre? Échale un vistazo a otras recetas <a style="color: #599A00; text-decoration: underline" href="{{ url_for('search.search_all_recipes') }}" title="Ver todas las recetas">aquí</a>.</h4>
+  	</div>
+  	<div>
+  		<h4>Si te ha gustado la receta, premia nuestro esfuerzo con una <a style="color: #599A00; text-decoration: underline" href="{{ url_for('main.get_donate') }}" title="Ver todas las recetas">donación</a>.</h4>
+  	</div>
+  </center>
+</form>
+{% endblock content %}

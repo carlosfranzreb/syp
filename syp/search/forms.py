@@ -3,6 +3,6 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 
-class RecipesForm(FlaskForm):
+class SearchRecipeForm(FlaskForm):
     recipe = StringField('Receta', validators=[DataRequired()])
     submit = SubmitField('Buscar')

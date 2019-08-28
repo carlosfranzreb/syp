@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
 from syp.recipes.utils import get_last_recipes
-from syp.search.forms import RecipesForm
+from syp.search.forms import SearchRecipeForm
 from syp.times.utils import get_recipes_by_time, get_times_keywords
 from syp.times.forms import TimesForm
 
@@ -19,7 +19,7 @@ def search_time_undefined():
             tardes, ¡dedícale tiempo a degustarlo!'
     return render_template('time.html',
                            title='Tiempo',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            form=form,
                            recipes=None,
                            last_recipes=get_last_recipes(4),
@@ -43,7 +43,7 @@ def search_time(time):
              degustarlo!'
     return render_template('time.html',
                            title=f'{time} minutos',
-                           recipe_form=RecipesForm(),
+                           recipe_form=SearchRecipeForm(),
                            form=form,
                            recipes=recs,
                            time=time,
