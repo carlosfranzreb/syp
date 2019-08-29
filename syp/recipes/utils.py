@@ -9,6 +9,19 @@ def get_recipe_by_name(recipe_name):
     if recipe is None:
         abort(404)
     else:
+        # set duplicate method for health comments
+        ids = []
+        for q in recipe.ingredients:
+            q.duplicate = False
+            ids.append(q.ingredient.id)
+        for sub in recipe.subrecipes:
+            for q in sub.ingredients:
+                id = q.ingredient.id
+                if id not in ids:
+                    q.duplicate = False
+                    ids.append(id)
+                else:
+                    q.duplicate = True
         return recipe
 
 
