@@ -5,50 +5,11 @@ import ast
 
 
 def get_recipe_by_name(recipe_name):
-    """
-    Gets recipe with following attributes:
-    recipe.id = int
-    recipe.name - string
-    recipe.img_name - Name of recipe with underscores instead of spaces,
-        lowercase, and _opt at the end (this is done directly in the
-        template)
-    recipe.time_cook, recipe.time_prep - integers
-    recipe.season - string (backref)
-    recipe.intro, recipe.text - strings
-    recipe.real_steps - list of strings, with subrecipes
-        marked as 'subrecipe_name'
-    recipe.substeps - dictionary with steps for subrecipes:
-        ['name']: ['title', list of steps]
-    recipe.link_video - string
-    recipe.health - string
-    recipe.ingredients - list of ingredients
-        ingredient.name - string
-        ingredient.amount - int
-        ingredient.unit.name - string
-        ingredient.health - string
-    recipe.subingredients - list of tuples (title, ingredients (as above))
-        title: "Para el/la subrecipe", used in the ingredient section
-    """
     recipe = Recipe.query.filter_by(name=recipe_name).first()
-
     if recipe is None:
         abort(404)
     else:
-        recipe.ingredients = get_ingredients_of_recipe(recipe.id)
         return recipe
-
-
-def get_ingredients_of_recipe(id):
-    """Get ingredients of a recipe with: name, amount, unit, health"""
-    query_quantity = Quantity.query.filter_by(id_recipe=id).all()
-    ings = []
-
-    for q in query_quantity:
-        ing = Ingredient.query.filter_by(id=q.id_ingredient).first()
-        ing.amount = simplify(q.amount)
-        ings.append(ing)
-
-    return ings
 
 
 def get_last_recipes(limit=None):
@@ -72,10 +33,10 @@ def get_paginated_recipes(limit=None, items=9):
 
 def get_recipe_keywords(recipe):
     recipe_keys = get_default_keywords() + ', '
-    for ing in recipe.ingredients:
-        recipe_keys += f'receta vegana con {ing.name}, '
-        recipe_keys += f'receta saludable con {ing.name}, '
-
+    for q in recipe.ingredients:
+        name = q.ingredient.name.lower()
+        recipe_keys += f'receta vegana con {name}, '
+        recipe_keys += f'receta saludable con {name}, '
     return ' '.join(recipe_keys[:-2].split())
 
 

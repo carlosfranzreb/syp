@@ -32,6 +32,7 @@ class Recipe(db.Model):
     subrecipes = db.relationship('Subrecipe', secondary=subrecipes, lazy=True,
                                  backref=db.backref('recipes', lazy=True))
     steps = db.relationship('RecipeStep', backref='recipe', lazy=True)
+    ingredients = db.relationship('Quantity', backref='recipe', lazy=True)
 
 
     def __repr__(self):
@@ -54,6 +55,7 @@ class Subrecipe(db.Model):
     date_created = db.Column(db.DateTime, nullable=False)
     case_fem = db.Column(db.Boolean, nullable=False)  # 0=masc., 1=fem.
     steps = db.relationship('SubrecipeStep', backref='subrecipe', lazy=True)
+    ingredients = db.relationship('Subquantity', backref='subrecipe', lazy=True)
 
     def __repr__(self):
         return f"Subrecipe('{self.name}')"
@@ -83,8 +85,6 @@ class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     health = db.Column(db.Text, nullable=False)
-    id_unit = db.Column(db.Integer, db.ForeignKey('t_units.id'),
-                        nullable=False)
     id_group = db.Column(db.Integer, db.ForeignKey('t_ingredient_groups.id'),
                          nullable=False)
 
@@ -95,11 +95,8 @@ class Ingredient(db.Model):
 class Unit(db.Model):
     __tablename__ = 't_units'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(10), nullable=False)
-    ingredients = db.relationship('Ingredient', backref='unit', lazy=True)
-
-    def __repr__(self):
-        return f"Unit('{self.name}', '{self.ingredients}')"
+    singular = db.Column(db.String(20), nullable=False)
+    plural = db.Column(db.String(20), nullable=False)
 
 
 class Ingredient_group(db.Model):
@@ -120,6 +117,10 @@ class Quantity(db.Model):
                           nullable=False)
     id_ingredient = db.Column(db.Integer, db.ForeignKey('t_ingredients.id'),
                               nullable=False)
+    id_unit = db.Column(db.Integer, db.ForeignKey('t_units.id'),
+                        nullable=False)
+    ingredient = db.relationship('Ingredient', lazy=True)
+    unit = db.relationship('Unit', lazy=True)
 
 
 class Subquantity(db.Model):
@@ -130,6 +131,10 @@ class Subquantity(db.Model):
                              nullable=False)
     id_ingredient = db.Column(db.Integer, db.ForeignKey('t_ingredients.id'),
                               nullable=False)
+    id_unit = db.Column(db.Integer, db.ForeignKey('t_units.id'),
+                        nullable=False)
+    ingredient = db.relationship('Ingredient', lazy=True)
+    unit = db.relationship('Unit', lazy=True)
 
 
 class Ingredient_season(db.Model):

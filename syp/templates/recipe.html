@@ -47,31 +47,41 @@
 	      <option value="4">4</option>
 	      <option value="5">5</option>
 	    </select>
-
 	    <span id="text-person">personas</span></h2>
 
 		<ul class="ul_pepper">
-			{% for ing in recipe.ingredients %}
-				{% if ing.amount == 0 %}
-					<li>{{ ing.name }}</li>
-				{% else %}
-					<li value="{{ ing.unit.id }}">{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
-				{% endif %}
-			{% endfor %}
+			{% for q in recipe.ingredients %}
+          {% if q.amount|float == 0 %}
+            <li value="{{ q.unit.id }}" data-before="{{ q.amount }}"><b>{{ q.ingredient.name }}</b></li>
+          {% elif q.amount|float > 1 %}
+					  <li value="{{ q.unit.id }}" data-before="{{ q.amount }}" data-singular="{{ q.unit.singular }}" data-plural="{{ q.unit.plural }}">
+              <b>{{ q.ingredient.name }}</b>: <span>{{ q.amount|string + ' ' + q.unit.singular + q.unit.plural }}</span>
+            </li>
+          {% else %}
+  				  <li value="{{ q.unit.id }}" data-before="{{ q.amount }}" data-singular="{{ q.unit.singular }}" data-plural="{{ q.unit.plural }}">
+              <b>{{ q.ingredient.name }}</b>: <span>{{ q.amount|string + ' ' + q.unit.singular }}</span>
+            </li>
+          {% endif %}
+      {% endfor %}
 		</ul>
-
-			{% for subrecipe in recipe.subingredients %}
-				<h3> {{ subrecipe[0] }} </h3>
-				<ul class="ul_pepper">
-					{% for ing in subrecipe[1] %}
-						{% if ing.amount == 0 %}
-							<li>{{ ing.name }}</li>
-						{% else %}
-							<li value="{{ ing.unit.id }}">{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
-						{% endif %}
-					{% endfor %}
-				</ul>
-			{% endfor %}
+		{% for subrecipe in recipe.subrecipes %}
+			<h3> {{ subrecipe.name }} </h3>
+			<ul class="ul_pepper">
+				{% for q in subrecipe.ingredients %}
+          {% if q.amount|float == 0 %}
+            <li value="{{ q.unit.id }}" data-before="{{ q.amount }}"><b>{{ q.ingredient.name }}</b></li>
+          {% elif q.amount|float > 1 %}
+            <li value="{{ q.unit.id }}" data-before="{{ q.amount }}" data-singular="{{ q.unit.singular }}" data-plural="{{ q.unit.plural }}">
+              <b>{{ q.ingredient.name }}</b>: <span>{{ q.amount|string + ' ' + q.unit.singular + q.unit.plural }}</span>
+            </li>
+          {% else %}
+            <li value="{{ q.unit.id }}" data-before="{{ q.amount }}" data-singular="{{ q.unit.singular }}" data-plural="{{ q.unit.plural }}">
+              <b>{{ q.ingredient.name }}</b>: <span>{{ q.amount|string + ' ' + q.unit.singular }}</span>
+            </li>
+          {% endif %}
+        {% endfor %}
+			</ul>
+		{% endfor %}
 	</article>
 
 	<article id="steps">
