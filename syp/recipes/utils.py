@@ -55,19 +55,3 @@ def get_recipe_keywords(recipe):
 
 def get_real_name(url_name):
     return url_name.replace("_", " ")
-
-
-def get_case(case_id):
-    if case_id == 0:
-        return "el"
-    elif case_id == 1:
-        return "la"
-    else:
-        raise ValueError
-
-
-def simplify(amount):
-    if amount < 1 or amount / int(amount) != 1:
-        return amount
-    else:
-        return int(amount)

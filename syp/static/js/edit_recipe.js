@@ -18,3 +18,12 @@ $(window).on('resize load', function(){
         $('#textarea_p').attr("rows", "14");
       }
 });
+
+$(document).ready(function() {
+  // Delete Ingredient('...')
+  $(".ul_pepper").children("li").each(function() {
+    ingredient = $(this).find('input:visible:first');
+    ing_val = ingredient.val();
+    ingredient.val(ing_val.substring(12, ing_val.length - 2))
+  });
+});

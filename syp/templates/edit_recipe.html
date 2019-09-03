@@ -51,50 +51,62 @@
   	  <h2>Ingredientes para 2 personas</h2>
 
   		<ul class="ul_pepper">
-  			{% for ing in recipe.ingredients %}
-  				{% if ing.amount == 0 %}
-  					<li>{{ ing.name }}</li>
-  				{% else %}
-  					<li value="{{ ing.unit.id }}">{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
-  				{% endif %}
+  			{% for subform in form.ingredients %}
+          {% for q in recipe.ingredients %}
+            {% if q.ingredient.name in subform.ingredient|string %}
+              {% set f = subform.unit.process_data(q.unit.id) %}
+            {% endif %}
+          {% endfor %}
+  				<li value="">
+            <span>{{ subform.ingredient(list="all_ingredients", autocomplete="off") }}</span>:
+            {{ subform.amount }} {{ subform.unit }}
+          </li>
   			{% endfor %}
   		</ul>
+      <datalist id="all_ingredients" style="block">
+        {% for ing in all_ingredients %}
+          <option value="{{ ing[0] }}"></option>
+        {% endfor %}
+      </datalist>
 
-  			{% for subrecipe in recipe.subingredients %}
-  				<h3> {{ subrecipe[0] }} </h3>
-  				<ul class="ul_pepper">
-  					{% for ing in subrecipe[1] %}
-  						{% if ing.amount == 0 %}
-  							<li>{{ ing.name }}</li>
-  						{% else %}
-  							<li value="{{ ing.unit.id }}">{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
-  						{% endif %}
-  					{% endfor %}
-  				</ul>
-  			{% endfor %}
+			{% for subrecipe in recipe.subingredients %}
+				<h3> {{ subrecipe[0] }} </h3>
+				<ul class="ul_pepper">
+					{% for ing in subrecipe[1] %}
+						{% if ing.amount == 0 %}
+							<li>{{ ing.name }}</li>
+						{% else %}
+							<li>{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			{% endfor %}
   	</article>
 
-  	<article id="steps">
+    <article id="steps">
   	  <h2>Pasos</h2>
   		<ol>
-        {% for step in recipe.real_steps %}
+        {% for step in recipe.steps %}
 
-			    {% if step[:10] == 'subrecipe_'%}
-			      <li> {{ recipe.substeps[step[10:]][0] }}:
-							<ol>
-								{% for substep in recipe.substeps[step[10:]][1] %}
-									<li>{{ substep }}</li>
-								{% endfor %}
-							</ol>
+          {% if step.step|int > 0 %}
+            {% for sub in recipe.subrecipes if sub.id == step.step|int %}
+              {% if sub.case_fem %}
+                <li>Preparamos la {{ sub.name.lower() }}
+              {% else %}
+                <li>Preparamos el {{ sub.name.lower() }}
+              {% endif %}
+              <ol>
+              {% for substep in sub.steps %}
+                <li>{{ substep.step }}</li>
+              {% endfor %}
+              </ol></li>
+            {% endfor %}
 
-			    {% else %}
-			      <li>{{ step }}</li>
-			    {% endif %}
-
-			  {% endfor %}
-  	  </ol>
-  		<br />
-  	  <h3 style="color: #f56a6a">¡Y listo! Que aproveche.</h3>
+          {% else %}
+  		      <li>{{ step.step }}</li>
+          {% endif %}
+  		  {% endfor %}
+      </ol>
   	</article>
   </div>
 

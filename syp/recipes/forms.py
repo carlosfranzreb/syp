@@ -1,12 +1,24 @@
 from flask_wtf import FlaskForm, RecaptchaField
-from wtforms import (Form, StringField, SubmitField, BooleanField, TextAreaField,
-                     IntegerField, SelectField, FieldList, FormField)
+from wtforms import (Form, StringField, SubmitField, BooleanField,
+                     SelectMultipleField, IntegerField, SelectField,
+                     FieldList, FormField, TextAreaField, FloatField)
 from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileField, FileAllowed
 
 
+class SubstepForm(Form):
+    step = StringField('Paso de la subreceta.', validators=[DataRequired()])
+
+
 class StepForm(Form):
     step = StringField('Paso de la receta.', validators=[DataRequired()])
+    substeps = FieldList(FormField(SubstepForm), min_entries=1)
+
+
+class IngredientForm(Form):
+    ingredient = StringField('Nombre del ingrediente.', validators=[DataRequired()])
+    amount = FloatField('Cantidad del ingrediente.', validators=[DataRequired()])
+    unit = SelectField('Unidad del ingrediente.', validators=[DataRequired()])
 
 
 class RecipeForm(FlaskForm):
@@ -21,7 +33,8 @@ class RecipeForm(FlaskForm):
     text = TextAreaField('Explicación detallada de la receta.',
                          validators=[DataRequired(), Length(min=600, max=1400)])
     steps = FieldList(FormField(StepForm), min_entries=1)
-    season = SelectField('Recetas adicionales.')
+    ingredients = FieldList(FormField(IngredientForm), min_entries=1)
+    subrecipes = SelectMultipleField('Recetas adicionales.')
     health = TextAreaField('Descripción de los nutrientes de la receta.',
                          validators=[DataRequired(), Length(min=300, max=600)])
     link_video = StringField('Link del vídeo de YouTube.')

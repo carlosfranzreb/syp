@@ -16,14 +16,15 @@ def get_veganizer():
                 la receta esté online', 'success')
         send_veggie_msg(form)
         return redirect(url_for('main.get_home'))
-
-    desc = "Envíanos tus recetas favoritas, y nosotros idearemos versiones \
-            veganas y saludables, para que tu paladar mantenga el listón y \
-            las viejas costumbres no desaparezcan"
-    return render_template('veganizer.html',
-                           title='Veganizador',
-                           recipe_form=SearchRecipeForm(),
-                           form=form,
-                           last_recipes=get_last_recipes(4),
-                           description=' '.join(desc.split()),
-                           keywords=get_veggie_keywords())
+        
+    else:
+        desc = "Envíanos tus recetas favoritas, y nosotros idearemos versiones \
+                veganas y saludables, para que tu paladar mantenga el listón y \
+                las viejas costumbres no desaparezcan"
+        return render_template('veganizer.html',
+                               title='Veganizador',
+                               recipe_form=SearchRecipeForm(),
+                               form=form,
+                               last_recipes=get_last_recipes(4),
+                               description=' '.join(desc.split()),
+                               keywords=get_veggie_keywords())
