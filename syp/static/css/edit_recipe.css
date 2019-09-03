@@ -34,12 +34,37 @@
   line-height: 1.5;
 }
 
+article {
+  margin-bottom: 3em;
+}
 
 .input_time_number {
   font-size: 1em !important;
   font-weight: bolder !important;
   padding-right: .7em !important;
   width: 4em !important;
+}
+
+.ingredient_item {
+  margin-bottom: 3em;
+}
+
+.ingredient_item label {
+  clear: both;
+  float: left;
+}
+
+.ingredient_item input {
+  margin-left: 7em;
+  margin-bottom: 1em;
+  width: auto;
+}
+
+.ingredient_item select {
+  width: auto;
+  margin-left: 7em;
+  border-width: 1px !important;
+  font-weight: normal !important;
 }
 
 @media screen and (max-width: 736px) {

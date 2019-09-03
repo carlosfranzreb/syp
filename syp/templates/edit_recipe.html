@@ -46,109 +46,122 @@
   </section>
 
 
-  <div id="first-posts-recipe" class="posts">
-  	<article id="ingredients">
-  	  <h2>Ingredientes para 2 personas</h2>
+	<article id="ingredients">
+	  <h2>Ingredientes para 2 personas</h2>
 
-  		<ul class="ul_pepper">
-  			{% for subform in form.ingredients %}
-          {% for q in recipe.ingredients %}
-            {% if q.ingredient.name in subform.ingredient|string %}
-              {% set f = subform.unit.process_data(q.unit.id) %}
-            {% endif %}
-          {% endfor %}
-  				<li value="">
-            <span>{{ subform.ingredient(list="all_ingredients", autocomplete="off") }}</span>:
-            {{ subform.amount }} {{ subform.unit }}
-          </li>
-  			{% endfor %}
-  		</ul>
-      <datalist id="all_ingredients" style="block">
-        {% for ing in all_ingredients %}
-          <option value="{{ ing[0] }}"></option>
+		<ul class="ul_pepper" id="ingredients_list">
+			{% for subform in form.ingredients %}
+        {% for q in recipe.ingredients %}
+          {% if q.ingredient.name in subform.ingredient|string %}
+            {% set f = subform.unit.process_data(q.unit.id) %}
+          {% endif %}
         {% endfor %}
-      </datalist>
+				<li class="ingredient_item">
+          {{ subform.ingredient.label }}<span>{{ subform.ingredient(list="all_ingredients", autocomplete="off") }}</span>
+          {{ subform.amount.label }} {{ subform.amount }}
+          {{ subform.unit.label }} {{ subform.unit }}
+          <a onclick="remove_ingredient(this)">Borrar ingrediente</a>
+        </li>
+			{% endfor %}
+		</ul>
+    <a onclick="add_ingredient()">Añadir ingrediente</a>
+    <datalist id="all_ingredients" style="block">
+      {% for ing in all_ingredients %}
+        <option value="{{ ing[0] }}"></option>
+      {% endfor %}
+    </datalist>
+	</article>
 
-			{% for subrecipe in recipe.subingredients %}
-				<h3> {{ subrecipe[0] }} </h3>
-				<ul class="ul_pepper">
-					{% for ing in subrecipe[1] %}
-						{% if ing.amount == 0 %}
-							<li>{{ ing.name }}</li>
-						{% else %}
-							<li>{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
+
+  <article id="subrecipes">
+    <h2>Subrecetas</h2>
+    <ul id="subrecipes_list">
+    {% for subform in form.subrecipes %}
+      <li class="subrecipe_item">
+        {{ subform.subrecipe(list="all_subrecipes", autocomplete="off") }}
+        <a onclick="remove_subrecipe(this)">Borrar subreceta</a>
+      </li>
+    {% endfor %}
+    </ul>
+    <a onclick="add_subrecipe()">Añadir subreceta</a>
+
+    <datalist id="all_subrecipes" style="block">
+      {% for sub in all_subrecipes %}
+        <option value="{{ sub[0] }}"></option>
+      {% endfor %}
+    </datalist>
+
+    <li class="subrecipe_item" style="display: none">
+      <input id="subrecipes-0-subrecipe" list="all_subrecipes" name="subrecipes-0-subrecipe"
+             required type="text">
+      <a onclick="remove_parent(this)">Borrar subreceta</a>
+    </li>
+  </article>
+
+
+  <article id="steps">
+	  <h2>Pasos</h2>
+		<ol>
+      {% for step in recipe.steps %}
+
+        {% if step.step|int > 0 %}
+          {% for sub in recipe.subrecipes if sub.id == step.step|int %}
+            {% if sub.case_fem %}
+              <li>Preparamos la {{ sub.name.lower() }}
+            {% else %}
+              <li>Preparamos el {{ sub.name.lower() }}
+            {% endif %}
+            <ol>
+            {% for substep in sub.steps %}
+              <li>{{ substep.step }}</li>
+            {% endfor %}
+            </ol></li>
+          {% endfor %}
+
+        {% else %}
+		      <li>{{ step.step }}</li>
+        {% endif %}
+		  {% endfor %}
+    </ol>
+	</article>
+
+	<article id="video">
+		<h2>Vídeo</h2>
+			<div class="video-container">
+				<iframe class="video-item" allowfullscreen src={{ recipe.link_video }}></iframe>
+			</div>
+	</article>
+
+	<article id="health">
+		<h2>Beneficios para la salud</h2>
+
+	  <p> {{ recipe.health }} </p>
+
+		<h4>Por ingredientes</h4>
+		<ul class="fa-ul">
+
+				{% for ing in recipe.ingredients %}
+
+			    <li>
+			      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
+			      <strong>{{ ing.name }}: </strong>{{ ing.health }}
+			    </li>
+
+			  {% endfor %}
+
+				{% for subrecipe in recipe.subingredients %}
+					{% for ing in subrecipe[1]  %}
+						{% if not ing.duplicate %}
+					    <li>
+					      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
+					      <strong>{{ ing.name }}: </strong>{{ ing.health }}
+					    </li>
 						{% endif %}
 					{% endfor %}
-				</ul>
-			{% endfor %}
-  	</article>
+			  {% endfor %}
 
-    <article id="steps">
-  	  <h2>Pasos</h2>
-  		<ol>
-        {% for step in recipe.steps %}
-
-          {% if step.step|int > 0 %}
-            {% for sub in recipe.subrecipes if sub.id == step.step|int %}
-              {% if sub.case_fem %}
-                <li>Preparamos la {{ sub.name.lower() }}
-              {% else %}
-                <li>Preparamos el {{ sub.name.lower() }}
-              {% endif %}
-              <ol>
-              {% for substep in sub.steps %}
-                <li>{{ substep.step }}</li>
-              {% endfor %}
-              </ol></li>
-            {% endfor %}
-
-          {% else %}
-  		      <li>{{ step.step }}</li>
-          {% endif %}
-  		  {% endfor %}
-      </ol>
-  	</article>
-  </div>
-
-  <div id="second-posts-recipe" class="posts">
-  	<article id="video">
-  		<h2>Vídeo</h2>
-  			<div class="video-container">
-  				<iframe class="video-item" allowfullscreen src={{ recipe.link_video }}></iframe>
-  			</div>
-  	</article>
-
-  	<article id="health">
-  		<h2>Beneficios para la salud</h2>
-
-  	  <p> {{ recipe.health }} </p>
-
-  		<h4>Por ingredientes</h4>
-  		<ul class="fa-ul">
-
-  				{% for ing in recipe.ingredients %}
-
-  			    <li>
-  			      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
-  			      <strong>{{ ing.name }}: </strong>{{ ing.health }}
-  			    </li>
-
-  			  {% endfor %}
-
-  				{% for subrecipe in recipe.subingredients %}
-  					{% for ing in subrecipe[1]  %}
-  						{% if not ing.duplicate %}
-  					    <li>
-  					      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
-  					      <strong>{{ ing.name }}: </strong>{{ ing.health }}
-  					    </li>
-  						{% endif %}
-  					{% endfor %}
-  			  {% endfor %}
-
-  		</ul>
-  	</article>
-  </div>
+		</ul>
+	</article>
   <br>
   <center>
   	<div>

@@ -1,6 +1,6 @@
 from flask import abort, request
 from syp.search.utils import get_default_keywords
-from syp.models import Recipe, Quantity, Subquantity, Ingredient
+from syp.models import Recipe, Quantity, Subquantity, Ingredient, Subrecipe
 import ast
 
 
@@ -55,3 +55,8 @@ def get_recipe_keywords(recipe):
 
 def get_real_name(url_name):
     return url_name.replace("_", " ")
+
+
+def get_all_subrecipes():
+    return Subrecipe.query.with_entities(Subrecipe.name) \
+                          .order_by(Subrecipe.name).all()
