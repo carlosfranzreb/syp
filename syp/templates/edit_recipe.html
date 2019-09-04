@@ -60,11 +60,11 @@
           {{ subform.ingredient.label }}<span>{{ subform.ingredient(list="all_ingredients", autocomplete="off") }}</span>
           {{ subform.amount.label }} {{ subform.amount }}
           {{ subform.unit.label }} {{ subform.unit }}
-          <a onclick="remove_ingredient(this)">Borrar ingrediente</a>
+          <a onclick="remove_item(this)">Borrar ingrediente</a>
         </li>
 			{% endfor %}
 		</ul>
-    <a onclick="add_ingredient()">Añadir ingrediente</a>
+    <a onclick="add_item(this)">Añadir ingrediente</a>
     <datalist id="all_ingredients" style="block">
       {% for ing in all_ingredients %}
         <option value="{{ ing[0] }}"></option>
@@ -79,23 +79,17 @@
     {% for subform in form.subrecipes %}
       <li class="subrecipe_item">
         {{ subform.subrecipe(list="all_subrecipes", autocomplete="off") }}
-        <a onclick="remove_subrecipe(this)">Borrar subreceta</a>
+        <a onclick="remove_item(this)">Borrar subreceta</a>
       </li>
     {% endfor %}
     </ul>
-    <a onclick="add_subrecipe()">Añadir subreceta</a>
+    <a onclick="add_item(this)">Añadir subreceta</a>
 
     <datalist id="all_subrecipes" style="block">
       {% for sub in all_subrecipes %}
         <option value="{{ sub[0] }}"></option>
       {% endfor %}
     </datalist>
-
-    <li class="subrecipe_item" style="display: none">
-      <input id="subrecipes-0-subrecipe" list="all_subrecipes" name="subrecipes-0-subrecipe"
-             required type="text">
-      <a onclick="remove_parent(this)">Borrar subreceta</a>
-    </li>
   </article>
 
 

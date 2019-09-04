@@ -29,80 +29,85 @@ $(window).on('resize load', function(){
 });
 
 
-function add_ingredient() {
-  var idx = $('#ingredients_list li').length;
-  var new_ing = $('.ingredient_item').first().clone();
-  // Change values
-  new_ing.find('input').each(function() {
-    $(this).val('');
-  });
-  new_ing.find('select').first().val('0');
-  // Change IDS and names
-  new_ing.find('input, select').each(function() {
-    var old_id = $(this).attr("id");
-    var new_id = old_id.replace(
-      /(ingredients-)(\d+)(-[a-zA-Z]+)/,
-      "$1" + idx + "$3"
-    );
-    $(this).attr("id", new_id);
-    $(this).attr("name", new_id);
-  });
-
-  //Change for attribute of associated label
-  new_ing.find('label').each(function() {
-    var old_id = $(this).attr("for");
-    var new_id = old_id.replace(
-      /(ingredients-)(\d+)(-[a-zA-Z]+)/,
-      "$1" + idx + "$3"
-    );
-    $(this).attr("for", new_id);
-  });
-
-  new_ing.attr("id", "ingredients-" + idx + "-ingredient")
-  new_ing.attr("name", "ingredients-" + idx + "-ingredient")
-  $('#ingredients_list').append(new_ing);
-}
-
-function remove_ingredient(link) {
-  var n_items = $('#ingredients_list li').length;
-  var item_id = $(link).siblings('select').attr('id');
-  var item_nr = parseInt(item_id.match(/ingredients-(\d+)-[a-zA-Z]+/)[1]);
-  if (item_nr < n_items - 1) { // This was not the last element
-    for (idx = item_nr + 1; idx < n_items; idx++) {
-      var item = $('#ingredients_list li').eq(idx);
-      item.find('input, select').each(function() {
-        var old_id = $(this).attr("id");
-        var new_id = old_id.replace(
-          /(ingredients-)(\d+)(-[a-zA-Z]+)/,
-          "$1" + (idx-1).toString() + "$3"
-        );
-        $(this).attr("id", new_id);
-        $(this).attr("name", new_id);
-      });
-
-      //Change for attribute of associated label
-      item.find('label').each(function() {
-        var old_id = $(this).attr("for");
-        var new_id = old_id.replace(
-          /(ingredients-)(\d+)(-[a-zA-Z]+)/,
-          "$1" + (idx-1).toString() + "$3"
-        );
-        $(this).attr("for", new_id);
-      });
-    }
+function add_item(link) {
+  var list = $(link).siblings('ul');
+  var items = list.children('li');
+  var n_items = items.length;
+  var first_item = items.first();
+  if (n_items == 1 && first_item.css('display') == 'none') {
+    first_item.css('display', 'block');
   }
-  $(link).parent().remove();
+  else {
+    var new_ing = first_item.clone();
+    // Change values
+    new_ing.find('input').each(function() {
+      $(this).val('');
+    });
+    new_ing.find('select').first().val('0');
+    // Change IDS and names
+    new_ing.find('input, select').each(function() {
+      var old_id = $(this).attr("id");
+      var new_id = old_id.replace(
+        /([a-zA-Z]+-)(\d+)(-[a-zA-Z]+)/,
+        "$1" + n_items + "$3"
+      );
+      $(this).attr("id", new_id);
+      $(this).attr("name", new_id);
+    });
+
+    //Change for attribute of associated label
+    new_ing.find('label').each(function() {
+      var old_id = $(this).attr("for");
+      var new_id = old_id.replace(
+        /([a-zA-Z]+-)(\d+)(-[a-zA-Z]+)/,
+        "$1" + n_items + "$3"
+      );
+      $(this).attr("for", new_id);
+    });
+
+    list.append(new_ing);
+  }
 }
 
+function remove_item(link) {
+  var items = $(link).closest('ul').children('li');
+  var n_items = items.length;
+  if (n_items == 1) {
+    i = items.first();
+    i.find('input').each(function() {
+      $(this).val('');
+    });
+    i.find('select').first().val('0');
+    i.css('display', 'none');
+  }
+  else {
+    var item_id = $(link).siblings('input').attr('id');
+    var item_nr = parseInt(item_id.match(/[a-zA-Z]+-(\d+)-[a-zA-Z]+/)[1]);
+    var item = '';
+    if (item_nr < n_items - 1) {
+      for (idx = item_nr + 1; idx < n_items; idx++) {
+        item = items.eq(idx);
+        item.find('input, select').each(function() {
+          var old_id = $(this).attr("id");
+          var new_id = old_id.replace(
+            /([a-zA-Z]+-)(\d+)(-[a-zA-Z]+)/,
+            "$1" + (idx-1).toString() + "$3"
+          );
+          $(this).attr("id", new_id);
+          $(this).attr("name", new_id);
+        });
 
-function add_subrecipe() {
-    var new_sub = $('.subrecipe_item').first().clone();
-    new_sub.find('input').first().val('');
-    $('#subrecipes_list').append(new_sub);
+        //Change for attribute of associated label
+        item.find('label').each(function() {
+          var old_id = $(this).attr("for");
+          var new_id = old_id.replace(
+            /(ingredients-)(\d+)(-[a-zA-Z]+)/,
+            "$1" + (idx-1).toString() + "$3"
+          );
+          $(this).attr("for", new_id);
+        });
+      }
+    }
+    $(link).parent().remove();
+  }
 }
-
-function remove_subrecipe(link) {
-  $(link).parent().remove();
-}
-
-// TODO: Every time an element is removed, the larger indices have to be reduced.
