@@ -6,13 +6,8 @@ from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileField, FileAllowed
 
 
-class SubstepForm(Form):
-    step = StringField('Paso de la subreceta.', validators=[DataRequired()])
-
-
 class StepForm(Form):
-    step = StringField('Paso de la receta.', validators=[DataRequired()])
-    substeps = FieldList(FormField(SubstepForm), min_entries=1)
+    step = TextAreaField('Paso:', validators=[DataRequired()])
 
 
 class IngredientForm(Form):

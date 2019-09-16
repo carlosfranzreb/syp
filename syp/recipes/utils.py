@@ -60,3 +60,7 @@ def get_real_name(url_name):
 def get_all_subrecipes():
     return Subrecipe.query.with_entities(Subrecipe.name) \
                           .order_by(Subrecipe.name).all()
+
+
+def get_subrecipe(id):
+    return Subrecipe.query.filter_by(id=id).first()

@@ -1,13 +1,12 @@
 from flask import Blueprint, render_template
 from syp.recipes.utils import get_recipe_by_name, get_last_recipes, \
                               get_recipe_keywords, get_real_name, \
-                              get_all_subrecipes
+                              get_all_subrecipes, get_subrecipe
 from syp.ingredients.utils import get_all_ingredients
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.forms import RecipeForm
 from syp.models import Season, Subrecipe, Unit
 import sys
-
 
 
 recipes = Blueprint('recipes', __name__)
@@ -48,6 +47,8 @@ def edit_recipe(recipe_name):
         for subform in form.ingredients:
             subform.unit.choices = [(u.id, u.singular) for u in
                                     Unit.query.order_by(Unit.singular)]
+        
+        print(recipe.subrecipes, file=sys.stdout)
         return render_template('edit_recipe.html',
                                form=form,
                                title=recipe.name,
