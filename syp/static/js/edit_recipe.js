@@ -1,17 +1,30 @@
-// "Añadir subreceta" no cambia a "Subrecetas incluidas" cuando debe.
-// datalist subrecipes not working
-
 $(document).ready(function() {
   $(".ul_pepper").children("li").each(function() {
     ingredient = $(this).find('input:visible:first');
     ing_val = ingredient.val();
     ingredient.val(ing_val.substring(12, ing_val.length - 2));
   });
-  // Remove set subrecipes from options
+  // Update subrecipe options for subrecipes
   $('#subrecipes li input').each(function() {
     $("#all_subrecipes option[value='" + $(this).val() + "']").remove();
   });
-  update_subrecipe_options();
+  // Update subrecipe options for the steps
+  var select = $('#choose_subrecipe');
+  var all_subrecipes = [];
+  $('#subrecipes ul li').each(function() {
+    all_subrecipes.push($(this).find('input').val());
+  });
+  var used_subrecipes = [];
+  $('#steps ol li textarea').filter('.is_subrecipe').each(function() {
+    used_subrecipes.push($(this).val());
+  });
+  var subrecipes = all_subrecipes.filter(x => !used_subrecipes.includes(x));
+  select.children('option:not(:first)').remove();
+  for (idx = 0; idx < subrecipes.length; idx++) {
+    select.append(new Option('', subrecipes[idx]));
+  }
+  select.val(select.children('option').first().val());
+  update_subrecipe_anchor();
 });
 
 /* ELSE IF was not working, don't know why. */
@@ -57,11 +70,12 @@ function add_item(link) {
     first_item.css('display', 'block');
   }
   else {
+    var new_item = '';
     if (div == 'subrecipes') {
-      var new_item = $('#blueprint_subrecipes').children(0).clone();
+      new_item = $('#blueprint_subrecipes').children(0).clone();
     }
     else {
-      var new_item = first_item.clone();
+      new_item = first_item.clone();
     }
     // Change values
     new_item.find('input, textarea').each(function() {
@@ -90,6 +104,7 @@ function add_item(link) {
     });
 
     list.append(new_item);
+    return new_item;
   }
 }
 
@@ -150,18 +165,17 @@ function add_subrecipe_steps() {
 function set_subrecipe_step() {
   // Subrecipe is added to the steps and removed from the options
   var select = $('#choose_subrecipe');
-  add_item(select.siblings('a:contains(paso)'));
+  var added_item = add_item(select.siblings('a:contains(paso)'));
   select.css('display', 'none');
   var selected_option = select.find('option:selected');
 
-  var added_item = $('#steps ol li').last();
   added_item.find('textarea')
     .val(selected_option.text())
     .attr('readonly', true)
     .addClass('is_subrecipe');
   added_item.children('a').attr(
     'onclick',
-    'remove_item(this); update_subrecipe_options()'
+    'remove_item(this); update_subrecipe_options(this)'
   );
   selected_option.remove();
   select.val(select.children('option').first().val());
@@ -180,7 +194,7 @@ function remove_subrecipe(link) {
     }
   });
   if (is_removable == true) {
-    $('#all_subrecipes').append(new Option(subrecipe));
+    $('#all_subrecipes').append(new Option('', subrecipe));
     // Remove subrecipe from step options
     // $("#choose_subrecipe option[value='" + subrecipe + "']").remove();
     $("#choose_subrecipe option").each(function() {
@@ -194,36 +208,30 @@ function remove_subrecipe(link) {
 }
 
 
-function add_subrecipe_to_step_options(link) {
-  var subrecipe = $(link).siblings('textarea').val();
+function add_subrecipe_to_step_options(link, from_subrecipe=false) {
+  var subrecipe = '';
+  if (from_subrecipe == true) {  // Subrecipe was added to subrecipes
+    subrecipe = $(link).val();
+  }
+  else {  // Subrecipe was removed from steps
+    subrecipe = $(link).siblings('textarea').val();
+  }
   var select = $("#choose_subrecipe");
-  select.append(new Option(subrecipe));
+  select.append(new Option('', subrecipe));
   select.val(select.children('option').first().val());
   update_subrecipe_anchor();
 }
 
 
-function update_subrecipe_options() {
-  // Update subrecipe options for the subrecipes
-  var caca = $('#subrecipes_list li');
-  $("#all_subrecipes option[value='" + caca + "']").remove();
-
-  // Update subrecipe options for the steps
-  var select = $('#choose_subrecipe');
-  var all_subrecipes = [];
-  $('#subrecipes ul li').each(function() {
-    all_subrecipes.push($(this).find('input').val());
-  });
-  var used_subrecipes = [];
-  $('#steps ol li textarea').filter('.is_subrecipe').each(function() {
-    used_subrecipes.push($(this).val());
-  });
-  var subrecipes = all_subrecipes.filter(x => !used_subrecipes.includes(x));
-  select.children('option:not(:first)').remove();
-  for (idx = 0; idx < subrecipes.length; idx++) {
-    select.append(new Option(subrecipes[idx]));
+function update_subrecipe_options(item) {
+  var before = $(item).attr('data-before');
+  if (before != "None") {
+    $("#all_subrecipes").append(new Option('', before));  // add_subrecipe_to_subrecipe_options
+    $("#choose_subrecipe option[value='" + before + "']").remove();  // remove_subrecipe_from_step_options
   }
-  select.val(select.children('option').first().val());
+  $("#all_subrecipes option[value='" + $(item).val() + "']").remove();  // remove_subrecipe_from_subrecipe_options
+  add_subrecipe_to_step_options(item, from_subrecipe=true);
+  $(item).attr('data-before', $(item).val());  // Update data-before
   update_subrecipe_anchor();
 }
 
