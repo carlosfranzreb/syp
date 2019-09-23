@@ -1,7 +1,23 @@
-from flask import request
+from flask import abort, request
 from string import Template
 from syp.models import Recipe, Subrecipe, Quantity, Subquantity, Ingredient
 from syp.search.utils import get_default_keywords
+
+
+def get_ingredient_by_name(name):
+    ing = Ingredient.query.filter_by(name=name).first()
+    if ing is None:
+        abort(404)
+    else:
+        return ing
+
+
+def get_ingredient_by_url(url):
+    ing = Ingredient.query.filter_by(url=url).first()
+    if ing is None:
+        abort(404)
+    else:
+        return ing
 
 
 def get_recipes_by_ingredient(ing_name, items=9):

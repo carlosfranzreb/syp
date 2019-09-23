@@ -25,6 +25,27 @@ def get_recipe_by_name(recipe_name):
         return recipe
 
 
+def get_recipe_by_url(recipe_url):
+    recipe = Recipe.query.filter_by(url=recipe_url).first()
+    if recipe is None:
+        abort(404)
+    else:
+        # set duplicate method for health comments
+        ids = []
+        for q in recipe.ingredients:
+            q.duplicate = False
+            ids.append(q.ingredient.id)
+        for sub in recipe.subrecipes:
+            for q in sub.ingredients:
+                id = q.ingredient.id
+                if id not in ids:
+                    q.duplicate = False
+                    ids.append(id)
+                else:
+                    q.duplicate = True
+        return recipe
+
+
 def get_last_recipes(limit=None):
     """ returns recipes starting with the most recent one
         Images are sized 300"""
@@ -51,10 +72,6 @@ def get_recipe_keywords(recipe):
         recipe_keys += f'receta vegana con {name}, '
         recipe_keys += f'receta saludable con {name}, '
     return ' '.join(recipe_keys[:-2].split())
-
-
-def get_real_name(url_name):
-    return url_name.replace("_", " ")
 
 
 def get_all_subrecipes():

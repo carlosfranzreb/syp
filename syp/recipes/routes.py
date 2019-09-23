@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
-from syp.recipes.utils import get_recipe_by_name, get_last_recipes, \
-                              get_recipe_keywords, get_real_name, \
-                              get_all_subrecipes, get_subrecipe
+from syp.recipes.utils import get_recipe_by_url, get_last_recipes, \
+                              get_recipe_keywords, get_all_subrecipes, \
+                              get_subrecipe
 from syp.ingredients.utils import get_all_ingredients
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.forms import RecipeForm
@@ -12,11 +12,10 @@ import sys
 recipes = Blueprint('recipes', __name__)
 
 
-@recipes.route('/receta/<recipe_name>',
+@recipes.route('/receta/<recipe_url>',
                methods=['GET', 'POST'])
-def get_recipe(recipe_name):
-    real_name = get_real_name(recipe_name)
-    recipe = get_recipe_by_name(real_name)
+def get_recipe(recipe_url):
+    recipe = get_recipe_by_url(recipe_url)
     desc = f'Receta vegana y saludable: {recipe.name}. {recipe.intro}'
     keywords = get_recipe_keywords(recipe)
     return render_template('recipe.html',
@@ -29,11 +28,10 @@ def get_recipe(recipe_name):
                            keywords=keywords)
 
 
-@recipes.route('/editar_receta/<recipe_name>',
+@recipes.route('/editar_receta/<recipe_url>',
                methods=['GET', 'POST'])
-def edit_recipe(recipe_name):
-    real_name = get_real_name(recipe_name)
-    recipe = get_recipe_by_name(real_name)
+def edit_recipe(recipe_url):
+    recipe = get_recipe_by_url(recipe_url)
     form = RecipeForm(obj=recipe)
     if form.validate_on_submit():
         print('Form is being validated', file=sys.stdout)
@@ -47,8 +45,7 @@ def edit_recipe(recipe_name):
         for subform in form.ingredients:
             subform.unit.choices = [(u.id, u.singular) for u in
                                     Unit.query.order_by(Unit.singular)]
-        
-        print(recipe.subrecipes, file=sys.stdout)
+
         return render_template('edit_recipe.html',
                                form=form,
                                title=recipe.name,
@@ -62,11 +59,10 @@ def edit_recipe(recipe_name):
                                keywords=keywords)
 
 
-@recipes.route('/receta/<recipe_name>',
+@recipes.route('/receta/<recipe_url>',
                methods=['GET', 'POST'])
-def save_recipe(recipe_name):
-    real_name = get_real_name(recipe_name)
-    recipe = get_recipe_by_name(real_name)
+def save_recipe(recipe_url):
+    recipe = get_recipe_by_url(recipe_url)
     desc = f'Receta vegana y saludable: {recipe.name}. {recipe.intro}'
     keywords = get_recipe_keywords(recipe)
     return render_template('edit_recipe.html',

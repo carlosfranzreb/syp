@@ -20,6 +20,7 @@ class Recipe(db.Model):
     __tablename__ = 't_recipes'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
+    url = db.Column(db.String(100), nullable=False, unique=True)
     time_prep = db.Column(db.Integer, nullable=False)
     time_cook = db.Column(db.Integer, nullable=False)
     intro = db.Column(db.Text, nullable=False)
@@ -84,6 +85,7 @@ class Ingredient(db.Model):
     __tablename__ = 't_ingredients'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
+    url = db.Column(db.String(100), nullable=False, unique=True)
     health = db.Column(db.Text, nullable=False)
     id_group = db.Column(db.Integer, db.ForeignKey('t_ingredient_groups.id'),
                          nullable=False)
