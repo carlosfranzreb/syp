@@ -1,6 +1,6 @@
 {% extends 'main_layout.html' %}
 {% block content %}
-<form method="post" action="{{ url_for('recipes.save_recipe', recipe_url=recipe.url) }}">
+<form method="post" action="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}">
   {{ form.hidden_tag() }}
   <section>
   	<header class="main" id="recipe_header">
@@ -13,7 +13,7 @@
         {{ form.image(class="form-control-file") }}
         {% if form.image.errors %}
           {% for error in form.image.errors %}
-            <span class="text-danger">{{ error }}</span></br>
+            <span class="text-danger">{{ error }}</span>
           {% endfor %}
         {% endif %}
       </div>
@@ -57,8 +57,29 @@
           {% endif %}
         {% endfor %}
 				<li class="ingredient_item">
-          {{ subform.ingredient.label }}<span>{{ subform.ingredient(list="all_ingredients", autocomplete="off") }}</span>
-          {{ subform.amount.label }} {{ subform.amount }}
+          {% if subform.ingredient.errors %}
+          {{ subform.ingredient(class="is-invalid") }}
+            <div class="invalid-feedback">
+              <span style="color: #991D1D">Escoge un ingrediente.</span>
+            </div>
+          {% else %}
+            {{ subform.ingredient.label }}
+            <span>
+              {{ subform.ingredient(list="all_ingredients", autocomplete="off") }}
+            </span>
+          {% endif %}
+
+          {% if subform.amount.errors %}
+            {{ subform.amount.label(style="color: #991D1D; font-style: italic") }}
+            {{ subform.amount(style="border: 2px solid #991D1D") }}
+            <div class="invalid-feedback">
+              <span style="color: #991D1D">La unidad tiene que ser un número.</span>
+            </div>
+            <br>
+          {% else %}
+            {{ subform.amount.label }} {{ subform.amount }}
+          {% endif %}
+
           {{ subform.unit.label }} {{ subform.unit }}
           <a onclick="remove_item(this)">Borrar ingrediente</a>
         </li>
@@ -127,11 +148,15 @@
 
 	<article id="video">
 		<h2>Vídeo</h2>
-			<div class="video-container">
-				<iframe class="video-item" allowfullscreen src={{ recipe.link_video }}></iframe>
-			</div>
+    <input type="text" id="video_link" value="{{ recipe.link_video }}" onchange="update_video()">
+    <br>
+		<div class="video-container">
+			<iframe class="video-item" allowfullscreen src={{ recipe.link_video }}></iframe>
+		</div>
 	</article>
-
+  <center>
+    {{ form.save(class="primary") }}
+  </center>
 </form>
 
 <div id="blueprint_subrecipes" style="display: none">

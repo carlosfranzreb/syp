@@ -254,3 +254,8 @@ function update_subrecipe_anchor() {
         .attr('onclick', 'add_subrecipe_steps()');
   }
 }
+
+
+function update_video() {
+  $('.video-container').find('iframe').attr('src', $('#video_link').val());
+}

@@ -16,7 +16,6 @@ def get_veganizer():
                 la receta esté online', 'success')
         send_veggie_msg(form)
         return redirect(url_for('main.get_home'))
-        
     else:
         desc = "Envíanos tus recetas favoritas, y nosotros idearemos versiones \
                 veganas y saludables, para que tu paladar mantenga el listón y \
