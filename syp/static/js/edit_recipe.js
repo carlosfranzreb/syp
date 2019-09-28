@@ -108,6 +108,7 @@ function add_item(link) {
   }
 }
 
+
 function remove_item(link) {
   var items = '';
   if ($(link).closest('article').attr('id') == 'steps') {
@@ -161,6 +162,7 @@ function remove_item(link) {
 function add_subrecipe_steps() {
     $('#choose_subrecipe').css('display', 'block');
 }
+
 
 function set_subrecipe_step() {
   // Subrecipe is added to the steps and removed from the options
@@ -217,7 +219,7 @@ function add_subrecipe_to_step_options(link, from_subrecipe=false) {
     subrecipe = $(link).siblings('textarea').val();
   }
   var select = $("#choose_subrecipe");
-  select.append(new Option('', subrecipe));
+  select.append(new Option(subrecipe, subrecipe));
   select.val(select.children('option').first().val());
   update_subrecipe_anchor();
 }
