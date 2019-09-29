@@ -40,8 +40,8 @@ def edit_recipe(recipe_url):
                                 Unit.query.order_by(Unit.singular)]
     if form.validate_on_submit():
         flash('Los cambios han sido guardados.', 'success')
-        utils.update_recipe(form)
-        return redirect(url_for('recipes.get_recipe', recipe_url=recipe_url))
+        new_url = utils.update_recipe(recipe, form)
+        return redirect(url_for('recipes.get_recipe', recipe_url=new_url))
     else:
         desc = f'Receta vegana y saludable: {recipe.name}. {recipe.intro}'
         return render_template('edit_recipe.html',
