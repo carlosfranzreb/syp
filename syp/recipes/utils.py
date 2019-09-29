@@ -1,7 +1,7 @@
 from flask import abort, request, current_app
 from syp.search.utils import get_default_keywords
 from syp.models import Recipe, Quantity, Subquantity, Ingredient, \
-                       Subrecipe, Unit
+                       Subrecipe, Unit, subrecipes
 import ast
 from syp import db
 from os import path
@@ -83,6 +83,12 @@ def update_recipe(recipe, form):
     if form.image.data:
         save_image(form.image.data, recipe.url)
 
+    if recipe.intro != form.intro.data:
+        recipe.intro = form.intro.data
+
+    if recipe.text != form.text.data:
+        recipe.text = form.text.data
+
     old_ings = [q.ingredient.name for q in recipe.ingredients]
     deleted_ings = old_ings.copy()
     for subform in form.ingredients:
@@ -106,6 +112,11 @@ def update_recipe(recipe, form):
     for ing_name in deleted_ings:
         removed_q = recipe.ingredients[deleted_ings.index(ing_name)]
         db.session.delete(removed_q)
+
+    recipe.subrecipes = [
+        Subrecipe.query.filter_by(name=subform.subrecipe.data).first()
+        for subform in form.subrecipes
+    ]
 
     db.session.commit()
     return recipe.url

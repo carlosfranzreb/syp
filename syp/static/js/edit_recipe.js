@@ -111,7 +111,8 @@ function add_item(link) {
 
 function remove_item(link) {
   var items = '';
-  if ($(link).closest('article').attr('id') == 'steps') {
+  var section = $(link).closest('article').attr('id');
+  if (section == 'steps') {
     items = $(link).closest('ol').children('li');
   }
   else {
@@ -119,12 +120,17 @@ function remove_item(link) {
   }
   var n_items = items.length;
   if (n_items == 1) {
-    i = items.first();
-    i.find('input, textarea').each(function() {
-      $(this).val('');
-    });
-    i.find('select').first().val('0');
-    i.css('display', 'none');
+    if (section == 'subrecipes') {
+      $(link).parent().remove();
+    }
+    else {
+      i = items.first();
+      i.find('input, textarea').each(function() {
+        $(this).val('');
+      });
+      i.find('select').first().val('0');
+      i.css('display', 'none');
+    }
   }
   else {
     var item_id = $(link).siblings('input, textarea').attr('id');
