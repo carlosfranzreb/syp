@@ -118,6 +118,9 @@ def update_recipe(recipe, form):
         for subform in form.subrecipes
     ]
 
+    for subform in form.steps:
+        print(subform.step.data, file=sys.stdout)
+
     db.session.commit()
     return recipe.url
 
@@ -166,3 +169,13 @@ def get_url_from_name(name):
         if char in replacements.keys():
             char = replacements[char]
     return name.replace(' ', '_')
+
+
+def form_errors(form):
+    for subform in form.ingredients:
+        ing_name = subform.ingredient.data
+        if Ingredient.query.filter_by(name=ing_name).first() is None:
+            return f"""El ingrediente "{ing_name}" no existe.
+                Si está bien escrito, y no lo encuentras entre las opciones,
+                crea un nuevo ingrediente."""
+    return None

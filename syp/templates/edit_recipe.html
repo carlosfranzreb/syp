@@ -4,7 +4,13 @@
   {{ form.hidden_tag() }}
   <section>
   	<header class="main" id="recipe_header">
-      {{ form.name(id="input_h1") }}
+      {% if form.name.errors %}
+        {{ form.name(id="input_h1", style="color: #991D1D") }}
+        <span style="color: #991D1D; font-weight: bolder">El nombre puede tener máximo 100 caracteres.</span>
+        <br><br><br>
+      {% else %}
+        {{ form.name(id="input_h1") }}
+      {% endif %}
   	</header>
 
   	<span class="image main">
@@ -13,7 +19,7 @@
         {{ form.image(class="form-control-file") }}
         {% if form.image.errors %}
           {% for error in form.image.errors %}
-            <span class="text-danger">{{ error }}</span>
+            <span style="color: #991D1D">{{ error }}</span>
           {% endfor %}
         {% endif %}
       </div>
@@ -40,8 +46,21 @@
         <span class="time_number">{{ form.season() }}</span>
 			</div></center>
 
-    {{ form.intro(id="textarea_h4") }}
-    {{ form.text(id="textarea_p") }}
+    {% if form.intro.errors %}
+      {{ form.intro(id="textarea_h4", style="color: #991D1D") }}
+      <span style="color: #991D1D; font-weight: bolder">La introducción tiene que tener entre 80 y 180 caracteres.</span>
+      <br><br>
+    {% else %}
+      {{ form.intro(id="textarea_h4") }}
+    {% endif %}
+
+    {% if form.text.errors %}
+      {{ form.text(id="textarea_p", style="color: #991D1D") }}
+      <span style="color: #991D1D; font-weight: bolder">El texto tiene que tener entre 600 y 1400 caracteres.</span>
+      <br><br>
+    {% else %}
+      {{ form.text(id="textarea_p") }}
+    {% endif %}
 
   </section>
 
