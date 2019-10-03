@@ -35,11 +35,11 @@
 
         {% for recipe in recipes.items %}
           <article>
-      			<a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '_')) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
+      			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
       			<h3>{{ recipe.name }} - {{ recipe.time_cook + recipe.time_prep }} minutos</h3>
       			<p>{{ recipe.intro }}</p>
       			<ul class="actions">
-      				<li><a href="{{ url_for('recipes.get_recipe', recipe_name=recipe.name.replace(' ', '_')) }}" class="button">Abrir</a></li>
+      				<li><a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="button">Abrir</a></li>
       			</ul>
       		</article>
         {% endfor %}
@@ -51,7 +51,7 @@
             {% if recipes.page == page_num %}
               <a class="btn btn-danger mb-4" href="{{ url_for('times.search_time', time=time, page=page_num) }}">{{ page_num }}</a>
             {% else %}
-              <a class="btn btn-outline-danger mb-4" href="{{ times.url_for('search_time', time=time, page=page_num) }}">{{ page_num }}</a>
+              <a class="btn btn-outline-danger mb-4" href="{{ url_for('times.search_time', time=time, page=page_num) }}">{{ page_num }}</a>
             {% endif %}
           {% else %}
             ...

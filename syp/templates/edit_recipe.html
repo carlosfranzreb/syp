@@ -1,10 +1,16 @@
 {% extends 'main_layout.html' %}
 {% block content %}
-<form method="post" action="{{ url_for('recipes.save_recipe', recipe_name=recipe.name.replace(' ', '_')) }}">
+<form method="post" enctype="multipart/form-data" action="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}">
   {{ form.hidden_tag() }}
   <section>
   	<header class="main" id="recipe_header">
-      {{ form.name(id="input_h1") }}
+      {% if form.name.errors %}
+        {{ form.name(id="input_h1", style="color: #991D1D") }}
+        <span style="color: #991D1D; font-weight: bolder">El nombre puede tener máximo 100 caracteres.</span>
+        <br><br><br>
+      {% else %}
+        {{ form.name(id="input_h1") }}
+      {% endif %}
   	</header>
 
   	<span class="image main">
@@ -13,7 +19,7 @@
         {{ form.image(class="form-control-file") }}
         {% if form.image.errors %}
           {% for error in form.image.errors %}
-            <span class="text-danger">{{ error }}</span></br>
+            <span style="color: #991D1D">{{ error }}</span>
           {% endfor %}
         {% endif %}
       </div>
@@ -40,111 +46,143 @@
         <span class="time_number">{{ form.season() }}</span>
 			</div></center>
 
-    {{ form.intro(id="textarea_h4") }}
-    {{ form.text(id="textarea_p") }}
+    {% if form.intro.errors %}
+      {{ form.intro(id="textarea_h4", style="color: #991D1D") }}
+      <span style="color: #991D1D; font-weight: bolder">La introducción tiene que tener entre 80 y 180 caracteres.</span>
+      <br><br>
+    {% else %}
+      {{ form.intro(id="textarea_h4") }}
+    {% endif %}
+
+    {% if form.text.errors %}
+      {{ form.text(id="textarea_p", style="color: #991D1D") }}
+      <span style="color: #991D1D; font-weight: bolder">El texto tiene que tener entre 600 y 1400 caracteres.</span>
+      <br><br>
+    {% else %}
+      {{ form.text(id="textarea_p") }}
+    {% endif %}
 
   </section>
 
 
-  <div id="first-posts-recipe" class="posts">
-  	<article id="ingredients">
-  	  <h2>Ingredientes para 2 personas</h2>
+	<article id="ingredients">
+	  <h2>Ingredientes para 2 personas</h2>
 
-  		<ul class="ul_pepper">
-  			{% for ing in recipe.ingredients %}
-  				{% if ing.amount == 0 %}
-  					<li>{{ ing.name }}</li>
-  				{% else %}
-  					<li value="{{ ing.unit.id }}">{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
-  				{% endif %}
-  			{% endfor %}
-  		</ul>
+		<ul class="ul_pepper" id="ingredients_list">
+			{% for subform in form.ingredients %}
+        {% for q in recipe.ingredients %}
+          {% if q.ingredient.name in subform.ingredient|string %}
+            {% set f = subform.unit.process_data(q.unit.id) %}
+          {% endif %}
+        {% endfor %}
+				<li class="ingredient_item">
+          {% if subform.ingredient.errors %}
+          {{ subform.ingredient(class="is-invalid") }}
+            <div class="invalid-feedback">
+              <span style="color: #991D1D">Escoge un ingrediente.</span>
+            </div>
+          {% else %}
+            {{ subform.ingredient.label }}
+            <span>
+              {{ subform.ingredient(list="all_ingredients", autocomplete="off") }}
+            </span>
+          {% endif %}
 
-  			{% for subrecipe in recipe.subingredients %}
-  				<h3> {{ subrecipe[0] }} </h3>
-  				<ul class="ul_pepper">
-  					{% for ing in subrecipe[1] %}
-  						{% if ing.amount == 0 %}
-  							<li>{{ ing.name }}</li>
-  						{% else %}
-  							<li value="{{ ing.unit.id }}">{{ ing.name }}: {{ ing.amount }} {{ ing.unit.name }}</li>
-  						{% endif %}
-  					{% endfor %}
-  				</ul>
-  			{% endfor %}
-  	</article>
+          {% if subform.amount.errors %}
+            {{ subform.amount.label(style="color: #991D1D; font-style: italic") }}
+            {{ subform.amount(style="border: 2px solid #991D1D") }}
+            <div class="invalid-feedback">
+              <span style="color: #991D1D">La unidad tiene que ser un número.</span>
+            </div>
+            <br>
+          {% else %}
+            {{ subform.amount.label }} {{ subform.amount }}
+          {% endif %}
 
-  	<article id="steps">
-  	  <h2>Pasos</h2>
-  		<ol>
-        {% for step in recipe.real_steps %}
+          {{ subform.unit.label }} {{ subform.unit }}
+          <a onclick="remove_item(this)">Borrar ingrediente</a>
+        </li>
+			{% endfor %}
+		</ul>
+    <a onclick="add_item(this)">Añadir ingrediente</a>
+    <datalist id="all_ingredients" style="block">
+      {% for ing in all_ingredients %}
+        <option value="{{ ing[0] }}"></option>
+      {% endfor %}
+    </datalist>
+	</article>
 
-			    {% if step[:10] == 'subrecipe_'%}
-			      <li> {{ recipe.substeps[step[10:]][0] }}:
-							<ol>
-								{% for substep in recipe.substeps[step[10:]][1] %}
-									<li>{{ substep }}</li>
-								{% endfor %}
-							</ol>
 
-			    {% else %}
-			      <li>{{ step }}</li>
-			    {% endif %}
+  <article id="subrecipes">
+    <h2>Subrecetas</h2>
 
-			  {% endfor %}
-  	  </ol>
-  		<br />
-  	  <h3 style="color: #f56a6a">¡Y listo! Que aproveche.</h3>
-  	</article>
-  </div>
+    <ul id="subrecipes_list">
+    {% for i in range(form.subrecipes|length) %}
+      {% set f = form.subrecipes[i].subrecipe.process_data(recipe.subrecipes[i].name) %}
+      <li class="subrecipe_item">
+        {{ form.subrecipes[i].subrecipe(list="all_subrecipes", data_before=recipe.subrecipes[i].name, autocomplete="off", onchange="update_subrecipe_options(this)") }}
+        <a onclick="remove_subrecipe(this)">Borrar subreceta</a>
+      </li>
+    {% endfor %}
+    </ul>
+    <a onclick="add_item(this)">Añadir subreceta</a>
 
-  <div id="second-posts-recipe" class="posts">
-  	<article id="video">
-  		<h2>Vídeo</h2>
-  			<div class="video-container">
-  				<iframe class="video-item" allowfullscreen src={{ recipe.link_video }}></iframe>
-  			</div>
-  	</article>
+    <datalist id="all_subrecipes" style="block">
+      {% for sub in all_subrecipes %}
+        <option value="{{ sub[0] }}"></option>
+      {% endfor %}
+    </datalist>
+  </article>
 
-  	<article id="health">
-  		<h2>Beneficios para la salud</h2>
 
-  	  <p> {{ recipe.health }} </p>
+  <article id="steps">
+	  <h2>Pasos</h2>
+		<ol>
+      {% for subform in form.steps %}
+        {% if subform.step.data|int == 0 %}
+		     <li class="step_item">
+           {{ subform.step(class="recipe_step") }}
+           <a onclick="remove_item(this)">Borrar paso</a>
+         </li>
+        {% else %}
+          {% for subrecipe in recipe.subrecipes %}
+            {% if subrecipe.id == subform.step.data|int %}
+              {% set f = subform.step.process_data(subrecipe.name) %}
+              <li class="step_item">
+                {{ subform.step(class="recipe_step is_subrecipe", readonly=true) }}
+                <a onclick="add_subrecipe_to_step_options(this); remove_item(this)">Borrar paso</a>
+              </li>
+            {% endif %}
+    		  {% endfor %}
+        {% endif %}
+		  {% endfor %}
+    </ol>
+    <a onclick="add_item(this)" style="margin-right: 2em">Añadir paso</a>
+    <a id="anchor_add_subrecipe" onclick="add_subrecipe_steps()">Añadir subreceta</a>
 
-  		<h4>Por ingredientes</h4>
-  		<ul class="fa-ul">
+    <select id="choose_subrecipe" onchange="set_subrecipe_step()">
+      <option value="" disabled selected>Escoge una subreceta</option>
+    </select>
+	</article>
 
-  				{% for ing in recipe.ingredients %}
-
-  			    <li>
-  			      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
-  			      <strong>{{ ing.name }}: </strong>{{ ing.health }}
-  			    </li>
-
-  			  {% endfor %}
-
-  				{% for subrecipe in recipe.subingredients %}
-  					{% for ing in subrecipe[1]  %}
-  						{% if not ing.duplicate %}
-  					    <li>
-  					      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
-  					      <strong>{{ ing.name }}: </strong>{{ ing.health }}
-  					    </li>
-  						{% endif %}
-  					{% endfor %}
-  			  {% endfor %}
-
-  		</ul>
-  	</article>
-  </div>
-  <br>
+	<article id="video">
+		<h2>Vídeo</h2>
+    <input type="text" id="video_link" value="{{ recipe.link_video }}" onchange="update_video()">
+    <br>
+		<div class="video-container">
+			<iframe class="video-item" allowfullscreen src={{ recipe.link_video }}></iframe>
+		</div>
+	</article>
   <center>
-  	<div>
-  		<h4>¿Te has quedado con hambre? Échale un vistazo a otras recetas <a style="color: #599A00; text-decoration: underline" href="{{ url_for('search.search_all_recipes') }}" title="Ver todas las recetas">aquí</a>.</h4>
-  	</div>
-  	<div>
-  		<h4>Si te ha gustado la receta, premia nuestro esfuerzo con una <a style="color: #599A00; text-decoration: underline" href="{{ url_for('main.get_donate') }}" title="Ver todas las recetas">donación</a>.</h4>
-  	</div>
+    {{ form.save(class="primary") }}
   </center>
 </form>
+
+<div id="blueprint_subrecipes" style="display: none">
+  <li class="subrecipe_item">
+    <input data-before="None" autocomplete="off" id="subrecipes-0-subrecipe" list="all_subrecipes" name="subrecipes-0-subrecipe" onchange="update_subrecipe_options(this)" required type="text" name="" value="">
+    <a onclick="remove_subrecipe(this)">Borrar subreceta</a>
+  </li>
+</div>
+
 {% endblock content %}

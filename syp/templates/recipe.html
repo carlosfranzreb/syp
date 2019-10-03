@@ -7,7 +7,7 @@
         {% if current_user.is_authenticated %}
           <li><a href="#" class="icon fas fa-star" title="Guardar receta."><span class="label">Guardar receta.</span></a></li>
           {% if current_user.role|int < 3 %}
-            <li><a href="{{ url_for('recipes.edit_recipe', recipe_name=recipe.name.replace(' ', '_')) }}" class="icon fas fa-pencil" title="Editar receta."><span class="label">Editar receta.</span></a></li>
+            <li><a href="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}" class="icon fas fa-pencil" title="Editar receta."><span class="label">Editar receta.</span></a></li>
           {% endif %}
         {% endif %}
         <li><h1> {{ recipe.name }} </h1></li>
@@ -87,26 +87,26 @@
 	<article id="steps">
 	  <h2>Pasos</h2>
 		<ol>
-				{% for step in recipe.steps %}
-          {% if step.step|int > 0 %}  <!-- IF CASTING FAILS, RETURNS 0 -->
-            {% for sub in recipe.subrecipes %}
-              {% if sub.id == step.step|int %}
-                {% if sub.case_fem %}
-                  <li>Preparamos la {{ sub.name.lower() }}</li>
-                {% else %}
-                  <li>Preparamos el {{ sub.name.lower() }}</li>
-                {% endif %}
-                <ol>
-                {% for substep in sub.steps %}
-                  <li>{{ substep.step }}</li>
-                {% endfor %}
-                </ol>
-              {% endif %}
+			{% for step in recipe.steps %}
+
+        {% if step.step|int > 0 %}
+          {% for sub in recipe.subrecipes if sub.id == step.step|int %}
+            {% if sub.case_fem %}
+              <li>Preparamos la {{ sub.name.lower() }}
+            {% else %}
+              <li>Preparamos el {{ sub.name.lower() }}
+            {% endif %}
+            <ol>
+            {% for substep in sub.steps %}
+              <li>{{ substep.step }}</li>
             {% endfor %}
-          {% else %}
-			      <li>{{ step.step }}</li>
-          {% endif %}
-			  {% endfor %}
+            </ol></li>
+          {% endfor %}
+
+        {% else %}
+		      <li>{{ step.step }}</li>
+        {% endif %}
+		  {% endfor %}
 	  </ol>
 		<br />
 	  <h3 style="color: #f56a6a">¡Y listo! Que aproveche.</h3>
@@ -129,21 +129,19 @@
 		<h4>Por ingredientes</h4>
 		<ul class="fa-ul">
 
-				{% for ing in recipe.ingredients %}
-
+				{% for q in recipe.ingredients %}
 			    <li>
 			      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
-			      <strong>{{ ing.name }}: </strong>{{ ing.health }}
+			      <strong>{{ q.ingredient.name }}: </strong>{{ q.ingredient.health }}
 			    </li>
-
 			  {% endfor %}
 
-				{% for subrecipe in recipe.subingredients %}
-					{% for ing in subrecipe[1]  %}
-						{% if not ing.duplicate %}
+				{% for sub in recipe.subrecipes %}
+					{% for q in sub.ingredients  %}
+						{% if not q.duplicate %}
 					    <li>
 					      <span class="fa-li" style="color: #f56a6a"><i class="fas fa-carrot"></i></span>
-					      <strong>{{ ing.name }}: </strong>{{ ing.health }}
+					      <strong>{{ q.ingredient.name }}: </strong>{{ q.ingredient.health }}
 					    </li>
 						{% endif %}
 					{% endfor %}

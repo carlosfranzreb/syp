@@ -1,18 +1,15 @@
-/*
-	CSS for the recipes.
-  Written by charlo.
-*/
-
 #ingredients select {
   border: 2px solid #f56a6a;
   font-weight: bold;
 }
 
-#ingredients ol, #steps ol {
+#ingredients ol,
+#steps ol {
   margin: 0;
 }
 
-#ingredients ul li, #ingredients ul li b {
+#ingredients ul li,
+#ingredients ul li b {
   padding-left: 0.5em;
   color: #000;
 }
