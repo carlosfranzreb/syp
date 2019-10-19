@@ -118,9 +118,6 @@ def update_recipe(recipe, form):
         for subform in form.subrecipes
     ]
 
-    for subform in form.steps:
-        print(subform.step.data, file=sys.stdout)
-
     db.session.commit()
     return recipe.url
 
@@ -172,10 +169,32 @@ def get_url_from_name(name):
 
 
 def form_errors(form):
+    errors = list()
+    # check if all ingredients are in the DB
     for subform in form.ingredients:
         ing_name = subform.ingredient.data
         if Ingredient.query.filter_by(name=ing_name).first() is None:
-            return f"""El ingrediente "{ing_name}" no existe.
+            errors.append(f"""El ingrediente "{ing_name}" no existe.
                 Si está bien escrito, y no lo encuentras entre las opciones,
-                crea un nuevo ingrediente."""
-    return None
+                crea un nuevo ingrediente.""")
+    # Check if all subrecipes are used
+    subrecipes = [subform.data['subrecipe'] for subform in form.subrecipes]
+    for subform in form.subrecipes:
+        is_used = False
+        subrecipe = subform.data['subrecipe']
+        for step in form.steps:
+            if step.data['step'] == subrecipe:
+                is_used = True
+        if not is_used:
+            errors.append(f"""La subreceta '{subrecipe}' no está incluida en los
+                pasos de la receta. Si no debería estarlo, bórrala de la
+                sección 'Subrecetas'""")
+
+    # Check if video is in
+    video = form.link_video.data
+    print(video, file=sys.stdout)
+    if len(video) > 0 and video[:30] !='https://www.youtube.com/embed/':
+        errors.append("""Con ese link, el vídeo no se puede mostrar. Para conseguir
+            el link correcto, haz click en 'Share' y luego en 'Embed' en la página 
+            del vídeo.""")
+    return errors

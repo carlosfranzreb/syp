@@ -71,7 +71,7 @@
 		<ul class="ul_pepper" id="ingredients_list">
 			{% for subform in form.ingredients %}
         {% for q in recipe.ingredients %}
-          {% if q.ingredient.name in subform.ingredient|string %}
+          {% if q.ingredient.name == subform.ingredient|string %}
             {% set f = subform.unit.process_data(q.unit.id) %}
           {% endif %}
         {% endfor %}
@@ -105,12 +105,12 @@
 			{% endfor %}
 		</ul>
     <a onclick="add_item(this)">Añadir ingrediente</a>
-    <datalist id="all_ingredients" style="block">
+    <datalist id="all_ingredients">
       {% for ing in all_ingredients %}
         <option value="{{ ing[0] }}"></option>
       {% endfor %}
     </datalist>
-	</article>
+  </article>
 
 
   <article id="subrecipes">
@@ -127,7 +127,7 @@
     </ul>
     <a onclick="add_item(this)">Añadir subreceta</a>
 
-    <datalist id="all_subrecipes" style="block">
+    <datalist id="all_subrecipes">
       {% for sub in all_subrecipes %}
         <option value="{{ sub[0] }}"></option>
       {% endfor %}
