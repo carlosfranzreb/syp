@@ -64,14 +64,13 @@
 
   </section>
 
-
 	<article id="ingredients">
 	  <h2>Ingredientes para 2 personas</h2>
 
 		<ul class="ul_pepper" id="ingredients_list">
 			{% for subform in form.ingredients %}
         {% for q in recipe.ingredients %}
-          {% if q.ingredient.name == subform.ingredient|string %}
+          {% if q.ingredient.name in subform.ingredient|string %}
             {% set f = subform.unit.process_data(q.unit.id) %}
           {% endif %}
         {% endfor %}
@@ -105,13 +104,12 @@
 			{% endfor %}
 		</ul>
     <a onclick="add_item(this)">Añadir ingrediente</a>
-    <datalist id="all_ingredients">
+    <datalist id="all_ingredients" style="block">
       {% for ing in all_ingredients %}
         <option value="{{ ing[0] }}"></option>
       {% endfor %}
     </datalist>
-  </article>
-
+	</article>
 
   <article id="subrecipes">
     <h2>Subrecetas</h2>
@@ -167,10 +165,10 @@
 
 	<article id="video">
 		<h2>Vídeo</h2>
-    <input type="text" id="video_link" value="{{ recipe.link_video }}" onchange="update_video()">
+    {{ form.link_video(onchange="update_video()") }}
     <br>
 		<div class="video-container">
-			<iframe class="video-item" allowfullscreen src={{ recipe.link_video }}></iframe>
+			<iframe class="video-item" allowfullscreen src={{ form.link_video }}></iframe>
 		</div>
 	</article>
   <center>

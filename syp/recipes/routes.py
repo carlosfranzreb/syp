@@ -1,17 +1,17 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
+from flask_login import current_user, login_required
+
 from syp.recipes import utils
 from syp.ingredients.utils import get_all_ingredients
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.forms import RecipeForm
 from syp.models import Season, Subrecipe, Unit
-import sys
 
 
 recipes = Blueprint('recipes', __name__)
 
 
-@recipes.route('/receta/<recipe_url>',
-               methods=['GET', 'POST'])
+@recipes.route('/receta/<recipe_url>', methods=['GET', 'POST'])
 def get_recipe(recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     desc = f'Receta vegana y saludable: {recipe.name}. {recipe.intro}'
@@ -27,8 +27,8 @@ def get_recipe(recipe_url):
     )
 
 
-@recipes.route('/editar_receta/<recipe_url>',
-               methods=['GET', 'POST'])
+@recipes.route('/editar_receta/<recipe_url>', methods=['GET', 'POST'])
+@login_required
 def edit_recipe(recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     form = RecipeForm(obj=recipe)

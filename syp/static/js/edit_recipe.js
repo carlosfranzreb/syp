@@ -320,5 +320,5 @@ function update_subrecipe_anchor() {
 function update_video() {
   $(".video-container")
     .find("iframe")
-    .attr("src", $("#video_link").val());
+    .attr("src", $("#link_video").val());
 }
