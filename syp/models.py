@@ -48,6 +48,10 @@ class RecipeStep(db.Model):
     id_recipe = db.Column(db.Integer, db.ForeignKey('t_recipes.id'),
                           nullable=False)
 
+    def __repr__(self):
+        return f"""Step nr. {self.step_nr} of recipe nr. 
+                   {self.id_recipe}: '{self.step}')"""
+
 class Subrecipe(db.Model):
     __tablename__ = 't_subrecipes'
     id = db.Column(db.Integer, primary_key=True)
