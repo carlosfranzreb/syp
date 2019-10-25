@@ -64,7 +64,6 @@
 
   </section>
 
-
 	<article id="ingredients">
 	  <h2>Ingredientes para 2 personas</h2>
 
@@ -112,7 +111,6 @@
     </datalist>
 	</article>
 
-
   <article id="subrecipes">
     <h2>Subrecetas</h2>
 
@@ -127,7 +125,7 @@
     </ul>
     <a onclick="add_item(this)">Añadir subreceta</a>
 
-    <datalist id="all_subrecipes" style="block">
+    <datalist id="all_subrecipes">
       {% for sub in all_subrecipes %}
         <option value="{{ sub[0] }}"></option>
       {% endfor %}
@@ -167,10 +165,10 @@
 
 	<article id="video">
 		<h2>Vídeo</h2>
-    <input type="text" id="video_link" value="{{ recipe.link_video }}" onchange="update_video()">
+    {{ form.link_video(onchange="update_video()") }}
     <br>
 		<div class="video-container">
-			<iframe class="video-item" allowfullscreen src={{ recipe.link_video }}></iframe>
+			<iframe class="video-item" allowfullscreen src={{ form.link_video }}></iframe>
 		</div>
 	</article>
   <center>
