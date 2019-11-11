@@ -132,6 +132,8 @@ syp/config.py
 syp/static/images/
 syp/static/fonts/
 syp/static/sass/
+ec2/
+*.pyc
 
 
 
