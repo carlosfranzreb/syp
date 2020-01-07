@@ -68,7 +68,7 @@ def upload(rotate=False):
 
     """
     print("Calling shell script to upload photos...")
-    subprocess.call(['/home/charlo/docs/code/ec2/upload_photos.sh'])
+    subprocess.call(['../../ec2/upload_photos.sh'])
     print("Script terminated. Bye!")
     """
 
