@@ -260,3 +260,6 @@
 			});
 
 })(jQuery);
+
+// REMOVE TEXT FROM MENU ICON
+$('a[class="toggle"]').empty();

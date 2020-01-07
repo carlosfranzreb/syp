@@ -127,11 +127,16 @@ dmypy.json
 # Added by charlo
 .bak/
 .vscode/
-extras/
 syp/config.py
 syp/static/images/
 syp/static/fonts/
 syp/static/sass/
+ec2/
+extras/images/300_opt/
+extras/images/600_opt/
+extras/images/large_opt/
+extras/images/images/
+
 
 
 
