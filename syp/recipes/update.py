@@ -1,5 +1,6 @@
 """Functions to update recipes. """
 
+
 from os import path
 from PIL import Image
 from flask import current_app
@@ -120,28 +121,16 @@ def save_image(form_img, recipe_url):
         path.join(
             current_app.root_path,
             f'static/images/recipes/large/{recipe_url}_opt.jpg'
-        ),
-        optimize=True,
-        progressive=True
+        ), optimize=True, progressive=True
     )
-    img.thumbnail((600, 600))
-    img.save(
-        path.join(
-            current_app.root_path,
-            f'static/images/recipes/600/{recipe_url}_600_opt.jpg'
-        ),
-        optimize=True,
-        progressive=True
-    )
-    img.thumbnail((300, 300))
-    img.save(
-        path.join(
-            current_app.root_path,
-            f'static/images/recipes/300/{recipe_url}_300_opt.jpg'
-        ),
-        optimize=True,
-        progressive=True
-    )
+    for size in (600, 300):
+        img.thumbnail((size, size))
+        img.save(
+            path.join(
+                current_app.root_path,
+                f'static/images/recipes/{size}/{recipe_url}_{size}_opt.jpg'
+            ), optimize=True, progressive=True
+        )
 
 
 def get_url_from_name(name):
@@ -150,5 +139,5 @@ def get_url_from_name(name):
                     'é': 'e', 'ú': 'u', 'á': 'a'}
     for char in name:
         if char in replacements.keys():
-            char = replacements[char]
+            name = name.replace(char, replacements[char])
     return name.replace(' ', '_')
