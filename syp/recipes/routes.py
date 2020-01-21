@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import current_user, login_required
 
-from syp.recipes import utils
+from syp.recipes import utils, update
 from syp.ingredients.utils import get_all_ingredients
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.forms import RecipeForm
@@ -40,11 +40,11 @@ def edit_recipe(recipe_url):
         subform.unit.choices = [(u.id, u.singular) for u in
                                 Unit.query.order_by(Unit.singular)]
     if form.validate_on_submit():
-        errors = utils.form_errors(form)
+        errors = update.form_errors(form)
         if len(errors) == 0:
             flash('Los cambios han sido guardados.', 'success')
             return redirect(
-                url_for('recipes.get_recipe', recipe_url=utils.update_recipe(recipe, form))
+                url_for('recipes.get_recipe', recipe_url=update.update_recipe(recipe, form))
             )
         else:
             for error in errors:
