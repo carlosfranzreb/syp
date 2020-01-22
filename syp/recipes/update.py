@@ -4,6 +4,7 @@
 from os import path
 from PIL import Image
 from flask import current_app
+import sys
 
 from syp.models import Quantity, Ingredient, \
                        Subrecipe, Unit, RecipeStep
@@ -12,14 +13,14 @@ from syp import db
 
 def form_errors(form):
     errors = list()
-    # check if all ingredients are in the DB
+    # check if all ingredients are in the DB.
     for subform in form.ingredients:
         ing_name = subform.ingredient.data
         if Ingredient.query.filter_by(name=ing_name).first() is None:
             errors.append(f"""El ingrediente "{ing_name}" no existe.
                 Si está bien escrito, y no lo encuentras entre las opciones,
                 crea un nuevo ingrediente.""")
-    # Check if all subrecipes are used
+    # Check if all subrecipes are used.
     for subform in form.subrecipes:
         is_used = False
         subrecipe = subform.data['subrecipe']
@@ -30,7 +31,7 @@ def form_errors(form):
             errors.append(f"""La subreceta '{subrecipe}' no está incluida en los
                 pasos de la receta. Si no debería estarlo, bórrala de la
                 sección 'Subrecetas'""")
-    # Check if video link is correct
+    # Check if video link is correct.
     video = form.link_video.data
     if len(video) > 0 and video[:30] !='https://www.youtube.com/embed/':
         errors.append("""Con ese link, el vídeo no se puede mostrar. Para conseguir
@@ -57,7 +58,8 @@ def update_recipe(recipe, form):
         Subrecipe.query.filter_by(name=subform.subrecipe.data).first()
         for subform in form.subrecipes
     ]
-    
+    subrecipe_names = [sub.name for sub in recipe.subrecipes]
+
     old_ings = [q.ingredient.name for q in recipe.ingredients]
     deleted_ings = old_ings.copy()
     for subform in form.ingredients:
@@ -86,20 +88,38 @@ def update_recipe(recipe, form):
     deleted_steps = old_steps.copy()
     for idx, subform in enumerate(form.steps):
         step_name = subform.step.data
-        if step_name in old_steps:  # change step_nr
-            step = recipe.steps[old_steps.index(step_name)]
-            deleted_steps.remove(step_name)
-            if step.step_nr != idx + 1:
+        if step_name in subrecipe_names:
+            subrecipe = Subrecipe.query.filter_by(
+                name=step_name
+            ).first()
+            if subrecipe.id in old_steps:  # change step nr
+                step = recipe.steps[old_steps.index(step_name)]
+                deleted_steps.remove(step_name)
                 step.step_nr = idx + 1
-        else:  # create new step
-            recipe.steps.append(
-                RecipeStep(
-                    step_nr=idx+1,
-                    step=step_name,
-                    id_recipe=recipe.id
+            else:  # create new step for subrecipe
+                recipe.steps.append(
+                    RecipeStep(
+                        step_nr=idx+1,
+                        step=subrecipe.id,
+                        id_recipe=recipe.id
+                    )
                 )
-            )
-    # remove deleted quantities
+            print(subrecipe.id, file=sys.stdout)
+            print(old_steps, file=sys.stdout)
+        else:
+            if step_name in old_steps:  # change step_nr
+                step = recipe.steps[old_steps.index(step_name)]
+                deleted_steps.remove(step_name)
+                step.step_nr = idx + 1
+            else:  # create new step
+                recipe.steps.append(
+                    RecipeStep(
+                        step_nr=idx+1,
+                        step=step_name,
+                        id_recipe=recipe.id
+                    )
+                )
+    # remove deleted steps
     for step_name in deleted_steps:
         for step in recipe.steps:
             if step.step == step_name:
