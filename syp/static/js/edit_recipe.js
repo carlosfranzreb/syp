@@ -1,3 +1,6 @@
+/*jshint esversion: 6 */
+
+
 $(document).ready(function() {
   // On first load, remove Ingredient(...) from name
   // The check is necessary because it shouldn't be cut when the form is validated
