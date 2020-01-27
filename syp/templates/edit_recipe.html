@@ -104,34 +104,12 @@
 			{% endfor %}
 		</ul>
     <a onclick="add_item(this)">Añadir ingrediente</a>
-    <datalist id="all_ingredients" style="block">
+    <datalist id="all_ingredients" style="display: block">
       {% for ing in all_ingredients %}
         <option value="{{ ing[0] }}"></option>
       {% endfor %}
     </datalist>
 	</article>
-
-  <article id="subrecipes">
-    <h2>Subrecetas</h2>
-
-    <ul id="subrecipes_list">
-    {% for i in range(form.subrecipes|length) %}
-      {% set f = form.subrecipes[i].subrecipe.process_data(recipe.subrecipes[i].name) %}
-      <li class="subrecipe_item">
-        {{ form.subrecipes[i].subrecipe(list="all_subrecipes", data_before=recipe.subrecipes[i].name, autocomplete="off", onchange="update_subrecipe_options(this)") }}
-        <a onclick="remove_subrecipe(this)">Borrar subreceta</a>
-      </li>
-    {% endfor %}
-    </ul>
-    <a onclick="add_item(this)">Añadir subreceta</a>
-
-    <datalist id="all_subrecipes">
-      {% for sub in all_subrecipes %}
-        <option value="{{ sub[0] }}"></option>
-      {% endfor %}
-    </datalist>
-  </article>
-
 
   <article id="steps">
 	  <h2>Pasos</h2>
@@ -148,19 +126,24 @@
               {% set f = subform.step.process_data(subrecipe.name) %}
               <li class="step_item">
                 {{ subform.step(class="recipe_step is_subrecipe", readonly=true) }}
-                <a onclick="add_subrecipe_to_step_options(this); remove_item(this)">Borrar paso</a>
+                <a onclick="remove_item(this)">Borrar paso</a>
               </li>
             {% endif %}
     		  {% endfor %}
         {% endif %}
 		  {% endfor %}
     </ol>
-    <a onclick="add_item(this)" style="margin-right: 2em">Añadir paso</a>
-    <a id="anchor_add_subrecipe" onclick="add_subrecipe_steps()">Añadir subreceta</a>
+    <a id="anchor_add_step" onclick="add_item(this)" style="margin-right: 2em">Añadir paso</a>
 
-    <select id="choose_subrecipe" onchange="set_subrecipe_step()">
-      <option value="" disabled selected>Escoge una subreceta</option>
-    </select>
+    <a id="anchor_add_subrecipe" onclick="toggle_subrecipe_input()">Añadir subreceta</a>
+    <input id="choose_subrecipe" list="all_subrecipes" type="text">
+    <input id="subrecipe_button" class="primary" onclick="add_subrecipe()" value="Añadir" type="button" style="display: None">
+    <datalist id="all_subrecipes">
+      {% for sub in all_subrecipes %}
+        <option value="{{ sub[0] }}"></option>
+      {% endfor %}
+    </datalist>
+
 	</article>
 
 	<article id="video">
@@ -175,12 +158,5 @@
     {{ form.save(class="primary") }}
   </center>
 </form>
-
-<div id="blueprint_subrecipes" style="display: none">
-  <li class="subrecipe_item">
-    <input data-before="None" autocomplete="off" id="subrecipes-0-subrecipe" list="all_subrecipes" name="subrecipes-0-subrecipe" onchange="update_subrecipe_options(this)" required type="text" name="" value="">
-    <a onclick="remove_subrecipe(this)">Borrar subreceta</a>
-  </li>
-</div>
 
 {% endblock content %}
