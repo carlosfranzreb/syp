@@ -18,8 +18,6 @@ $(document).ready(function() {
       ingredient.val(ing_val.substring(12, ing_val.length - 2));
     });
   }
-
-
   // Disable submit on enter
   $(window).keydown(function(event){
     if(event.keyCode == 13) {
@@ -27,6 +25,13 @@ $(document).ready(function() {
       return false;
     }
   });
+  // Add 'Receta: ' before subrecipes. CSS ::before not working.
+  $('#steps').find('textarea').each(function() {
+    if ($(this).hasClass('is_subrecipe')) {
+      $(this).text("Receta: " + $(this).text());
+    }
+  });
+
 });
 
 /* ELSE IF was not working, don't know why. */
@@ -183,7 +188,7 @@ function add_subrecipe() {
     toggle_subrecipe_input();
     added_item
       .find("textarea")
-      .val(subrecipe)
+      .val('Receta: ' + subrecipe)
       .attr("readonly", true)
       .addClass("is_subrecipe")
       .children("a")

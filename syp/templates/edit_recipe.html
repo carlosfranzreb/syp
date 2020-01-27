@@ -126,7 +126,7 @@
               {% set f = subform.step.process_data(subrecipe.name) %}
               <li class="step_item">
                 {{ subform.step(class="recipe_step is_subrecipe", readonly=true) }}
-                <a onclick=remove_item(this)">Borrar paso</a>
+                <a onclick="remove_item(this)">Borrar paso</a>
               </li>
             {% endif %}
     		  {% endfor %}

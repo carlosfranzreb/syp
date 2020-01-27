@@ -76,9 +76,9 @@ article {
   margin-top: 2em;
 }
 
-.is_subrecipe {
-  font-weight: bold;
-}
+.is_subrecipe { font-weight: bold }
+
+#subrecipe_button { margin-top: 1em }
 
 @media screen and (max-width: 736px) {
   #input_h1 {
