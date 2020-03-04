@@ -84,6 +84,48 @@ ul.ul_pepper {
     padding-right: 2em;
 }
 
+/*  For the YouTube video */
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+}
+.video-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    -moz-box-shadow: 4px 4px 14px #000;
+    -webkit-box-shadow: 4px 4px 14px #000;
+    box-shadow: 4px 4px 14px #000;
+}
+
+@media screen and (min-width: 1681px) {
+    .posts article {
+        width: calc(50% - 6em);
+    }
+
+    .posts article:nth-last-child(3) {
+        margin-bottom: 6em;
+    }
+}
+
+@media screen and (max-width: 880px) {
+    #second-posts-recipe {
+        margin: 0 0 2em 0;
+        width: 100%;
+    }
+
+    #second-posts-recipe article {
+        margin: 0 0 4.5em 0;
+        width: 100%;
+    }
+}
+
 @media screen and (max-width: 780px) {
     .time_img {
         width: 30px;
@@ -93,12 +135,6 @@ ul.ul_pepper {
         font-size: 130%;
         font-weight: bold;
         padding-right: 1em;
-    }
-}
-
-@media screen and (max-width: 380px) {
-    .item_times {
-        display: block;
     }
 }
 
@@ -115,46 +151,8 @@ ul.ul_pepper {
     }
 }
 
-@media screen and (max-width: 880px) {
-    #second-posts-recipe {
-        margin: 0 0 2em 0;
-        width: 100%;
+@media screen and (max-width: 380px) {
+    .item_times {
+        display: block;
     }
-
-    #second-posts-recipe article {
-        margin: 0 0 4.5em 0;
-        width: 100%;
-    }
-}
-
-@media screen and (min-width: 1681px) {
-    .posts article {
-        width: calc(50% - 6em);
-    }
-
-    .posts article:nth-last-child(3) {
-        margin-bottom: 6em;
-    }
-}
-
-/*  For the YouTube video */
-.video-container {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%;
-}
-
-.video-item {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    -moz-border-radius: 12px;
-    -webkit-border-radius: 12px;
-    border-radius: 12px;
-    -moz-box-shadow: 4px 4px 14px #000;
-    -webkit-box-shadow: 4px 4px 14px #000;
-    box-shadow: 4px 4px 14px #000;
 }
