@@ -1,6 +1,6 @@
 """Functions to update recipes. """
 
-
+import sys
 from os import path
 from PIL import Image
 from flask import current_app
@@ -12,14 +12,14 @@ from syp import db
 
 def form_errors(form):
     errors = list()
-    # check if all ingredients are in the DB
+    # check if all ingredients are in the DB.
     for subform in form.ingredients:
         ing_name = subform.ingredient.data
         if Ingredient.query.filter_by(name=ing_name).first() is None:
             errors.append(f"""El ingrediente "{ing_name}" no existe.
                 Si está bien escrito, y no lo encuentras entre las opciones,
                 crea un nuevo ingrediente.""")
-    # Check if all subrecipes are used
+    # Check if all subrecipes are used.
     for subform in form.subrecipes:
         is_used = False
         subrecipe = subform.data['subrecipe']
@@ -30,9 +30,9 @@ def form_errors(form):
             errors.append(f"""La subreceta '{subrecipe}' no está incluida en los
                 pasos de la receta. Si no debería estarlo, bórrala de la
                 sección 'Subrecetas'""")
-    # Check if video link is correct
+    # Check if video link is correct.
     video = form.link_video.data
-    if len(video) > 0 and video[:30] !='https://www.youtube.com/embed/':
+    if len(video) > 0 and video[:30] != 'https://www.youtube.com/embed/':
         errors.append("""Con ese link, el vídeo no se puede mostrar. Para conseguir
             el link correcto, haz click en 'Share' y luego en 'Embed' en la página 
             del vídeo.""")
@@ -48,16 +48,18 @@ def update_recipe(recipe, form):
         save_image(form.image.data, recipe.url)
     if recipe.intro != form.intro.data:
         recipe.intro = form.intro.data
-    if recipe.text != form.text.data: 
+    if recipe.text != form.text.data:
         recipe.text = form.text.data
     if recipe.link_video != form.link_video.data:
         recipe.link_video = form.link_video.data
 
-    recipe.subrecipes = [
-        Subrecipe.query.filter_by(name=subform.subrecipe.data).first()
-        for subform in form.subrecipes
-    ]
-    
+    update_ingredients(recipe, form)
+    update_steps_and_subrecipes(recipe, form)
+    db.session.commit()
+    return recipe.url
+
+
+def update_ingredients(recipe, form):
     old_ings = [q.ingredient.name for q in recipe.ingredients]
     deleted_ings = old_ings.copy()
     for subform in form.ingredients:
@@ -82,31 +84,45 @@ def update_recipe(recipe, form):
         removed_q = recipe.ingredients[deleted_ings.index(ing_name)]
         db.session.delete(removed_q)
 
+
+def update_steps_and_subrecipes(recipe, form):
     old_steps = [s.step for s in recipe.steps]
+    new_subrecipes = list()
     deleted_steps = old_steps.copy()
     for idx, subform in enumerate(form.steps):
         step_name = subform.step.data
-        if step_name in old_steps:  # change step_nr
-            step = recipe.steps[old_steps.index(step_name)]
-            deleted_steps.remove(step_name)
-            if step.step_nr != idx + 1:
+        if 'Receta: ' in step_name:  # step is a subrecipe
+            step_name = step_name[8:]  # Remove 'Receta: '
+            subrecipe = Subrecipe.query.filter_by(
+                name=step_name
+            ).first()
+            new_subrecipes.append(subrecipe)
+            if subrecipe.id in old_steps:  # change step nr
+                step = recipe.steps[old_steps.index(step_name)]
+                deleted_steps.remove(step_name)
                 step.step_nr = idx + 1
-        else:  # create new step
-            recipe.steps.append(
-                RecipeStep(
-                    step_nr=idx+1,
-                    step=step_name,
-                    id_recipe=recipe.id
-                )
-            )
-    # remove deleted quantities
-    for step_name in deleted_steps:
+            else:  # create new step for subrecipe
+                recipe.steps.append(RecipeStep(
+                        step_nr=idx+1,
+                        step=subrecipe.id,
+                        id_recipe=recipe.id
+                ))
+        else:  # step is not a subrecipe
+            if step_name in old_steps:  # change step_nr
+                step = recipe.steps[old_steps.index(step_name)]
+                deleted_steps.remove(step_name)
+                step.step_nr = idx + 1
+            else:  # create new step
+                recipe.steps.append(RecipeStep(
+                        step_nr=idx+1,
+                        step=step_name,
+                        id_recipe=recipe.id
+                ))
+    for step_name in deleted_steps:  # remove deleted steps
         for step in recipe.steps:
             if step.step == step_name:
                 db.session.delete(step)
-    #commit and return url for redirect
-    db.session.commit()
-    return recipe.url
+    recipe.subrecipes = new_subrecipes  # update subrecipes
 
 
 def save_image(form_img, recipe_url):

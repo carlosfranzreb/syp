@@ -139,6 +139,7 @@ extras/images/images/
 *.pyc
 .pylintrc
 node_modules/
+.prettierrc
 
 
 
