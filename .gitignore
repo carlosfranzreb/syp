@@ -138,7 +138,7 @@ extras/images/large_opt/
 extras/images/images/
 *.pyc
 .pylintrc
-
+node_modules/
 
 
 
