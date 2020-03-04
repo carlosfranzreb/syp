@@ -104,7 +104,7 @@
 			{% endfor %}
 		</ul>
     <a onclick="add_item(this)">Añadir ingrediente</a>
-    <datalist id="all_ingredients" style="display: block">
+    <datalist id="all_ingredients" style="display: none">
       {% for ing in all_ingredients %}
         <option value="{{ ing[0] }}"></option>
       {% endfor %}
