@@ -46,7 +46,6 @@ ul.ul_pepper {
 #steps ol li::before {
     /* content: counter(item); */
     content: counters(item, ".") " ";
-    counter-increment: item;
     display: inline-block;
     width: 1em;
     margin-left: -1.5em;
