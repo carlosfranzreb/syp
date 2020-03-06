@@ -151,7 +151,7 @@
     {{ form.link_video(onchange="update_video()") }}
     <br>
 		<div class="video-container">
-			<iframe class="video-item" allowfullscreen src={{ form.link_video }}></iframe>
+			<iframe class="video-item" allowfullscreen src="{{ form.link_video.data }}"></iframe>
 		</div>
 	</article>
   <center>
