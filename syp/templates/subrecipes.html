@@ -1,0 +1,54 @@
+{% extends 'main_layout.html' %} {% block content %}
+
+<h1>Subrecetas</h1>
+
+<table>
+  <tr>
+    <th>Nombre</th>
+    <th>Último cambio</th>
+    <th>Estado</th>
+    <th>Acciones</th>
+  </tr>
+  {% for subrecipe in subrecipes.items %}
+  <tr>
+    <td>{{ subrecipe.name }}</td>
+    <td>{{ subrecipe.date_created.strftime("%Y-%m-%d") }}</td>
+    <td>STATUS</td>
+    <td>
+      <a
+        href=""
+        class="icon fas fa-pencil"
+        title="Editar subreceta."
+        ><span class="label">Editar subreceta.</span></a
+      >
+      <a
+        href=""
+        style="margin-left: 0.5em"
+        class="icon fas fa-trash"
+        title="Borrar subreceta."
+      ><span class="label">Borrar subreceta.</span></a
+    >
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<center>
+  {% for page_num in subrecipes.iter_pages(left_edge=1, right_edge=1,
+  left_current=1, right_current=2) %} {% if page_num %} {% if subrecipes.page ==
+  page_num %}
+  <a
+    class="btn btn-danger mb-4"
+    href="{{ url_for('subrecipes.overview', page=page_num) }}"
+    >{{ page_num }}</a
+  >
+  {% else %}
+  <a
+    class="btn btn-danger mb-4"
+    href="{{ url_for('subrecipes.overview', page=page_num) }}"
+    >{{ page_num }}</a
+  >
+  {% endif %} {% else %} ... {% endif %} {% endfor %}
+</center>
+
+{% endblock content %}
