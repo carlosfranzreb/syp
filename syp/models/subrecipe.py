@@ -5,13 +5,15 @@ It is not a recipe itself; it belongs to a recipe. """
 
 from syp import db
 from syp.models.subrecipe_step import SubrecipeStep
-from syp.models.subquantity import Subquantity  # TODO: Why are these imports necessary?
+from syp.models.subquantity import Subquantity
 
 
 class Subrecipe(db.Model):
+    # TODO: add function that gets url from name automatically.
     __tablename__ = 'subrecipes'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
+    url = db.Column(db.String(100), nullable=False, unique=True)
     steps = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     is_feminine = db.Column(db.Boolean, nullable=False)  # 0=masc., 1=fem.
