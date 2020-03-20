@@ -6,14 +6,12 @@
   <tr>
     <th>Nombre</th>
     <th>Último cambio</th>
-    <th>Estado</th>
     <th>Acciones</th>
   </tr>
   {% for subrecipe in subrecipes.items %}
   <tr>
     <td>{{ subrecipe.name }}</td>
     <td>{{ subrecipe.created_at.strftime("%Y-%m-%d") }}</td>
-    <td>STATUS</td>
     <td>
       <a
         href="{{ url_for('subrecipes.edit_subrecipe', subrecipe_url=subrecipe.url) }}"
