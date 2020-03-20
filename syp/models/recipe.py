@@ -3,6 +3,7 @@
 
 
 from syp import db
+from syp.models.recipe_state import RecipeState
 
 
 class Recipe(db.Model):
