@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import (Form, StringField, SubmitField, BooleanField,
                      SelectMultipleField, IntegerField, SelectField,
                      FieldList, FormField, TextAreaField, FloatField)
-from wtforms.validators import DataRequired, InputRequired, Length
+from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileField, FileAllowed
 
 
@@ -12,8 +12,8 @@ class StepForm(Form):
 
 class IngredientForm(Form):
     ingredient = StringField('Ingrediente:', validators=[DataRequired()])
-    amount = FloatField('Cantidad:', validators=[InputRequired()])
-    unit = SelectField('Unidad:', validators=[InputRequired()], coerce=int)
+    amount = FloatField('Cantidad:', validators=[DataRequired()])
+    unit = SelectField('Unidad:', validators=[DataRequired()], coerce=int)
 
 
 class SubrecipeForm(Form):
