@@ -2,8 +2,9 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
-from syp.config import Config
 from flask_login import LoginManager
+
+from syp.config import Config
 
 
 db = SQLAlchemy()
