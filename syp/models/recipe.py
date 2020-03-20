@@ -21,7 +21,6 @@ class Recipe(db.Model):
     id_state = db.Column(db.Integer, db.ForeignKey('recipe_states.id'), nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    subrecipes = db.relationship('Subrecipe', backref='recipe', lazy=True)
     steps = db.relationship('RecipeStep', backref='recipe', lazy=True)
     ingredients = db.relationship('Quantity', backref='recipe', lazy=True)
 
