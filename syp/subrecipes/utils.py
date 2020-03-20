@@ -13,3 +13,8 @@ def get_paginated_subrecipes(limit=None, items=20):
     subrecipes = Subrecipe.query.order_by(Subrecipe.created_at.desc()) \
                           .limit(limit).paginate(page=page, per_page=items)
     return (page, subrecipes)
+
+
+def get_subrecipe_by_url(subrecipe_url):
+    """ Return the subrecipe object with the given url. """
+    return Subrecipe.query.filter_by(url=subrecipe_url).first()

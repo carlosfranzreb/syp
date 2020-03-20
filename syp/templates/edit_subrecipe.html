@@ -2,7 +2,7 @@
 <form
     method="post"
     enctype="multipart/form-data"
-    action="{{ url_for('subrecipes.edit_subrecipe', recipe_url=subrecipe.url) }}"
+    action="{{ url_for('subrecipes.edit_subrecipe', subrecipe_url=subrecipe.url) }}"
 >
     {{ form.hidden_tag() }}
     <article id="name">
@@ -20,7 +20,7 @@
 
         <ul class="ul_pepper" id="ingredients_list">
             {% for subform in form.ingredients %} 
-                {% for q in recipe.ingredients%} 
+                {% for q in subrecipe.ingredients %} 
                     {% if q.ingredient.name in subform.ingredient|string %} 
                         {% set f = subform.unit.process_data(q.unit.id) %} 
                     {% endif %} 
@@ -39,14 +39,18 @@
                     </span>
                 {% endif %} 
                 {% if subform.amount.errors %} 
-                {{ subform.amount.label(style="color: #991D1D; font-style: italic")}} 
-                {{ subform.amount(style="border: 2px solid #991D1D") }}
-                <div class="invalid-feedback">
-                    <span style="color: #991D1D">La unidad tiene que ser un número.</span>
-                </div>
-                <br />
-                {% else %} {{ subform.amount.label }} {{ subform.amount }} {%
-                endif %} {{ subform.unit.label }} {{ subform.unit }}
+                    {{ subform.amount.label(style="color: #991D1D; font-style: italic")}} 
+                    {{ subform.amount(style="border: 2px solid #991D1D") }}
+                    <div class="invalid-feedback">
+                        <span style="color: #991D1D">La unidad tiene que ser un número.</span>
+                    </div>
+                    <br />
+                {% else %} 
+                    {{ subform.amount.label }} 
+                    {{ subform.amount }} 
+                {% endif %} 
+                {{ subform.unit.label }} 
+                {{ subform.unit }}
                 <a onclick="remove_item(this)">Borrar ingrediente</a>
             </li>
             {% endfor %}
@@ -63,10 +67,15 @@
         <h2>Pasos</h2>
         <ol>
             {% for subform in form.steps %}
-            <li class="step_item">
-                {{ subform.step(class="recipe_step") }}
-                <a onclick="remove_item(this)">Borrar paso</a>
-            </li>
+                <li class="step_item">
+                    {{ subform.step(class="recipe_step") }}
+                    <a onclick="remove_item(this)">Borrar paso</a>
+                </li>
+                {% if subform.step.errors %}
+                    {% for error in subform.step.errors %}
+                        <span style="color: #991D1D">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
             {% endfor %}
         </ol>
         <a
