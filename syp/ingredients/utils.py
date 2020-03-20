@@ -1,23 +1,30 @@
-from flask import abort, request
+""" Help functions for search-by-ingredient pages. """
+# pylint: disable = missing-function-docstring
+
+
 from string import Template
-from syp.models import Recipe, Subrecipe, Quantity, Subquantity, Ingredient
+from flask import abort, request
+
+from syp.models.recipe import Recipe
+from syp.models.subrecipe import Subrecipe
+from syp.models.quantity import Quantity
+from syp.models.subquantity import Subquantity
+from syp.models.ingredient import Ingredient
 from syp.search.utils import get_default_keywords
 
 
 def get_ingredient_by_name(name):
     ing = Ingredient.query.filter_by(name=name).first()
     if ing is None:
-        abort(404)
-    else:
-        return ing
+        return abort(404)
+    return ing
 
 
 def get_ingredient_by_url(url):
     ing = Ingredient.query.filter_by(url=url).first()
     if ing is None:
-        abort(404)
-    else:
-        return ing
+        return abort(404)
+    return ing
 
 
 def get_recipes_by_ingredient(ing_name, items=9):
@@ -70,6 +77,7 @@ def get_all_ingredients():
 
 
 def get_ing_keywords(ing_name=None):
+    """ SEO keywords specific to this page. """
     ing_keys = get_default_keywords()
     if ing_name is not None:
         ing_keys += f', receta vegana con {ing_name}, '

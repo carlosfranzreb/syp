@@ -1,11 +1,17 @@
+""" Routing for everything related to recipes. """
+# pylint: disable = invalid-name, missing-function-docstring
+
+
 from flask import Blueprint, render_template, flash, redirect, url_for
-from flask_login import current_user, login_required
+from flask_login import login_required
 
 from syp.recipes import utils, update
 from syp.ingredients.utils import get_all_ingredients
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.forms import RecipeForm
-from syp.models import Season, Subrecipe, Unit
+from syp.models.season import Season
+from syp.models.subrecipe import Subrecipe
+from syp.models.unit import Unit
 
 
 recipes = Blueprint('recipes', __name__)
@@ -46,9 +52,8 @@ def edit_recipe(recipe_url):
             return redirect(
                 url_for('recipes.get_recipe', recipe_url=update.update_recipe(recipe, form))
             )
-        else:
-            for error in errors:
-                flash(error, 'danger')
+        for error in errors:
+            flash(error, 'danger')
     return render_template(
         'edit_recipe.html',
         form=form,
