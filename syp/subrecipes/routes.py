@@ -14,6 +14,7 @@ subrecipes = Blueprint("subrecipes", __name__)
 @subrecipes.route("/subrecetas")
 @login_required
 def overview():
+    """ Shows a list with all subrecipes. """
     return render_template(
         "subrecipes.html",
         title="Subrecetas",
@@ -46,3 +47,14 @@ def edit_subrecipe(subrecipe_url):
         form=form,
         is_edit_recipe=True
     )
+
+@subrecipes.route("/borrar_subreceta/<subrecipe_url>")
+@login_required
+def delete_subrecipe(subrecipe_url):
+    subrecipe = utils.get_subrecipe_by_url(subrecipe_url)
+    if subrecipe.uses() > 0:
+        flash('La subreceta no se puede borrar. Hay recetas que la usan.', 'danger')
+    else:
+        utils.delete_subrecipe(subrecipe)
+        flash('La subreceta ha sido borrada.', 'success')
+    return redirect(url_for('subrecipes.overview'))
