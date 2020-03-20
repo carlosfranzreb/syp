@@ -5,6 +5,7 @@ It is not a recipe itself; it belongs to a recipe. """
 
 from syp import db
 from syp.models.subrecipe_step import SubrecipeStep
+from syp.models.recipe_step import RecipeStep
 from syp.models.subquantity import Subquantity
 
 
@@ -16,6 +17,11 @@ class Subrecipe(db.Model):
     url = db.Column(db.String(100), nullable=False, unique=True)
     steps = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
-    is_feminine = db.Column(db.Boolean, nullable=False)  # 0=masc., 1=fem.
+    is_feminine = db.Column(db.Boolean, nullable=False)
+    is_deleted = db.Column(db.Boolean, nullable=False)
     steps = db.relationship('SubrecipeStep', backref='subrecipe', lazy=True)
     ingredients = db.relationship('Subquantity', backref='subrecipe', lazy=True)
+
+    def uses(self):
+        """ Returns the number of recipes on which the given subrecipe appears. """
+        return RecipeStep.query.filter_by(step=self.id).count()

@@ -4,17 +4,26 @@ Can only be accessed by logged in chefs. """
 
 from flask import request
 
+from syp import db
 from syp.models.subrecipe import Subrecipe
 
 
 def get_paginated_subrecipes(limit=None, items=20):
-    """ returns paginated recipes starting with the most recent one"""
+    """ Returns paginated recipes starting with the most recent one. 
+    It only returns recipes that have not been deleted. """
     page = request.args.get('page', 1, type=int)
-    subrecipes = Subrecipe.query.order_by(Subrecipe.created_at.desc()) \
+    subrecipes = Subrecipe.query.filter_by(is_deleted=False) \
+                          .order_by(Subrecipe.created_at.desc()) \
                           .limit(limit).paginate(page=page, per_page=items)
     return (page, subrecipes)
 
 
 def get_subrecipe_by_url(subrecipe_url):
     """ Return the subrecipe object with the given url. """
-    return Subrecipe.query.filter_by(url=subrecipe_url).first()
+    subrecipe = Subrecipe.query.filter_by(url=subrecipe_url).first()
+    return subrecipe
+
+def delete_subrecipe(subrecipe):
+    """ Marks subrecipe as deleted. """
+    subrecipe.is_deleted = True
+    db.session.commit()
