@@ -17,6 +17,8 @@ class Ingredient(db.Model):
     changed_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     is_valid = db.Column(db.Boolean, default=False)
 
+    def __repr__(self):
+        return self.name
 
 
 

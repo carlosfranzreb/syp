@@ -1,6 +1,10 @@
-from flask import request
+""" Help functions for the search-by-time page. """
+
+
 from string import Template
-from syp.models import Recipe
+from flask import request
+
+from syp.models.recipe import Recipe
 from syp.search.utils import get_default_keywords
 
 
@@ -31,6 +35,7 @@ def get_recipes_by_time(time, items=9):
 
 
 def get_times_keywords(time=None):
+    """ SEO keywords specific for this page. """
     times_keys = get_default_keywords()
 
     if time is not None:

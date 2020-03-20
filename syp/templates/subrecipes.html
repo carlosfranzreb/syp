@@ -12,7 +12,7 @@
   {% for subrecipe in subrecipes.items %}
   <tr>
     <td>{{ subrecipe.name }}</td>
-    <td>{{ subrecipe.date_created.strftime("%Y-%m-%d") }}</td>
+    <td>{{ subrecipe.created_at.strftime("%Y-%m-%d") }}</td>
     <td>STATUS</td>
     <td>
       <a

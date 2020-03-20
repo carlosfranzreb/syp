@@ -1,6 +1,10 @@
+""" Help functions for the search-by-name page. """
+
+
 from flask import request
-from syp.models import Recipe
 from string import Template
+
+from syp.models.recipe import Recipe
 
 
 def get_recipes_by_name(recipe_name, items=9):
@@ -9,7 +13,7 @@ def get_recipes_by_name(recipe_name, items=9):
 
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query.filter(Recipe.name.contains(recipe_name)) \
-                          .order_by(Recipe.date_created.desc()) \
+                          .order_by(Recipe.created_at.desc()) \
                           .paginate(page=page, per_page=items)
 
     if recipes.items == []:
@@ -21,6 +25,7 @@ def get_recipes_by_name(recipe_name, items=9):
 
 
 def get_default_keywords():
+    """ SEO keywords. """
     keys = "receta vegana, receta saludable, receta sana, plato vegano, \
             plato saludable, cocina vegana, receta casera vegana, \
             salud y pimienta, syp"
@@ -28,6 +33,7 @@ def get_default_keywords():
 
 
 def get_search_keywords(recipe_name):
+    """ SEO keywords specific for the search page. """
     search_keys = get_default_keywords()
     search_keys += f', {recipe_name} receta vegana, '
     search_keys += f'{recipe_name} receta saludable, '

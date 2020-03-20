@@ -95,10 +95,12 @@
             </div>
             <br>
           {% else %}
-            {{ subform.amount.label }} {{ subform.amount }}
+            {{ subform.amount.label }} 
+            {{ subform.amount }}
           {% endif %}
 
-          {{ subform.unit.label }} {{ subform.unit }}
+          {{ subform.unit.label }} 
+          {{ subform.unit }}
           <a onclick="remove_item(this)">Borrar ingrediente</a>
         </li>
 			{% endfor %}

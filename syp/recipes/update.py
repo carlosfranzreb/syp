@@ -1,16 +1,21 @@
 """Functions to update recipes. """
 
-import sys
+
 from os import path
 from PIL import Image
 from flask import current_app
 
-from syp.models import Quantity, Ingredient, \
-                       Subrecipe, Unit, RecipeStep
+from syp.models.quantity import Quantity
+from syp.models.ingredient import Ingredient
+from syp.models.subrecipe import Subrecipe 
+from syp.models.unit import Unit
+from syp.models.recipe_step import RecipeStep
 from syp import db
 
 
 def form_errors(form):
+    """ Ensure that the form is correctly filled.
+    If not, return the appropiate errors. """
     errors = list()
     # check if all ingredients are in the DB.
     for subform in form.ingredients:
@@ -19,17 +24,6 @@ def form_errors(form):
             errors.append(f"""El ingrediente "{ing_name}" no existe.
                 Si está bien escrito, y no lo encuentras entre las opciones,
                 crea un nuevo ingrediente.""")
-    # Check if all subrecipes are used.
-    for subform in form.subrecipes:
-        is_used = False
-        subrecipe = subform.data['subrecipe']
-        for step in form.steps:
-            if step.data['step'] == subrecipe:
-                is_used = True
-        if not is_used:
-            errors.append(f"""La subreceta '{subrecipe}' no está incluida en los
-                pasos de la receta. Si no debería estarlo, bórrala de la
-                sección 'Subrecetas'""")
     # Check if video link is correct.
     video = form.link_video.data
     if len(video) > 0 and video[:30] != 'https://www.youtube.com/embed/':
@@ -40,6 +34,8 @@ def form_errors(form):
 
 
 def update_recipe(recipe, form):
+    """ Find changes and update the appropriate elements. 
+    Calls functions to update ingredients, steps, subrecipes and images. """
     if recipe.name != form.name.data:
         new_name = form.name.data
         recipe.name = new_name
@@ -54,12 +50,13 @@ def update_recipe(recipe, form):
         recipe.link_video = form.link_video.data
 
     update_ingredients(recipe, form)
-    update_steps_and_subrecipes(recipe, form)
+    update_steps(recipe, form)
     db.session.commit()
     return recipe.url
 
 
 def update_ingredients(recipe, form):
+    """ Update ingredients. """
     old_ings = [q.ingredient.name for q in recipe.ingredients]
     deleted_ings = old_ings.copy()
     for subform in form.ingredients:
@@ -85,9 +82,9 @@ def update_ingredients(recipe, form):
         db.session.delete(removed_q)
 
 
-def update_steps_and_subrecipes(recipe, form):
+def update_steps(recipe, form):
+    """ Update steps. """
     old_steps = [s.step for s in recipe.steps]
-    new_subrecipes = list()
     deleted_steps = old_steps.copy()
     for idx, subform in enumerate(form.steps):
         step_name = subform.step.data
@@ -96,7 +93,6 @@ def update_steps_and_subrecipes(recipe, form):
             subrecipe = Subrecipe.query.filter_by(
                 name=step_name
             ).first()
-            new_subrecipes.append(subrecipe)
             if subrecipe.id in old_steps:  # change step nr
                 step = recipe.steps[old_steps.index(step_name)]
                 deleted_steps.remove(step_name)
@@ -122,10 +118,11 @@ def update_steps_and_subrecipes(recipe, form):
         for step in recipe.steps:
             if step.step == step_name:
                 db.session.delete(step)
-    recipe.subrecipes = new_subrecipes  # update subrecipes
 
 
 def save_image(form_img, recipe_url):
+    """ Save new image. """
+    # TODO: Remove old one, or rename it when only name changes.
     mark = Image.open(
         path.join(current_app.root_path, 'static/images/icons/syp_circle.png')
     )
@@ -150,6 +147,7 @@ def save_image(form_img, recipe_url):
 
 
 def get_url_from_name(name):
+    """ Help function. """
     name = name.lower()
     replacements = {'ñ': 'n', 'í': 'i', 'ó': 'o',
                     'é': 'e', 'ú': 'u', 'á': 'a'}
