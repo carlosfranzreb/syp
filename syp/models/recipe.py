@@ -7,6 +7,7 @@ from syp.models.recipe_state import RecipeState
 
 
 class Recipe(db.Model):
+    # TODO: add function that gets url from name automatically.
     __tablename__ = 'recipes'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)

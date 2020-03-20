@@ -13,7 +13,7 @@ from wtforms.validators import DataRequired, InputRequired, Length
 
 
 class StepForm(Form):
-    step = TextAreaField("Paso:", validators=[DataRequired()])
+    step = TextAreaField("Paso:", validators=[DataRequired(), Length(max=200)])
 
 
 class IngredientForm(Form):
