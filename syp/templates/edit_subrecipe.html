@@ -2,7 +2,11 @@
 <form
     method="post"
     enctype="multipart/form-data"
-    action="{{ url_for('subrecipes.edit_subrecipe', subrecipe_url=subrecipe.url) }}"
+    {% if is_new_subrecipe %}
+        action="{{ url_for('subrecipes.create_subrecipe', subrecipe_url=subrecipe.url) }}"
+    {% else %}
+        action="{{ url_for('subrecipes.edit_subrecipe', subrecipe_url=subrecipe.url) }}"
+    {% endif %}
 >
     {{ form.hidden_tag() }}
     <article id="name">
@@ -42,7 +46,7 @@
                     {{ subform.amount.label(style="color: #991D1D; font-style: italic")}} 
                     {{ subform.amount(style="border: 2px solid #991D1D") }}
                     <div class="invalid-feedback">
-                        <span style="color: #991D1D">La unidad tiene que ser un número.</span>
+                        <span style="color: #991D1D">La cantidad tiene que ser un número.</span>
                     </div>
                     <br />
                 {% else %} 
