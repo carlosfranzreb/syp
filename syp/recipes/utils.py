@@ -7,6 +7,7 @@ from flask import abort, request
 from syp.search.utils import get_default_keywords
 from syp.models.recipe import Recipe
 from syp.models.subrecipe import Subrecipe
+from syp import db
 
 
 def get_recipe_by_name(recipe_name):
@@ -85,3 +86,9 @@ def get_subrecipes(recipe):
         except ValueError:  # Step is not a subrecipe.
             continue
     return subrecipes
+
+
+def delete_recipe(recipe_id):
+    recipe = Recipe.query.filter_by(id=recipe_id).first()
+    recipe.id_state = 4  # 4 = 'Borrada'
+    db.session.commit()

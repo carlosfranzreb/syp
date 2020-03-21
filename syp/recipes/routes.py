@@ -80,3 +80,13 @@ def edit_recipe(recipe_url):
         description=f'Receta vegana y saludable: {recipe.name}. {recipe.intro}',
         keywords=utils.get_recipe_keywords(recipe)
     )
+
+
+@recipes.route("/borrar_receta/<recipe_url>")
+@login_required
+def delete_recipe(recipe_url):
+    # TODO: Window alert before deleting.
+    recipe = utils.get_recipe_by_url(recipe_url)
+    utils.delete_recipe(recipe.id)
+    flash('La receta ha sido borrada.', 'success')
+    return redirect(url_for('recipes.overview'))
