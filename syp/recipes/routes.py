@@ -33,6 +33,19 @@ def get_recipe(recipe_url):
     )
 
 
+@recipes.route("/recetas")
+@login_required
+def overview():
+    """ Shows a list with all recipes of the user. """
+    return render_template(
+        "recipes.html",
+        title="Recetas",
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        recipes=utils.get_paginated_recipes()[1],
+    )
+
+
 @recipes.route('/editar_receta/<recipe_url>', methods=['GET', 'POST'])
 @login_required
 def edit_recipe(recipe_url):
