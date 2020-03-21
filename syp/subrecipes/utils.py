@@ -27,3 +27,11 @@ def delete_subrecipe(subrecipe):
     """ Marks subrecipe as deleted. """
     subrecipe.is_deleted = True
     db.session.commit()
+
+def create_subrecipe():
+    """ Creates and returns an empty subrecipe. """
+    subrecipe = Subrecipe(
+        name="Nueva subreceta",
+        url="nueva_subreceta"
+    )
+    return subrecipe
