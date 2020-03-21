@@ -18,9 +18,11 @@ def get_season_recipes(season_nr=None, items=9):
         season_nr = get_season_nr(season_nr)
 
     page = request.args.get('page', 1, type=int)
-    recipes = Recipe.query.filter(Recipe.id_season.in_((season_nr, 5))) \
-                          .order_by(Recipe.id_season) \
-                          .paginate(page=page, per_page=items)
+    recipes = Recipe.query \
+        .filter_by(id_state=3) \
+        .filter(Recipe.id_season.in_((season_nr, 5))) \
+        .order_by(Recipe.id_season) \
+        .paginate(page=page, per_page=items)
 
     return (page, recipes)
 
@@ -60,5 +62,4 @@ def get_season_keywords(season_name):
     season_keys += f', receta vegana para {season_name}, '
     season_keys += f'receta saludable para {season_name}, '
     season_keys += f'receta casera para {season_name}'
-
     return ' '.join(season_keys.split())
