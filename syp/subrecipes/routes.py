@@ -63,7 +63,7 @@ def delete_subrecipe(subrecipe_url):
     return redirect(url_for('subrecipes.overview'))
 
 
-@subrecipes.route('/crear_subreceta/<subrecipe_url>', methods=['GET', 'POST'])
+@subrecipes.route('/<subrecipe_url>', methods=['GET', 'POST'])
 @login_required
 def create_subrecipe(subrecipe_url):
     subrecipe = utils.create_subrecipe()

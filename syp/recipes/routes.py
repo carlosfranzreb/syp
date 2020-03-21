@@ -33,6 +33,19 @@ def get_recipe(recipe_url):
     )
 
 
+@recipes.route("/recetas")
+@login_required
+def overview():
+    """ Shows a list with all recipes of the user. """
+    return render_template(
+        "recipes.html",
+        title="Recetas",
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        recipes=utils.get_paginated_recipes()[1],
+    )
+
+
 @recipes.route('/editar_receta/<recipe_url>', methods=['GET', 'POST'])
 @login_required
 def edit_recipe(recipe_url):
@@ -67,3 +80,13 @@ def edit_recipe(recipe_url):
         description=f'Receta vegana y saludable: {recipe.name}. {recipe.intro}',
         keywords=utils.get_recipe_keywords(recipe)
     )
+
+
+@recipes.route("/borrar_receta/<recipe_url>")
+@login_required
+def delete_recipe(recipe_url):
+    # TODO: Window alert before deleting.
+    recipe = utils.get_recipe_by_url(recipe_url)
+    utils.delete_recipe(recipe.id)
+    flash('La receta ha sido borrada.', 'success')
+    return redirect(url_for('recipes.overview'))

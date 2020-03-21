@@ -73,11 +73,11 @@
             href="{{ url_for('static', filename='css/edit_recipe.css') }}"
         />
 		{% endif %} 
-		{% if title == 'Subrecetas' %}
+		{% if title == 'Subrecetas' or title == 'Recetas' %}
         <link
             rel="stylesheet"
             type="text/css"
-            href="{{ url_for('static', filename='css/subrecipes.css') }}"
+            href="{{ url_for('static', filename='css/overview.css') }}"
         />
 		{% endif %} 
 		{% if title %}
@@ -194,12 +194,12 @@
                                         >
                                     </li>
                                     <li>
-                    <a href="" title="Ver las recetas que he guardado."
+                    <a href="{{ url_for('recipes.overview') }}" title="Ver mis recetas."
                                             >Mis recetas</a
                                         >
                                     </li>
                                     <li>
-                    <a href="{{ url_for('subrecipes.overview') }}" title="Ver las recetas que he guardado."
+                    <a href="{{ url_for('subrecipes.overview') }}" title="Ver mis subrecetas."
                                             >Mis subrecetas</a
                                         >
                                     </li>
