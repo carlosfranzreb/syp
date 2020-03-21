@@ -41,18 +41,20 @@ def discard_duplicates(recipe):
 
 
 def get_last_recipes(limit=None):
-    """ returns recipes starting with the most recent one
-        Images are sized 300"""
-    recipes = Recipe.query.order_by(Recipe.created_at.desc()) \
+    """ returns published recipes starting with the most recent one
+        Images are sized 300 (small)"""
+    recipes = Recipe.query.filter_by(id_state=3) \
+                          .order_by(Recipe.created_at.desc()) \
                           .limit(limit).all()
     return recipes
 
 
 def get_paginated_recipes(limit=None, items=9):
-    """ returns paginated recipes starting with the most recent one
-        Images are medium sized"""
+    """ returns paginated recipes (published) starting with the most 
+        recent one. Images are medium sized (600). """
     page = request.args.get('page', 1, type=int)
-    recipes = Recipe.query.order_by(Recipe.created_at.desc()) \
+    recipes = Recipe.query.filter_by(id_state=3) \
+                          .order_by(Recipe.created_at.desc()) \
                           .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
 
@@ -67,7 +69,9 @@ def get_recipe_keywords(recipe):
 
 
 def get_all_subrecipes():
-    return Subrecipe.query.with_entities(Subrecipe.name) \
+    """ Get all non-deleted subrecipes. """
+    return Subrecipe.query.filter_by(is_deleted=False) \
+                          .with_entities(Subrecipe.name) \
                           .order_by(Subrecipe.name).all()
 
 
@@ -89,6 +93,7 @@ def get_subrecipes(recipe):
 
 
 def delete_recipe(recipe_id):
+    """ Delete recipe by changing its state. """
     recipe = Recipe.query.filter_by(id=recipe_id).first()
     recipe.id_state = 4  # 4 = 'Borrada'
     db.session.commit()
