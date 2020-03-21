@@ -15,10 +15,11 @@ class Subrecipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     url = db.Column(db.String(100), nullable=False, unique=True)
-    steps = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     is_feminine = db.Column(db.Boolean, nullable=False)
-    is_deleted = db.Column(db.Boolean, nullable=False)
+    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
     steps = db.relationship('SubrecipeStep', backref='subrecipe', lazy=True)
     ingredients = db.relationship('Subquantity', backref='subrecipe', lazy=True)
 
