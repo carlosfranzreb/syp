@@ -18,6 +18,13 @@
     </td>
     <td>
       <a
+        href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}"
+        class="icon fas fa-eye action_icon"
+        style="margin-right: 0.5em"
+        title="Ver receta."
+        ><span class="label">Ver receta.</span></a
+      >
+      <a
         href="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}"
         class="icon fas fa-pencil action_icon"
         title="Editar receta."
