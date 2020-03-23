@@ -4,6 +4,9 @@
   {{ form.hidden_tag() }}
   <section>
   	<header class="main" id="recipe_header">
+      {% set f = form.state.process_data(recipe.state.id) %}
+      {{ form.state.label(style="clear: both; float: left; margin-right: 2em") }}
+      {{ form.state(style="width: 10em; margin-top: 3em") }}
       {% if form.name.errors %}
         {{ form.name(id="input_h1", style="color: #991D1D") }}
         <span style="color: #991D1D; font-weight: bolder">El nombre puede tener máximo 100 caracteres.</span>

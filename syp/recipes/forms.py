@@ -37,4 +37,5 @@ class RecipeForm(FlaskForm):
     health = TextAreaField('Descripción de los nutrientes de la receta.',
                          validators=[DataRequired(), Length(min=300, max=600)])
     link_video = StringField('Link del vídeo de YouTube.')
+    state = SelectField('Estado:')
     save = SubmitField('Guardar')

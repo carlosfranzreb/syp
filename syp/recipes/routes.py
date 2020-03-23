@@ -12,6 +12,7 @@ from syp.recipes.forms import RecipeForm
 from syp.models.season import Season
 from syp.models.subrecipe import Subrecipe
 from syp.models.unit import Unit
+from syp.models.recipe_state import RecipeState
 
 
 recipes = Blueprint('recipes', __name__)
@@ -51,10 +52,15 @@ def overview():
 def edit_recipe(recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     form = RecipeForm(obj=recipe)
-    form.season.choices = [(s.id, s.name) for s in
-                           Season.query.order_by(Season.id.desc())]
-    form.subrecipes.choices = [(r.id, r.name) for r in
-                               Subrecipe.query.order_by(Subrecipe.name)]
+    form.season.choices = [
+        (s.id, s.name) for s in Season.query.order_by(Season.id.desc())
+    ]
+    form.subrecipes.choices = [
+        (r.id, r.name) for r in Subrecipe.query.order_by(Subrecipe.name)
+    ]
+    form.state.choices = [
+        (s.id, s.state) for s in RecipeState.query.order_by(RecipeState.id.desc())
+    ]
     for subform in form.ingredients:
         subform.unit.choices = [(u.id, u.singular) for u in
                                 Unit.query.order_by(Unit.singular)]
@@ -62,11 +68,13 @@ def edit_recipe(recipe_url):
         errors = update.form_errors(form)
         if len(errors) == 0:
             flash('Los cambios han sido guardados.', 'success')
-            return redirect(
-                url_for('recipes.get_recipe', recipe_url=update.update_recipe(recipe, form))
-            )
+            return redirect(url_for(
+                'recipes.get_recipe',
+                recipe_url=update.update_recipe(recipe, form)
+            ))
         for error in errors:
             flash(error, 'danger')
+    err = form.errors.items()
     return render_template(
         'edit_recipe.html',
         form=form,
