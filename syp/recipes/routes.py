@@ -55,9 +55,6 @@ def edit_recipe(recipe_url):
     form.season.choices = [
         (s.id, s.name) for s in Season.query.order_by(Season.id.desc())
     ]
-    form.subrecipes.choices = [
-        (r.id, r.name) for r in Subrecipe.query.order_by(Subrecipe.name)
-    ]
     form.state.choices = [
         (s.id, s.state) for s in RecipeState.query.order_by(RecipeState.id.desc())
     ]
