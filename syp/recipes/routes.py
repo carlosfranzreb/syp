@@ -43,7 +43,7 @@ def overview():
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
-        recipes=utils.get_paginated_recipes()[1],
+        recipes=utils.get_overview_recipes()[1],
     )
 
 
