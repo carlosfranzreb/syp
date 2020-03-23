@@ -10,7 +10,8 @@
 >
     {{ form.hidden_tag() }}
     <header id="name">
-        {{ form.case }}
+        {{ form.case.label(style="clear: both; float: left; margin-right: 2em") }}
+        {{ form.case(style="width: 5em; margin-top: 3em") }}
         {% if form.name.errors %} 
             {{ form.name(id="input_h1", style="color:#991D1D") }}
             <span style="color: #991D1D; font-weight: bolder">
@@ -33,33 +34,33 @@
                     {% endif %} 
                 {% endfor %}
                 <li class="ingredient_item">
-                {% if subform.ingredient.errors %} {{
-                    subform.ingredient(class="is-invalid") }}
-                    <div class="invalid-feedback">
-                        <span style="color: #991D1D">Escoge un ingrediente.</span>
-                    </div>
-                {% else %} 
-                    {{ subform.ingredient.label }}
-                    <span>
-                        {{ subform.ingredient(list="all_ingredients",
-                        autocomplete="off") }}
-                    </span>
-                {% endif %} 
-                {% if subform.amount.errors %} 
-                    {{ subform.amount.label(style="color: #991D1D; font-style: italic")}} 
-                    {{ subform.amount(style="border: 2px solid #991D1D") }}
-                    <div class="invalid-feedback">
-                        <span style="color: #991D1D">La cantidad tiene que ser un número.</span>
-                    </div>
-                    <br />
-                {% else %} 
-                    {{ subform.amount.label }} 
-                    {{ subform.amount }} 
-                {% endif %} 
-                {{ subform.unit.label }} 
-                {{ subform.unit }}
-                <a onclick="remove_item(this)">Borrar ingrediente</a>
-            </li>
+                    {% if subform.ingredient.errors %} {{
+                        subform.ingredient(class="is-invalid") }}
+                        <div class="invalid-feedback">
+                            <span style="color: #991D1D">Escoge un ingrediente.</span>
+                        </div>
+                    {% else %} 
+                        {{ subform.ingredient.label }}
+                        <span>
+                            {{ subform.ingredient(list="all_ingredients",
+                            autocomplete="off") }}
+                        </span>
+                    {% endif %} 
+                    {% if subform.amount.errors %} 
+                        {{ subform.amount.label(style="color: #991D1D; font-style: italic")}} 
+                        {{ subform.amount(style="border: 2px solid #991D1D") }}
+                        <div class="invalid-feedback">
+                            <span style="color: #991D1D">La cantidad tiene que ser un número.</span>
+                        </div>
+                        <br />
+                    {% else %} 
+                        {{ subform.amount.label }} 
+                        {{ subform.amount }} 
+                    {% endif %} 
+                    {{ subform.unit.label }} 
+                    {{ subform.unit }}
+                    <a onclick="remove_item(this)">Borrar ingrediente</a>
+                </li>
             {% endfor %}
         </ul>
         <a onclick="add_item(this)">Añadir ingrediente</a>
