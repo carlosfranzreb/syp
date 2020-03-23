@@ -46,7 +46,7 @@
 			<center><div class="container_times">
 				<img class="time_img" src="{{ url_for('static', filename='images/icons/syp_flower.svg') }}" alt="Temporada" title="Temporada" />
         {% set f = form.season.process_data(recipe.season.id) %}
-        <span class="time_number">{{ form.season() }}</span>
+        <span class="time_number">{{ form.season }}</span>
 			</div></center>
 
     {% if form.intro.errors %}
