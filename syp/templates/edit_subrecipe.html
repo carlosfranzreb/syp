@@ -9,14 +9,17 @@
     {% endif %}
 >
     {{ form.hidden_tag() }}
-    <article id="name">
-        {% if form.name.errors %} {{ form.name(id="input_h1", style="color:
-        #991D1D") }}
-        <span style="color: #991D1D; font-weight: bolder"
-            >El nombre puede tener máximo 100 caracteres.</span
-        >
-        <br /><br /><br />
-        {% else %} {{ form.name(id="input_h1") }} {% endif %}
+    <header id="name">
+        {{ form.case }}
+        {% if form.name.errors %} 
+            {{ form.name(id="input_h1", style="color:#991D1D") }}
+            <span style="color: #991D1D; font-weight: bolder">
+                El nombre puede tener máximo 100 caracteres.
+            </span>
+            <br /><br /><br />
+        {% else %} 
+            {{ form.name(id="input_h1") }} 
+        {% endif %}
     </header>
 
     <article id="ingredients">
