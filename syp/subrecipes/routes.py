@@ -34,11 +34,20 @@ def edit_subrecipe(subrecipe_url):
         subform.unit.choices = [
             (u.id, u.singular) for u in Unit.query.order_by(Unit.singular)
         ]
+    form.case.choices = [(0, "el"), (1, "la")]  # Set case choices.
+    form.case.process_data(int(subrecipe.is_feminine))  # populate field.
     if form.validate_on_submit():
-        # TODO: Check uniqueness of name, valid ingredients, etc.
-        update.update_subrecipe(subrecipe, form)
-        flash("Los cambios han sido guardados.", "success")
-        return redirect(url_for("subrecipes.overview"))
+        if form.name.data != subrecipe.name:
+            errors = validate.validate(form)
+        else:  # if name hasn't changed, check only ingredients.
+            errors = validate.validate_ingredients(form)
+        if len(errors) > 0:
+            for error in errors:
+                flash(error, 'danger')
+        else:
+            update.update_subrecipe(subrecipe, form)
+            flash("Los cambios han sido guardados.", "success")
+            return redirect(url_for("subrecipes.overview"))
     return render_template(
         "edit_subrecipe.html",
         title="Editar subreceta",
