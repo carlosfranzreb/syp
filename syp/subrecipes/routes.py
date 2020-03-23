@@ -35,8 +35,6 @@ def edit_subrecipe(subrecipe_url):
             (u.id, u.singular) for u in Unit.query.order_by(Unit.singular)
         ]
     form.case.choices = [(0, "el"), (1, "la")]  # Set case choices.
-    if form.case.data is None:  # form is being served, not received.
-        form.case.process_data(int(subrecipe.is_feminine))  # populate field.
     if form.validate_on_submit():
         if form.name.data != subrecipe.name:
             errors = validate.validate(form)

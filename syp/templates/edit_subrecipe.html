@@ -10,6 +10,7 @@
 >
     {{ form.hidden_tag() }}
     <header id="name">
+        {% set f = form.case.process_data(subrecipe.is_feminine) %}
         {{ form.case.label(style="clear: both; float: left; margin-right: 2em") }}
         {{ form.case(style="width: 5em; margin-top: 3em") }}
         {% if form.name.errors %} 
