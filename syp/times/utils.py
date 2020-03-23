@@ -21,6 +21,7 @@ def get_recipes_by_time(time, items=9):
 
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
         .filter_by(id_state=3) \
         .filter(Recipe.time_cook + Recipe.time_prep <= minutes) \
         .order_by((Recipe.time_prep + Recipe.time_cook).desc()) \

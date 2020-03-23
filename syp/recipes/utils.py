@@ -11,13 +11,19 @@ from syp import db
 
 
 def get_recipe_by_name(recipe_name):
-    recipe = Recipe.query.filter_by(name=recipe_name).first()
+    recipe = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(name=recipe_name) \
+        .first()
     recipe.subrecipes = get_subrecipes(recipe)
     return discard_duplicates(recipe)
 
 
 def get_recipe_by_url(recipe_url):
-    recipe = Recipe.query.filter_by(url=recipe_url).first()
+    recipe = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(url=recipe_url) \
+        .first()
     recipe.subrecipes = get_subrecipes(recipe)
     return discard_duplicates(recipe)
 
@@ -43,9 +49,11 @@ def discard_duplicates(recipe):
 def get_last_recipes(limit=None):
     """ returns published recipes starting with the most recent one
         Images are sized 300 (small)"""
-    recipes = Recipe.query.filter_by(id_state=3) \
-                          .order_by(Recipe.created_at.desc()) \
-                          .limit(limit).all()
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id_state=3) \
+        .order_by(Recipe.created_at.desc()) \
+        .limit(limit).all()
     return recipes
 
 
@@ -53,9 +61,11 @@ def get_paginated_recipes(limit=None, items=9):
     """ returns paginated recipes (published) starting with the most 
         recent one. Images are medium sized (600). """
     page = request.args.get('page', 1, type=int)
-    recipes = Recipe.query.filter_by(id_state=3) \
-                          .order_by(Recipe.created_at.desc()) \
-                          .limit(limit).paginate(page=page, per_page=items)
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id_state=3) \
+        .order_by(Recipe.created_at.desc()) \
+        .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
 
 
@@ -63,8 +73,10 @@ def get_overview_recipes(limit=None, items=9):
     """ returns paginated recipes (all, not only published as above)
     starting with the most recent one. Images are medium sized (600). """
     page = request.args.get('page', 1, type=int)
-    recipes = Recipe.query.order_by(Recipe.created_at.desc()) \
-                          .limit(limit).paginate(page=page, per_page=items)
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .order_by(Recipe.created_at.desc()) \
+        .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
 
 def get_recipe_keywords(recipe):
@@ -78,13 +90,17 @@ def get_recipe_keywords(recipe):
 
 def get_all_subrecipes():
     """ Get all non-deleted subrecipes. """
-    return Subrecipe.query.filter_by(is_deleted=False) \
-                          .with_entities(Subrecipe.name) \
-                          .order_by(Subrecipe.name).all()
+    return Subrecipe.query \
+        .filter_by(is_deleted=False) \
+        .with_entities(Subrecipe.name) \
+        .order_by(Subrecipe.name).all()
 
 
 def get_subrecipe(subrecipe_id):
-    return Subrecipe.query.filter_by(id=subrecipe_id).first()
+    return Subrecipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id=subrecipe_id) \
+        .first()
 
 
 def get_subrecipes(recipe):
@@ -94,7 +110,10 @@ def get_subrecipes(recipe):
     for step in recipe.steps:
         try:  # if the step is an int, it is a subrecipe.
             subrecipe_id = int(step.step)
-            subrecipes.append(Subrecipe.query.filter_by(id=subrecipe_id).first())
+            subrecipes.append(Subrecipe.query \
+                .filter_by(id=subrecipe_id)
+                .first()
+            )
         except ValueError:  # Step is not a subrecipe.
             continue
     return subrecipes
