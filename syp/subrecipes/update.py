@@ -15,6 +15,8 @@ def update_subrecipe(subrecipe, form):
         new_name = form.name.data
         subrecipe.name = new_name
         subrecipe.url = get_url_from_name(new_name)
+    if form.case.data != subrecipe.is_feminine:
+        subrecipe.is_feminine = form.case.data
     update_ingredients(subrecipe, form)
     update_steps(subrecipe, form)
     db.session.commit()
