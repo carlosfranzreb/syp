@@ -95,5 +95,5 @@ def get_subrecipes(recipe):
 def delete_recipe(recipe_id):
     """ Delete recipe by changing its state. """
     recipe = Recipe.query.filter_by(id=recipe_id).first()
-    recipe.id_state = 4  # 4 = 'Borrada'
+    recipe.is_deleted = True
     db.session.commit()

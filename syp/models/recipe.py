@@ -22,6 +22,7 @@ class Recipe(db.Model):
     id_season = db.Column(db.Integer, db.ForeignKey('seasons.id'), nullable=False)
     id_state = db.Column(db.Integer, db.ForeignKey('recipe_states.id'), nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
 
     steps = db.relationship('RecipeStep', backref='recipe', lazy=True)
     ingredients = db.relationship('Quantity', backref='recipe', lazy=True)
