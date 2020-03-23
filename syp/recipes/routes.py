@@ -71,7 +71,6 @@ def edit_recipe(recipe_url):
             ))
         for error in errors:
             flash(error, 'danger')
-    err = form.errors.items()
     return render_template(
         'edit_recipe.html',
         form=form,
