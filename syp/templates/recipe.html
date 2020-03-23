@@ -2,6 +2,9 @@
 {% block content %}
 <section>
 	<header class="main" id="recipe_header">
+	{% if current_user.is_authenticated %}
+		<span class="label label-{{recipe.state.label}}">{{ recipe.state.state|upper }}</span>
+	{% endif %}
     <div id="action_icons_container">
       <ul class="icons">
         {% if current_user.is_authenticated %}

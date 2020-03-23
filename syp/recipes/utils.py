@@ -99,7 +99,6 @@ def get_subrecipes(recipe):
             continue
     return subrecipes
 
-
 def delete_recipe(recipe_id):
     """ Delete recipe by changing its state. """
     recipe = Recipe.query.filter_by(id=recipe_id).first()
