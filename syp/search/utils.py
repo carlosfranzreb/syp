@@ -17,7 +17,7 @@ def get_recipes_by_name(recipe_name, items=9):
                           .paginate(page=page, per_page=items)
     if recipes.items == []:
         recipes = Template('No tenemos recetas llamadas $name. \
-                         ¡Prueba con otra receta!') \
+                         ¡Prueba con otro nombre!') \
                         .substitute(name=recipe_name.lower())
     return (page, recipes)
 

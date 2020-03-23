@@ -7,7 +7,7 @@ from flask import current_app
 
 from syp.models.quantity import Quantity
 from syp.models.ingredient import Ingredient
-from syp.models.subrecipe import Subrecipe 
+from syp.models.subrecipe import Subrecipe
 from syp.models.unit import Unit
 from syp.models.recipe_step import RecipeStep
 from syp import db
@@ -48,7 +48,14 @@ def update_recipe(recipe, form):
         recipe.text = form.text.data
     if recipe.link_video != form.link_video.data:
         recipe.link_video = form.link_video.data
-
+    if recipe.time_cook != form.time_cook.data:
+        recipe.time_cook = form.time_cook.data
+    if recipe.time_prep != form.time_prep.data:
+        recipe.time_prep = form.time_prep.data
+    if recipe.id_season != form.season.data:
+        recipe.id_season = form.season.data
+    if recipe.id_state != form.state.data:
+        recipe.id_state = form.state.data    
     update_ingredients(recipe, form)
     update_steps(recipe, form)
     db.session.commit()

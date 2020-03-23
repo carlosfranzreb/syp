@@ -13,7 +13,9 @@
   <tr>
     <td>{{ recipe.name }}</td>
     <td>{{ recipe.created_at.strftime("%Y-%m-%d") }}</td>
-    <td>{{ recipe.state.state }}</td>
+    <td>
+      <span class="label label-{{recipe.state.label}}">{{ recipe.state.state|upper }}</span>
+    </td>
     <td>
       <a
         href="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}"

@@ -2,6 +2,9 @@
 {% block content %}
 <section>
 	<header class="main" id="recipe_header">
+	{% if current_user.is_authenticated %}
+		<span class="label label-{{recipe.state.label}}">{{ recipe.state.state|upper }}</span>
+	{% endif %}
     <div id="action_icons_container">
       <ul class="icons">
         {% if current_user.is_authenticated %}
@@ -88,7 +91,7 @@
 
         {% if step.step|int > 0 %}
           {% for sub in recipe.subrecipes if sub.id == step.step|int %}
-            {% if sub.case_fem %}
+            {% if sub.is_feminine %}
               <li>Preparamos la {{ sub.name.lower() }}
             {% else %}
               <li>Preparamos el {{ sub.name.lower() }}

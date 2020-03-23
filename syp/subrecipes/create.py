@@ -17,7 +17,7 @@ def save_subrecipe(form):
     subrecipe = Subrecipe(
         name=form.name.data,
         url=get_url_from_name(form.name.data),
-        is_feminine=True,
+        is_feminine=form.case.data,
         id_user=current_user.id,
     )
     db.session.add(subrecipe)
