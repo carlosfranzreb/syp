@@ -82,6 +82,7 @@ def create_subrecipe(subrecipe_url):
         subform.unit.choices = [
         (u.id, u.singular) for u in Unit.query.order_by(Unit.singular)
     ]
+    form.case.choices = [(0, "el"), (1, "la")]  # Set case choices.
     if form.validate_on_submit():
         errors = validate.validate(form)
         if len(errors) > 0:
