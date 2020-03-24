@@ -26,6 +26,8 @@ def update_recipe(recipe, form):
         recipe.intro = form.intro.data
     if recipe.text != form.text.data:
         recipe.text = form.text.data
+    if recipe.health != form.health.data:
+        recipe.health = form.health.data
     if recipe.link_video != form.link_video.data:
         recipe.link_video = form.link_video.data
     if recipe.time_cook != form.time_cook.data:

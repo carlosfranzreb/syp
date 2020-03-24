@@ -40,21 +40,25 @@ $(window).on("resize load", function() {
     if (width < 450) {
         $("#textarea_h4").attr("rows", "6");
         $("#textarea_p").attr("rows", "40");
+        $("#textarea_health").attr("rows", "20");
         $(".recipe_step").attr("rows", "15");
     }
     if (width >= 450) {
         $("#textarea_h4").attr("rows", "5");
         $("#textarea_p").attr("rows", "30");
+        $("#textarea_health").attr("rows", "15");
         $(".recipe_step").attr("rows", "10");
     }
     if (width >= 580) {
         $("#textarea_h4").attr("rows", "3");
         $("#textarea_p").attr("rows", "24");
+        $("#textarea_health").attr("rows", "12");
         $(".recipe_step").attr("rows", "8");
     }
     if (width >= 1280) {
         $("#textarea_h4").attr("rows", "2");
         $("#textarea_p").attr("rows", "14");
+        $("#textarea_health").attr("rows", "7");
         $(".recipe_step").attr("rows", "5");
     }
 });

@@ -17,6 +17,7 @@ def save_recipe(form):  # TODO: health is missing
         time_cook=form.time_cook.data,
         intro=form.intro.data,
         text=form.text.data,
+        health=form.health.data,
         link_video=form.link_video.data
     )
     db.session.add(recipe)
