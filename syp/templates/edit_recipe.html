@@ -1,9 +1,27 @@
 {% extends 'main_layout.html' %}
 {% block content %}
-<form method="post" enctype="multipart/form-data" action="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}">
+<form 
+  method="post" 
+  enctype="multipart/form-data"
+  {% if title == 'Crear receta' %}
+    action="{{ url_for('recipes.create_recipe') }}"
+  {% elif is_new_recipe %}
+    action="{{ url_for('recipes.edit_new_recipe', recipe_url=recipe.url) }}"
+  {% else %}
+    action="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url, state='edit') }}"
+  {% endif %}
+>
   {{ form.hidden_tag() }}
+
+  {% if title == recipe.name %}
+    {% set f = form.state.process_data(recipe.state.id) %}
+    {% set f = form.season.process_data(recipe.season.id) %}
+  {% endif %}
+
   <section>
   	<header class="main" id="recipe_header">
+      {{ form.state.label(style="clear: both; float: left; margin-right: 2em") }}
+      {{ form.state(style="width: 10em; margin-top: 3em") }}
       {% if form.name.errors %}
         {{ form.name(id="input_h1", style="color: #991D1D") }}
         <span style="color: #991D1D; font-weight: bolder">El nombre puede tener máximo 100 caracteres.</span>
@@ -23,7 +41,7 @@
           {% endfor %}
         {% endif %}
       </div>
-      <img src="{{ url_for('static', filename='images/recipes/large/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_opt.jpg' }}" alt="{{ recipe.name }}" />
+      <img src="{{ recipe.image_path('large') }}" alt="{{ recipe.name }}" />
     </span>
 
   		<div class="container_times">
@@ -42,8 +60,7 @@
       </div>
 			<center><div class="container_times">
 				<img class="time_img" src="{{ url_for('static', filename='images/icons/syp_flower.svg') }}" alt="Temporada" title="Temporada" />
-        {% set f = form.season.process_data(recipe.season.id) %}
-        <span class="time_number">{{ form.season() }}</span>
+        <span class="time_number">{{ form.season }}</span>
 			</div></center>
 
     {% if form.intro.errors %}
@@ -91,14 +108,16 @@
             {{ subform.amount.label(style="color: #991D1D; font-style: italic") }}
             {{ subform.amount(style="border: 2px solid #991D1D") }}
             <div class="invalid-feedback">
-              <span style="color: #991D1D">La unidad tiene que ser un número.</span>
+              <span style="color: #991D1D">La cantidad tiene que ser un número.</span>
             </div>
             <br>
           {% else %}
-            {{ subform.amount.label }} {{ subform.amount }}
+            {{ subform.amount.label }} 
+            {{ subform.amount }}
           {% endif %}
 
-          {{ subform.unit.label }} {{ subform.unit }}
+          {{ subform.unit.label }} 
+          {{ subform.unit }}
           <a onclick="remove_item(this)">Borrar ingrediente</a>
         </li>
 			{% endfor %}
@@ -143,7 +162,6 @@
         <option value="{{ sub[0] }}"></option>
       {% endfor %}
     </datalist>
-
 	</article>
 
 	<article id="video">
@@ -154,6 +172,12 @@
 			<iframe class="video-item" allowfullscreen src="{{ form.link_video.data }}"></iframe>
 		</div>
 	</article>
+
+	<article id="health">
+		<h2>Beneficios para la salud</h2>
+	  <p> {{ form.health(id="textarea_health") }} </p>
+  </article>
+
   <center>
     {{ form.save(class="primary") }}
   </center>

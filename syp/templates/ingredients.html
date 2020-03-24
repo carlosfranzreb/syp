@@ -32,7 +32,9 @@
 
           {% for recipe in recipes.items %}
             <article>
-        			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
+        			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image">
+                <img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
+              </a>
         			<h3>{{ recipe.name }}</h3>
         			<p>{{ recipe.intro }}</p>
         			<ul class="actions">

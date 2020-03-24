@@ -128,7 +128,7 @@ dmypy.json
 .bak/
 .vscode/
 syp/config.py
-syp/static/images/
+syp/static/images/*
 syp/static/fonts/
 syp/static/sass/
 ec2/
@@ -140,8 +140,3 @@ extras/images/images/
 .pylintrc
 node_modules/
 .prettierrc
-
-
-
-
-

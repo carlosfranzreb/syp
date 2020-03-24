@@ -1,70 +1,156 @@
-from flask import abort, request
+""" Help function for recipe-related pages. """
+#pylint: disable = missing-function-docstring
 
+
+from flask import abort, request
+from flask_login import current_user
+
+from syp.recipes.images import delete_image
 from syp.search.utils import get_default_keywords
-from syp.models import Recipe, Subrecipe
+from syp.models.recipe import Recipe
+from syp.models.subrecipe import Subrecipe
+from syp.models.season import Season
+from syp.models.unit import Unit
+from syp.models.recipe_state import RecipeState
+
+from syp import db
 
 
 def get_recipe_by_name(recipe_name):
-    recipe = Recipe.query.filter_by(name=recipe_name).first()
+    recipe = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(name=recipe_name) \
+        .first()
+    recipe.subrecipes = get_subrecipes(recipe)
     return discard_duplicates(recipe)
 
 
 def get_recipe_by_url(recipe_url):
-    recipe = Recipe.query.filter_by(url=recipe_url).first()
+    recipe = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(url=recipe_url) \
+        .first()
+    recipe.subrecipes = get_subrecipes(recipe)
     return discard_duplicates(recipe)
 
 
 def discard_duplicates(recipe):
     if recipe is None:
-        abort(404)
-    else:
-        ids = []
-        for q in recipe.ingredients:
-            q.duplicate = False
-            ids.append(q.ingredient.id)
-        for sub in recipe.subrecipes:
-            for q in sub.ingredients:
-                id = q.ingredient.id
-                if id not in ids:
-                    q.duplicate = False
-                    ids.append(id)
-                else:
-                    q.duplicate = True
-        return recipe
+        return abort(404)
+    ingredient_ids = []
+    for quantity in recipe.ingredients:
+        quantity.duplicate = False
+        ingredient_ids.append(quantity.ingredient.id)
+    for sub in recipe.subrecipes:
+        for quantity in sub.ingredients:
+            ingredient_id = quantity.ingredient.id
+            if ingredient_id not in ingredient_ids:
+                quantity.duplicate = False
+                ingredient_ids.append(ingredient_id)
+            else:
+                quantity.duplicate = True
+    return recipe
 
 
 def get_last_recipes(limit=None):
-    """ returns recipes starting with the most recent one
-        Images are sized 300"""
-    recipes = Recipe.query.order_by(Recipe.date_created.desc()) \
-                          .limit(limit).all()
-
+    """ returns published recipes starting with the most recent one
+        Images are sized 300 (small)"""
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id_state=3) \
+        .order_by(Recipe.created_at.desc()) \
+        .limit(limit).all()
     return recipes
 
 
 def get_paginated_recipes(limit=None, items=9):
-    """ returns paginated recipes starting with the most recent one
-        Images are medium sized"""
+    """ returns paginated recipes (published) starting with the most 
+        recent one. Images are medium sized (600). """
     page = request.args.get('page', 1, type=int)
-    recipes = Recipe.query.order_by(Recipe.date_created.desc()) \
-                          .limit(limit).paginate(page=page, per_page=items)
-
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id_state=3) \
+        .order_by(Recipe.created_at.desc()) \
+        .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
 
 
+def get_overview_recipes(limit=None, items=9):
+    """ returns paginated recipes (all, not only published as above, 
+    but only those that belong to the current user) starting with
+    the most recent one. """
+    page = request.args.get('page', 1, type=int)
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id_user=current_user.id) \
+        .order_by(Recipe.created_at.desc()) \
+        .limit(limit).paginate(page=page, per_page=items)
+    return (page, recipes)
+
 def get_recipe_keywords(recipe):
     recipe_keys = get_default_keywords() + ', '
-    for q in recipe.ingredients:
-        name = q.ingredient.name.lower()
+    for quantity in recipe.ingredients:
+        name = quantity.ingredient.name.lower()
         recipe_keys += f'receta vegana con {name}, '
         recipe_keys += f'receta saludable con {name}, '
     return ' '.join(recipe_keys[:-2].split())
 
 
 def get_all_subrecipes():
-    return Subrecipe.query.with_entities(Subrecipe.name) \
-                          .order_by(Subrecipe.name).all()
+    """ Get all non-deleted subrecipes of the user. """
+    return Subrecipe.query \
+        .filter_by(id_user=current_user.id) \
+        .filter_by(is_deleted=False) \
+        .with_entities(Subrecipe.name) \
+        .order_by(Subrecipe.name).all()
 
 
-def get_subrecipe(id):
-    return Subrecipe.query.filter_by(id=id).first()
+def get_subrecipes(recipe):
+    """ Get subrecipes used in the given recipe. If the step consists
+    only of one int, then it is a reference to a subrecipe. """
+    subrecipes = list()
+    for step in recipe.steps:
+        try:  # if the step is an int, it is a subrecipe.
+            subrecipe_id = int(step.step)
+            subrecipes.append(
+                Subrecipe.query.filter_by(id=subrecipe_id).first()
+            )                    
+        except ValueError:  # Step is not a subrecipe.
+            continue
+    return subrecipes
+
+def delete_recipe(recipe_id):
+    """ Delete recipe by changing its state. Do delete the images
+    as they take too much space. """
+    recipe = Recipe.query.filter_by(id=recipe_id).first()
+    recipe.is_deleted = True
+    db.session.commit()
+    delete_image(recipe.url)
+
+
+def create_recipe(form=None):
+    """ Returns new recipe to populate the empty form or, if a form
+    is given, populates the returned object with the form. """
+    if form is None:
+        return Recipe(
+            name="Nueva receta",
+            url="nueva_receta",
+            id_user=current_user.id
+        )
+    
+
+
+def add_choices(form):
+    """Add choices for the select fields (state, season and units)
+    of the form. Retrieve them from the DB. """
+    form.season.choices = [
+        (s.id, s.name) for s in Season.query.order_by(Season.id.desc())
+    ]
+    form.state.choices = [
+        (s.id, s.state) for s in RecipeState.query.order_by(RecipeState.id)
+    ]
+    for subform in form.ingredients:
+        subform.unit.choices = [
+            (u.id, u.singular) for u in Unit.query.order_by(Unit.singular)
+        ]
+    return form

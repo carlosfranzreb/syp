@@ -1,6 +1,10 @@
-from flask import request
+""" Help functions for the search-by-time page. """
+
+
 from string import Template
-from syp.models import Recipe
+from flask import request
+
+from syp.models.recipe import Recipe
 from syp.search.utils import get_default_keywords
 
 
@@ -16,11 +20,12 @@ def get_recipes_by_time(time, items=9):
                 .substitute(time=time))
 
     page = request.args.get('page', 1, type=int)
-    recipes = Recipe.query.filter(Recipe.time_cook +
-                                  Recipe.time_prep <= minutes) \
-                          .order_by((Recipe.time_prep +
-                                     Recipe.time_cook).desc()) \
-                          .paginate(page=page, per_page=items)
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id_state=3) \
+        .filter(Recipe.time_cook + Recipe.time_prep <= minutes) \
+        .order_by((Recipe.time_prep + Recipe.time_cook).desc()) \
+        .paginate(page=page, per_page=items)
 
     if recipes.items == []:
         recipes = Template('No tenemos recetas que se hagan en menos de $time \
@@ -31,6 +36,7 @@ def get_recipes_by_time(time, items=9):
 
 
 def get_times_keywords(time=None):
+    """ SEO keywords specific for this page. """
     times_keys = get_default_keywords()
 
     if time is not None:

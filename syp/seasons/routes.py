@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, render_template, url_for
 from syp.recipes.utils import get_last_recipes
 from syp.search.forms import SearchRecipeForm
-from syp.seasons.utils import get_actual_season_name, get_season_name, \
+from syp.seasons.utils import get_current_season_name, get_season_name, \
                               get_season_recipes, get_season_keywords
 from syp.seasons.forms import SeasonForm
 
@@ -10,12 +10,12 @@ seasons = Blueprint('seasons', __name__)
 
 
 @seasons.route('/temporada')
-def search_actual_season():
+def search_current_season():
     """ Opens when season searcher is called.
-        Looks for actual season and redirects """
-    actual_season_name = get_actual_season_name()
+        Looks for current season and redirects """
+    current_season_name = get_current_season_name()
     return redirect(url_for('seasons.search_season',
-                            season_name=actual_season_name))
+                            season_name=current_season_name))
 
 
 @seasons.route('/temporada/<season_name>', methods=['GET', 'POST'])

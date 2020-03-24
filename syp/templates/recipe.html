@@ -2,20 +2,20 @@
 {% block content %}
 <section>
 	<header class="main" id="recipe_header">
+	{% if current_user.is_authenticated %}
+		<span class="label label-{{recipe.state.label}}">{{ recipe.state.state|upper }}</span>
+	{% endif %}
     <div id="action_icons_container">
       <ul class="icons">
         {% if current_user.is_authenticated %}
-          <li><a href="#" class="icon fas fa-star" title="Guardar receta."><span class="label">Guardar receta.</span></a></li>
-          {% if current_user.role|int < 3 %}
             <li><a href="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}" class="icon fas fa-pencil" title="Editar receta."><span class="label">Editar receta.</span></a></li>
-          {% endif %}
         {% endif %}
         <li><h1> {{ recipe.name }} </h1></li>
       </ul>
     </div>
 	</header>
 
-	<span class="image main"><img src="{{ url_for('static', filename='images/recipes/large/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_opt.jpg' }}" alt="{{ recipe.name }}" /></span>
+	<span class="image main"><img src="{{ recipe.image_path('large') }}" alt="{{ recipe.name }}" /></span>
 
 		<div class="container_times">
 			<div class="item_times">
@@ -91,7 +91,7 @@
 
         {% if step.step|int > 0 %}
           {% for sub in recipe.subrecipes if sub.id == step.step|int %}
-            {% if sub.case_fem %}
+            {% if sub.is_feminine %}
               <li>Preparamos la {{ sub.name.lower() }}
             {% else %}
               <li>Preparamos el {{ sub.name.lower() }}

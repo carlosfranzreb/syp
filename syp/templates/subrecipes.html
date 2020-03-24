@@ -1,0 +1,58 @@
+{% extends 'main_layout.html' %} {% block content %}
+
+<h1>Subrecetas</h1>
+<a href="{{ url_for('subrecipes.create_subrecipe', subrecipe_url='nueva_subreceta') }}" class="add_btn" style="margin-bottom: 1em">Nueva subreceta</a>
+<table>
+  <tr>
+    <th>Nombre</th>
+    <th>Último cambio</th>
+    <th>N° de usos</th>
+    <th>Acciones</th>
+  </tr>
+  {% for subrecipe in subrecipes.items %}
+  <tr>
+    <td>{{ subrecipe.name }}</td>
+    {% if subrecipe.changed_at %}
+      <td>{{ subrecipe.changed_at.strftime("%d-%m-%Y") }}</td>
+    {% else %}
+      <td>{{ subrecipe.created_at.strftime("%d-%m-%Y") }}</td>
+    {% endif %}
+    <td>{{ subrecipe.uses() }}</td>
+    <td>
+      <a
+        href="{{ url_for('subrecipes.edit_subrecipe', subrecipe_url=subrecipe.url) }}"
+        class="icon fas fa-pencil action_icon"
+        title="Editar subreceta."
+        ><span class="label">Editar subreceta.</span></a
+      >
+      <a
+        href="{{ url_for('subrecipes.delete_subrecipe', subrecipe_url=subrecipe.url) }}"
+        style="margin-left: 0.5em"
+        class="icon fas fa-trash action_icon"
+        title="Borrar subreceta."
+      ><span class="label">Borrar subreceta.</span></a
+    >
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<center>
+  {% for page_num in subrecipes.iter_pages(left_edge=1, right_edge=1,
+  left_current=1, right_current=2) %} {% if page_num %} {% if subrecipes.page ==
+  page_num %}
+  <a
+    class="btn btn-danger mb-4"
+    href="{{ url_for('subrecipes.overview', page=page_num) }}"
+    >{{ page_num }}</a
+  >
+  {% else %}
+  <a
+    class="btn btn-danger mb-4"
+    href="{{ url_for('subrecipes.overview', page=page_num) }}"
+    >{{ page_num }}</a
+  >
+  {% endif %} {% else %} ... {% endif %} {% endfor %}
+</center>
+
+{% endblock content %}

@@ -14,7 +14,7 @@
 		</ul>
 	</div>
 	<span class="image object">
-		<img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(last_recipes[0].name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ last_recipes[0].name }}" />
+		<img src="{{ last_recipes[0].image_path('600') }}" alt="{{ last_recipes[0].name }}" />
 	</span>
 </section>
 
@@ -78,11 +78,11 @@
 		</article>
 
 		<article>
-			<a href="{{ url_for('seasons.search_actual_season') }}" style="border-bottom: none">
+			<a href="{{ url_for('seasons.search_current_season') }}" style="border-bottom: none">
 				<span class="icon fa-thermometer-4"></span>
 			</a>
 			<div class="content">
-				<a href="{{ url_for('seasons.search_actual_season') }}" style="color: #000">
+				<a href="{{ url_for('seasons.search_current_season') }}" style="color: #000">
 					<h3>Buscar por temporada</h3>
 					<p>Tenemos recetas frías y calientes, basadas en productos de temporada.</p>
 				</a>
@@ -101,7 +101,9 @@
 
       {% for recipe in last_recipes[1:] %}
         <article>
-    			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image"><img src="{{ url_for('static', filename='images/recipes/600/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_600_opt.jpg' }}" alt="{{ recipe.name }}" /></a>
+    			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image">
+					<img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
+				</a>
     			<h3>{{ recipe.name }}</h3>
     			<p>{{ recipe.intro }}</p>
     			<ul class="actions">

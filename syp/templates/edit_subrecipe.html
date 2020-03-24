@@ -1,0 +1,103 @@
+{% extends 'main_layout.html' %} {% block content %}
+<form
+    method="post"
+    enctype="multipart/form-data"
+    {% if is_new_subrecipe %}
+        action="{{ url_for('subrecipes.create_subrecipe', subrecipe_url=subrecipe.url) }}"
+    {% else %}
+        action="{{ url_for('subrecipes.edit_subrecipe', subrecipe_url=subrecipe.url) }}"
+    {% endif %}
+>
+    {{ form.hidden_tag() }}
+    <header id="name">
+        {% set f = form.case.process_data(subrecipe.is_feminine) %}
+        {{ form.case.label(style="clear: both; float: left; margin-right: 2em") }}
+        {{ form.case(style="width: 5em; margin-top: 3em") }}
+        {% if form.name.errors %} 
+            {{ form.name(id="input_h1", style="color:#991D1D") }}
+            <span style="color: #991D1D; font-weight: bolder">
+                El nombre puede tener máximo 100 caracteres.
+            </span>
+            <br /><br /><br />
+        {% else %} 
+            {{ form.name(id="input_h1") }} 
+        {% endif %}
+    </header>
+
+    <article id="ingredients">
+        <h2>Ingredientes para 2 personas</h2>
+
+        <ul class="ul_pepper" id="ingredients_list">
+            {% for subform in form.ingredients %} 
+                {% for q in subrecipe.ingredients %} 
+                    {% if q.ingredient.name in subform.ingredient|string %} 
+                        {% set f = subform.unit.process_data(q.unit.id) %} 
+                    {% endif %} 
+                {% endfor %}
+                <li class="ingredient_item">
+                    {% if subform.ingredient.errors %} {{
+                        subform.ingredient(class="is-invalid") }}
+                        <div class="invalid-feedback">
+                            <span style="color: #991D1D">Escoge un ingrediente.</span>
+                        </div>
+                    {% else %} 
+                        {{ subform.ingredient.label }}
+                        <span>
+                            {{ subform.ingredient(list="all_ingredients",
+                            autocomplete="off") }}
+                        </span>
+                    {% endif %} 
+                    {% if subform.amount.errors %} 
+                        {{ subform.amount.label(style="color: #991D1D; font-style: italic")}} 
+                        {{ subform.amount(style="border: 2px solid #991D1D") }}
+                        <div class="invalid-feedback">
+                            <span style="color: #991D1D">La cantidad tiene que ser un número.</span>
+                        </div>
+                        <br />
+                    {% else %} 
+                        {{ subform.amount.label }} 
+                        {{ subform.amount }} 
+                    {% endif %} 
+                    {{ subform.unit.label }} 
+                    {{ subform.unit }}
+                    <a onclick="remove_item(this)">Borrar ingrediente</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <a onclick="add_item(this)">Añadir ingrediente</a>
+        <datalist id="all_ingredients" style="display: none">
+            {% for ing in all_ingredients %}
+            <option value="{{ ing[0] }}"></option>
+            {% endfor %}
+        </datalist>
+    </article>
+
+    <article id="steps">
+        <h2>Pasos</h2>
+        <ol>
+            {% for subform in form.steps %}
+                <li class="step_item">
+                    {{ subform.step(class="recipe_step") }}
+                    <a onclick="remove_item(this)">Borrar paso</a>
+                </li>
+                {% if subform.step.errors %}
+                    {% for error in subform.step.errors %}
+                        <span style="color: #991D1D">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </ol>
+        <a
+            id="anchor_add_step"
+            onclick="add_item(this)"
+            style="margin-right: 2em"
+            >Añadir paso</a
+        >
+    </article>
+
+    <center>
+        {{ form.save(class="primary") }}
+    </center>
+</form>
+
+{% endblock content %}
