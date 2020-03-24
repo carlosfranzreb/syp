@@ -1,6 +1,8 @@
 """ Help functions to update subrecipes. """
 
 
+from datetime import datetime as dt
+
 from syp.models.unit import Unit
 from syp.models.subquantity import Subquantity
 from syp.models.ingredient import Ingredient
@@ -11,6 +13,7 @@ from syp import db
 
 def update_subrecipe(subrecipe, form):
     """ Updates name, ingredients and steps of subrecipe. """
+    subrecipe.changed_at = dt.now()
     if subrecipe.name != form.name.data:
         new_name = form.name.data
         subrecipe.name = new_name

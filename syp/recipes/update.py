@@ -1,6 +1,8 @@
 """Functions to update recipes. """
 
 
+from datetime import datetime as dt 
+
 from syp.models.quantity import Quantity
 from syp.models.ingredient import Ingredient
 from syp.models.subrecipe import Subrecipe
@@ -13,6 +15,7 @@ from syp import db
 def update_recipe(recipe, form):
     """ Find changes and update the appropriate elements. 
     Calls functions to update ingredients, steps, subrecipes and images. """
+    recipe.changed_at = dt.now()
     if recipe.name != form.name.data:
         old_url = recipe.url
         new_name = form.name.data
