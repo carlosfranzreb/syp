@@ -12,7 +12,11 @@
   {% for subrecipe in subrecipes.items %}
   <tr>
     <td>{{ subrecipe.name }}</td>
-    <td>{{ subrecipe.created_at.strftime("%Y-%m-%d") }}</td>
+    {% if subrecipe.changed_at %}
+      <td>{{ subrecipe.changed_at.strftime("%d-%m-%Y") }}</td>
+    {% else %}
+      <td>{{ subrecipe.created_at.strftime("%d-%m-%Y") }}</td>
+    {% endif %}
     <td>{{ subrecipe.uses() }}</td>
     <td>
       <a

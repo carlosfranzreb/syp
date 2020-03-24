@@ -97,19 +97,12 @@ def get_recipe_keywords(recipe):
 
 
 def get_all_subrecipes():
-    """ Get all non-deleted subrecipes. """
-    return Subrecipe.query \
-        .filter_by(is_deleted=False) \
-        .with_entities(Subrecipe.name) \
-        .order_by(Subrecipe.name).all()
-
-
-def get_subrecipe(subrecipe_id):
+    """ Get all non-deleted subrecipes of the user. """
     return Subrecipe.query \
         .filter_by(id_user=current_user.id) \
         .filter_by(is_deleted=False) \
-        .filter_by(id=subrecipe_id) \
-        .first()
+        .with_entities(Subrecipe.name) \
+        .order_by(Subrecipe.name).all()
 
 
 def get_subrecipes(recipe):
