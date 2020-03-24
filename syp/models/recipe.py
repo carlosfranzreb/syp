@@ -1,6 +1,7 @@
 """ Recipe. """
 # pylint: disable=no-member, missing-class-docstring, too-few-public-methods
 
+from datetime import datetime as dt
 
 from syp import db
 from syp.models.recipe_state import RecipeState
@@ -18,7 +19,7 @@ class Recipe(db.Model):
     text = db.Column(db.Text)
     link_video = db.Column(db.String(100))
     health = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=dt.now())
     id_season = db.Column(db.Integer, db.ForeignKey('seasons.id'))
     id_state = db.Column(db.Integer, db.ForeignKey('recipe_states.id'), nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
