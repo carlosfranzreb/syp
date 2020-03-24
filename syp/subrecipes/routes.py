@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
-from flask_login import login_required
+from flask import Blueprint, render_template, flash, redirect, url_for, abort
+from flask_login import login_required, current_user
 
 from syp.subrecipes import utils, update, create, validate
 from syp.search.forms import SearchRecipeForm
@@ -29,6 +29,8 @@ def overview():
 @login_required
 def edit_subrecipe(subrecipe_url):
     subrecipe = utils.get_subrecipe_by_url(subrecipe_url)
+    if subrecipe.id_user != current_user.id:
+        return abort(404)
     form = SubrecipeForm(obj=subrecipe)
     for subform in form.ingredients:
         subform.unit.choices = [
@@ -63,6 +65,8 @@ def edit_subrecipe(subrecipe_url):
 def delete_subrecipe(subrecipe_url):
     # TODO: Window alert before deleting.
     subrecipe = utils.get_subrecipe_by_url(subrecipe_url)
+    if subrecipe.id_user != current_user.id:
+        return abort(404)
     if subrecipe.uses() > 0:
         flash('La subreceta no se puede borrar. Hay recetas que la usan.', 'danger')
     else:

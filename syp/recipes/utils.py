@@ -3,6 +3,7 @@
 
 
 from flask import abort, request
+from flask_login import current_user
 
 from syp.recipes.images import delete_image
 from syp.search.utils import get_default_keywords
@@ -75,11 +76,13 @@ def get_paginated_recipes(limit=None, items=9):
 
 
 def get_overview_recipes(limit=None, items=9):
-    """ returns paginated recipes (all, not only published as above)
-    starting with the most recent one. Images are medium sized (600). """
+    """ returns paginated recipes (all, not only published as above, 
+    but only those that belong to the current user) starting with
+    the most recent one. """
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
         .filter_by(is_deleted=False) \
+        .filter_by(id_user=current_user.id) \
         .order_by(Recipe.created_at.desc()) \
         .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
@@ -103,22 +106,22 @@ def get_all_subrecipes():
 
 def get_subrecipe(subrecipe_id):
     return Subrecipe.query \
+        .filter_by(id_user=current_user.id) \
         .filter_by(is_deleted=False) \
         .filter_by(id=subrecipe_id) \
         .first()
 
 
 def get_subrecipes(recipe):
-    """ Get subrecipes used in the given recipe. 
-    If the step consists only of one int, then it is a reference to a subrecipe. """
+    """ Get subrecipes used in the given recipe. If the step consists
+    only of one int, then it is a reference to a subrecipe. """
     subrecipes = list()
     for step in recipe.steps:
         try:  # if the step is an int, it is a subrecipe.
             subrecipe_id = int(step.step)
-            subrecipes.append(Subrecipe.query \
-                .filter_by(id=subrecipe_id)
-                .first()
-            )
+            subrecipes.append(
+                Subrecipe.query.filter_by(id=subrecipe_id).first()
+            )                    
         except ValueError:  # Step is not a subrecipe.
             continue
     return subrecipes
@@ -136,7 +139,11 @@ def create_recipe(form=None):
     """ Returns new recipe to populate the empty form or, if a form
     is given, populates the returned object with the form. """
     if form is None:
-        return Recipe(name="Nueva receta", url="nueva_receta")
+        return Recipe(
+            name="Nueva receta",
+            url="nueva_receta",
+            id_user=current_user.id
+        )
     
 
 

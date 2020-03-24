@@ -2,8 +2,8 @@
 # pylint: disable = invalid-name, missing-function-docstring
 
 
-from flask import Blueprint, render_template, flash, redirect, url_for
-from flask_login import login_required
+from flask import Blueprint, render_template, flash, redirect, url_for, abort
+from flask_login import login_required, current_user
 
 from syp.recipes import utils, update, validate, create
 from syp.ingredients.utils import get_all_ingredients
@@ -58,6 +58,8 @@ def edit_recipe(recipe_url, state=None):
     State is set to 'edit' when the RecipeForm is posted and the validation
     should proceed, instead of redirecting to edit_new_recipe. """
     recipe = utils.get_recipe_by_url(recipe_url)
+    if recipe.id_user != current_user.id:
+        return abort(404)
     if state is None and recipe.id_state == 1:  # unfinished
         return redirect(url_for(
             'recipes.edit_new_recipe',
@@ -97,6 +99,8 @@ def edit_recipe(recipe_url, state=None):
 def edit_new_recipe(recipe_url):
     """ Recipe state = 'Unfinished'. Validation is not thorough. """
     recipe = utils.get_recipe_by_url(recipe_url)
+    if recipe.id_user != current_user.id:
+        return abort(404)
     form = utils.add_choices(NewRecipeForm(obj=recipe))
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe)
