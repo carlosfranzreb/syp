@@ -1,7 +1,7 @@
 """Functions to update recipes. """
 
 
-from datetime import datetime as dt 
+from datetime import datetime as dt
 
 from syp.models.quantity import Quantity
 from syp.models.ingredient import Ingredient
