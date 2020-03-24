@@ -13,7 +13,7 @@
 >
   {{ form.hidden_tag() }}
 
-  {% if title == 'Editar receta' %}
+  {% if title == recipe.name %}
     {% set f = form.state.process_data(recipe.state.id) %}
     {% set f = form.season.process_data(recipe.season.id) %}
   {% endif %}
