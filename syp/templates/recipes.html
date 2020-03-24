@@ -1,7 +1,7 @@
 {% extends 'main_layout.html' %} {% block content %}
 
 <h1>Recetas</h1>
-<a href="" class="add_btn" style="margin-bottom: 1em">Nueva receta</a>
+<a href="{{ url_for('recipes.create_recipe') }}" class="add_btn" style="margin-bottom: 1em">Nueva receta</a>
 <table>
   <tr>
     <th>Nombre</th>
