@@ -7,6 +7,10 @@ from flask import abort, request
 from syp.search.utils import get_default_keywords
 from syp.models.recipe import Recipe
 from syp.models.subrecipe import Subrecipe
+from syp.models.season import Season
+from syp.models.unit import Unit
+from syp.models.recipe_state import RecipeState
+
 from syp import db
 
 
@@ -123,3 +127,27 @@ def delete_recipe(recipe_id):
     recipe = Recipe.query.filter_by(id=recipe_id).first()
     recipe.is_deleted = True
     db.session.commit()
+
+
+def create_recipe(form=None):
+    """ Returns new recipe to populate the empty form or, if a form
+    is given, populates the returned object with the form. """
+    if form is None:
+        return Recipe(name="Nueva receta", url="nueva_receta")
+    
+
+
+def add_choices(form):
+    """Add choices for the select fields (state, season and units)
+    of the form. Retrieve them from the DB. """
+    form.season.choices = [
+        (s.id, s.name) for s in Season.query.order_by(Season.id.desc())
+    ]
+    form.state.choices = [
+        (s.id, s.state) for s in RecipeState.query.order_by(RecipeState.id)
+    ]
+    for subform in form.ingredients:
+        subform.unit.choices = [
+            (u.id, u.singular) for u in Unit.query.order_by(Unit.singular)
+        ]
+    return form

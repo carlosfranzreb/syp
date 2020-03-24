@@ -5,14 +5,10 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_required
 
-from syp.recipes import utils, update
+from syp.recipes import utils, update, validate, create
 from syp.ingredients.utils import get_all_ingredients
 from syp.search.forms import SearchRecipeForm
-from syp.recipes.forms import RecipeForm
-from syp.models.season import Season
-from syp.models.subrecipe import Subrecipe
-from syp.models.unit import Unit
-from syp.models.recipe_state import RecipeState
+from syp.recipes.forms import RecipeForm, NewRecipeForm
 
 
 recipes = Blueprint('recipes', __name__)
@@ -47,28 +43,71 @@ def overview():
     )
 
 
-@recipes.route('/editar_receta/<recipe_url>', methods=['GET', 'POST'])
+@recipes.route(
+    '/editar_receta/<recipe_url>',
+    defaults={'state': None},
+    methods=['GET', 'POST']
+)
+@recipes.route('/editar_receta/<recipe_url>/<state>', methods=['GET', 'POST'])
 @login_required
-def edit_recipe(recipe_url):
+def edit_recipe(recipe_url, state=None):
+    """Edit a finished recipe, or one that is supposed to be so. The state
+    argument is used by edit_new_recipe(), where the stored state is still 1,
+    in case the recipe is not valid. The given state populates the form and
+    only enters the DB if the recipe is valid. """
     recipe = utils.get_recipe_by_url(recipe_url)
-    form = RecipeForm(obj=recipe)
-    form.season.choices = [
-        (s.id, s.name) for s in Season.query.order_by(Season.id.desc())
-    ]
-    form.state.choices = [
-        (s.id, s.state) for s in RecipeState.query.order_by(RecipeState.id.desc())
-    ]
-    for subform in form.ingredients:
-        subform.unit.choices = [(u.id, u.singular) for u in
-                                Unit.query.order_by(Unit.singular)]
+    if state is None and recipe.id_state == 1:  # unfinished
+        return redirect(url_for(
+            'recipes.edit_new_recipe',
+            recipe_url=recipe_url
+        ))
+    form = utils.add_choices(RecipeForm(obj=recipe))
+    if state is not None:
+        form.state.process_data(int(state))
     if form.validate_on_submit():
-        errors = update.form_errors(form)
+        errors = validate.validate_name(form, recipe) + \
+            validate.validate_edition(form)
         if len(errors) == 0:
             flash('Los cambios han sido guardados.', 'success')
             return redirect(url_for(
                 'recipes.get_recipe',
                 recipe_url=update.update_recipe(recipe, form)
             ))
+        for error in errors:
+            flash(error, 'danger')
+    return render_template(
+        'edit_recipe.html',
+        form=form,
+        title=recipe.name,
+        recipe_form=SearchRecipeForm(),
+        recipe=recipe,
+        is_edit_recipe=True,
+        all_ingredients=get_all_ingredients(),
+        all_subrecipes=utils.get_all_subrecipes(),
+        last_recipes=utils.get_last_recipes(4),
+        description=f'Receta vegana y saludable: {recipe.name}. {recipe.intro}',
+        keywords=utils.get_recipe_keywords(recipe)
+    )
+
+
+@recipes.route('/editar_nueva_receta/<recipe_url>', methods=['GET', 'POST'])
+@login_required
+def edit_new_recipe(recipe_url):
+    """ Recipe state = 'Unfinished'. Validation is not thorough. """
+    recipe = utils.get_recipe_by_url(recipe_url)
+    form = utils.add_choices(NewRecipeForm(obj=recipe))
+    if form.validate_on_submit():
+        errors = validate.validate_name(form, recipe)
+        if len(errors) == 0:
+            if form.state.data == 1:
+                return redirect(url_for('recipes.overview'))
+            new_state = form.state.data
+            form.state.data = 1  # so it is not stored as finished.
+            return redirect(url_for(  # check if ready for publishing.
+                'recipes.edit_recipe',
+                recipe_url=update.update_recipe(recipe, form),
+                state=new_state
+            ))  # TODO: Check instantly without redirecting
         for error in errors:
             flash(error, 'danger')
     return render_template(
@@ -94,3 +133,35 @@ def delete_recipe(recipe_url):
     utils.delete_recipe(recipe.id)
     flash('La receta ha sido borrada.', 'success')
     return redirect(url_for('recipes.overview'))
+
+
+@recipes.route('/nueva_receta', methods=['GET', 'POST'])
+@login_required
+def create_recipe():
+    """
+    NewRecipeForm doesn't have requirements, so it can be saved unfinished.
+    """
+    recipe = utils.create_recipe()
+    form = utils.add_choices(NewRecipeForm(obj=recipe))
+    if form.validate_on_submit():
+        errors = validate.validate_name(form)
+        if len(errors) == 0:
+            recipe = create.save_recipe(form)
+            if recipe.id_state == 1:
+                return redirect(url_for('recipes.overview',))
+            return redirect(url_for(  # check if ready for publishing.
+                'recipes.edit_recipe',
+                recipe_url=recipe.url
+            ))  # TODO: Check instantly without redirecting
+        for error in errors:
+            flash(error, 'danger')
+    return render_template(
+        "edit_recipe.html",
+        title="Crear receta",
+        recipe=recipe,
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        all_ingredients=get_all_ingredients(),
+        form=form,
+        is_edit_recipe=True
+    )

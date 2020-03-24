@@ -1,10 +1,25 @@
 {% extends 'main_layout.html' %}
 {% block content %}
-<form method="post" enctype="multipart/form-data" action="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}">
+<form 
+  method="post" 
+  enctype="multipart/form-data"
+  {% if title == 'Crear receta' %}
+    action="{{ url_for('recipes.create_recipe') }}"
+  {% elif recipe.id_state == 1 %}
+    action="{{ url_for('recipes.edit_new_recipe', recipe_url=recipe.url) }}"
+  {% else %}
+    action="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}"
+  {% endif %}
+>
   {{ form.hidden_tag() }}
+
+  {% if title == 'Editar receta' %}
+    {% set f = form.state.process_data(recipe.state.id) %}
+    {% set f = form.season.process_data(recipe.season.id) %}
+  {% endif %}
+
   <section>
   	<header class="main" id="recipe_header">
-      {% set f = form.state.process_data(recipe.state.id) %}
       {{ form.state.label(style="clear: both; float: left; margin-right: 2em") }}
       {{ form.state(style="width: 10em; margin-top: 3em") }}
       {% if form.name.errors %}
@@ -45,7 +60,6 @@
       </div>
 			<center><div class="container_times">
 				<img class="time_img" src="{{ url_for('static', filename='images/icons/syp_flower.svg') }}" alt="Temporada" title="Temporada" />
-        {% set f = form.season.process_data(recipe.season.id) %}
         <span class="time_number">{{ form.season }}</span>
 			</div></center>
 
