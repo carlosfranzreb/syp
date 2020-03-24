@@ -13,26 +13,6 @@ from syp.models.recipe_step import RecipeStep
 from syp import db
 
 
-def form_errors(form):
-    """ Ensure that the form is correctly filled.
-    If not, return the appropiate errors. """
-    errors = list()
-    # check if all ingredients are in the DB.
-    for subform in form.ingredients:
-        ing_name = subform.ingredient.data
-        if Ingredient.query.filter_by(name=ing_name).first() is None:
-            errors.append(f"""El ingrediente "{ing_name}" no existe.
-                Si está bien escrito, y no lo encuentras entre las opciones,
-                crea un nuevo ingrediente.""")
-    # Check if video link is correct.
-    video = form.link_video.data
-    if len(video) > 0 and video[:30] != 'https://www.youtube.com/embed/':
-        errors.append("""Con ese link, el vídeo no se puede mostrar. Para conseguir
-            el link correcto, haz click en 'Share' y luego en 'Embed' en la página 
-            del vídeo.""")
-    return errors
-
-
 def update_recipe(recipe, form):
     """ Find changes and update the appropriate elements. 
     Calls functions to update ingredients, steps, subrecipes and images. """
@@ -55,7 +35,7 @@ def update_recipe(recipe, form):
     if recipe.id_season != form.season.data:
         recipe.id_season = form.season.data
     if recipe.id_state != form.state.data:
-        recipe.id_state = form.state.data    
+        recipe.id_state = form.state.data   
     update_ingredients(recipe, form)
     update_steps(recipe, form)
     db.session.commit()
