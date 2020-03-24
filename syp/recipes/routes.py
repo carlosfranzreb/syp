@@ -54,7 +54,9 @@ def edit_recipe(recipe_url, state=None):
     """Edit a finished recipe, or one that is supposed to be so. The state
     argument is used by edit_new_recipe(), where the stored state is still 1,
     in case the recipe is not valid. The given state populates the form and
-    only enters the DB if the recipe is valid. """
+    only enters the DB if the recipe is valid. 
+    State is set to 'edit' when the RecipeForm is posted and the validation
+    should proceed, instead of redirecting to edit_new_recipe. """
     recipe = utils.get_recipe_by_url(recipe_url)
     if state is None and recipe.id_state == 1:  # unfinished
         return redirect(url_for(
@@ -62,7 +64,7 @@ def edit_recipe(recipe_url, state=None):
             recipe_url=recipe_url
         ))
     form = utils.add_choices(RecipeForm(obj=recipe))
-    if state is not None:
+    if state is not None and state != 'edit':  # Add new state to form.
         form.state.process_data(int(state))
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe) + \
@@ -121,7 +123,8 @@ def edit_new_recipe(recipe_url):
         all_subrecipes=utils.get_all_subrecipes(),
         last_recipes=utils.get_last_recipes(4),
         description=f'Receta vegana y saludable: {recipe.name}. {recipe.intro}',
-        keywords=utils.get_recipe_keywords(recipe)
+        keywords=utils.get_recipe_keywords(recipe),
+        is_new_recipe=True
     )
 
 

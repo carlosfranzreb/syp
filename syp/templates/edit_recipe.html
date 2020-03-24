@@ -5,10 +5,10 @@
   enctype="multipart/form-data"
   {% if title == 'Crear receta' %}
     action="{{ url_for('recipes.create_recipe') }}"
-  {% elif recipe.id_state == 1 %}
+  {% elif is_new_recipe %}
     action="{{ url_for('recipes.edit_new_recipe', recipe_url=recipe.url) }}"
   {% else %}
-    action="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}"
+    action="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url, state='edit') }}"
   {% endif %}
 >
   {{ form.hidden_tag() }}
@@ -162,7 +162,6 @@
         <option value="{{ sub[0] }}"></option>
       {% endfor %}
     </datalist>
-
 	</article>
 
 	<article id="video">
@@ -173,6 +172,12 @@
 			<iframe class="video-item" allowfullscreen src="{{ form.link_video.data }}"></iframe>
 		</div>
 	</article>
+
+	<article id="health">
+		<h2>Beneficios para la salud</h2>
+	  <p> {{ form.health(id="textarea_health") }} </p>
+  </article>
+
   <center>
     {{ form.save(class="primary") }}
   </center>
