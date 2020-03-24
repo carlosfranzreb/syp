@@ -4,20 +4,31 @@
 
 from flask import abort, request
 
+from syp.recipes.images import delete_image
 from syp.search.utils import get_default_keywords
 from syp.models.recipe import Recipe
 from syp.models.subrecipe import Subrecipe
+from syp.models.season import Season
+from syp.models.unit import Unit
+from syp.models.recipe_state import RecipeState
+
 from syp import db
 
 
 def get_recipe_by_name(recipe_name):
-    recipe = Recipe.query.filter_by(name=recipe_name).first()
+    recipe = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(name=recipe_name) \
+        .first()
     recipe.subrecipes = get_subrecipes(recipe)
     return discard_duplicates(recipe)
 
 
 def get_recipe_by_url(recipe_url):
-    recipe = Recipe.query.filter_by(url=recipe_url).first()
+    recipe = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(url=recipe_url) \
+        .first()
     recipe.subrecipes = get_subrecipes(recipe)
     return discard_duplicates(recipe)
 
@@ -43,9 +54,11 @@ def discard_duplicates(recipe):
 def get_last_recipes(limit=None):
     """ returns published recipes starting with the most recent one
         Images are sized 300 (small)"""
-    recipes = Recipe.query.filter_by(id_state=3) \
-                          .order_by(Recipe.created_at.desc()) \
-                          .limit(limit).all()
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id_state=3) \
+        .order_by(Recipe.created_at.desc()) \
+        .limit(limit).all()
     return recipes
 
 
@@ -53,9 +66,11 @@ def get_paginated_recipes(limit=None, items=9):
     """ returns paginated recipes (published) starting with the most 
         recent one. Images are medium sized (600). """
     page = request.args.get('page', 1, type=int)
-    recipes = Recipe.query.filter_by(id_state=3) \
-                          .order_by(Recipe.created_at.desc()) \
-                          .limit(limit).paginate(page=page, per_page=items)
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id_state=3) \
+        .order_by(Recipe.created_at.desc()) \
+        .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
 
 
@@ -63,8 +78,10 @@ def get_overview_recipes(limit=None, items=9):
     """ returns paginated recipes (all, not only published as above)
     starting with the most recent one. Images are medium sized (600). """
     page = request.args.get('page', 1, type=int)
-    recipes = Recipe.query.order_by(Recipe.created_at.desc()) \
-                          .limit(limit).paginate(page=page, per_page=items)
+    recipes = Recipe.query \
+        .filter_by(is_deleted=False) \
+        .order_by(Recipe.created_at.desc()) \
+        .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
 
 def get_recipe_keywords(recipe):
@@ -78,13 +95,17 @@ def get_recipe_keywords(recipe):
 
 def get_all_subrecipes():
     """ Get all non-deleted subrecipes. """
-    return Subrecipe.query.filter_by(is_deleted=False) \
-                          .with_entities(Subrecipe.name) \
-                          .order_by(Subrecipe.name).all()
+    return Subrecipe.query \
+        .filter_by(is_deleted=False) \
+        .with_entities(Subrecipe.name) \
+        .order_by(Subrecipe.name).all()
 
 
 def get_subrecipe(subrecipe_id):
-    return Subrecipe.query.filter_by(id=subrecipe_id).first()
+    return Subrecipe.query \
+        .filter_by(is_deleted=False) \
+        .filter_by(id=subrecipe_id) \
+        .first()
 
 
 def get_subrecipes(recipe):
@@ -94,13 +115,42 @@ def get_subrecipes(recipe):
     for step in recipe.steps:
         try:  # if the step is an int, it is a subrecipe.
             subrecipe_id = int(step.step)
-            subrecipes.append(Subrecipe.query.filter_by(id=subrecipe_id).first())
+            subrecipes.append(Subrecipe.query \
+                .filter_by(id=subrecipe_id)
+                .first()
+            )
         except ValueError:  # Step is not a subrecipe.
             continue
     return subrecipes
 
 def delete_recipe(recipe_id):
-    """ Delete recipe by changing its state. """
+    """ Delete recipe by changing its state. Do delete the images
+    as they take too much space. """
     recipe = Recipe.query.filter_by(id=recipe_id).first()
     recipe.is_deleted = True
     db.session.commit()
+    delete_image(recipe.url)
+
+
+def create_recipe(form=None):
+    """ Returns new recipe to populate the empty form or, if a form
+    is given, populates the returned object with the form. """
+    if form is None:
+        return Recipe(name="Nueva receta", url="nueva_receta")
+    
+
+
+def add_choices(form):
+    """Add choices for the select fields (state, season and units)
+    of the form. Retrieve them from the DB. """
+    form.season.choices = [
+        (s.id, s.name) for s in Season.query.order_by(Season.id.desc())
+    ]
+    form.state.choices = [
+        (s.id, s.state) for s in RecipeState.query.order_by(RecipeState.id)
+    ]
+    for subform in form.ingredients:
+        subform.unit.choices = [
+            (u.id, u.singular) for u in Unit.query.order_by(Unit.singular)
+        ]
+    return form

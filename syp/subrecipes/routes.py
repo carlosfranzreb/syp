@@ -101,5 +101,3 @@ def create_subrecipe(subrecipe_url):
         is_edit_recipe=True,
         is_new_subrecipe=True
     )
-
-

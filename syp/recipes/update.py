@@ -1,51 +1,35 @@
 """Functions to update recipes. """
 
 
-from os import path
-from PIL import Image
-from flask import current_app
-
 from syp.models.quantity import Quantity
 from syp.models.ingredient import Ingredient
 from syp.models.subrecipe import Subrecipe
 from syp.models.unit import Unit
 from syp.models.recipe_step import RecipeStep
+from syp.recipes.images import change_image
 from syp import db
-
-
-def form_errors(form):
-    """ Ensure that the form is correctly filled.
-    If not, return the appropiate errors. """
-    errors = list()
-    # check if all ingredients are in the DB.
-    for subform in form.ingredients:
-        ing_name = subform.ingredient.data
-        if Ingredient.query.filter_by(name=ing_name).first() is None:
-            errors.append(f"""El ingrediente "{ing_name}" no existe.
-                Si está bien escrito, y no lo encuentras entre las opciones,
-                crea un nuevo ingrediente.""")
-    # Check if video link is correct.
-    video = form.link_video.data
-    if len(video) > 0 and video[:30] != 'https://www.youtube.com/embed/':
-        errors.append("""Con ese link, el vídeo no se puede mostrar. Para conseguir
-            el link correcto, haz click en 'Share' y luego en 'Embed' en la página 
-            del vídeo.""")
-    return errors
 
 
 def update_recipe(recipe, form):
     """ Find changes and update the appropriate elements. 
     Calls functions to update ingredients, steps, subrecipes and images. """
     if recipe.name != form.name.data:
+        old_url = recipe.url
         new_name = form.name.data
         recipe.name = new_name
         recipe.url = get_url_from_name(new_name)
-    if form.image.data:
-        save_image(form.image.data, recipe.url)
+        if form.image.data:  # new image,  new name
+            change_image(form.image.data, recipe.url, old_url)
+        else:  # same image, new name
+            change_image(None, recipe.url, old_url)
+    elif form.image.data:  # new image, same name
+        change_image(form.image.data, None, recipe.url)
     if recipe.intro != form.intro.data:
         recipe.intro = form.intro.data
     if recipe.text != form.text.data:
         recipe.text = form.text.data
+    if recipe.health != form.health.data:
+        recipe.health = form.health.data
     if recipe.link_video != form.link_video.data:
         recipe.link_video = form.link_video.data
     if recipe.time_cook != form.time_cook.data:
@@ -55,7 +39,7 @@ def update_recipe(recipe, form):
     if recipe.id_season != form.season.data:
         recipe.id_season = form.season.data
     if recipe.id_state != form.state.data:
-        recipe.id_state = form.state.data    
+        recipe.id_state = form.state.data   
     update_ingredients(recipe, form)
     update_steps(recipe, form)
     db.session.commit()
@@ -125,32 +109,6 @@ def update_steps(recipe, form):
         for step in recipe.steps:
             if step.step == step_name:
                 db.session.delete(step)
-
-
-def save_image(form_img, recipe_url):
-    """ Save new image. """
-    # TODO: Remove old one, or rename it when only name changes.
-    mark = Image.open(
-        path.join(current_app.root_path, 'static/images/icons/syp_circle.png')
-    )
-    mark.thumbnail((250, 250))
-    img = Image.open(form_img)
-    img.paste(mark, (30, 30), mark)
-    img = img.convert('RGB')
-    img.save(
-        path.join(
-            current_app.root_path,
-            f'static/images/recipes/large/{recipe_url}_opt.jpg'
-        ), optimize=True, progressive=True
-    )
-    for size in (600, 300):
-        img.thumbnail((size, size))
-        img.save(
-            path.join(
-                current_app.root_path,
-                f'static/images/recipes/{size}/{recipe_url}_{size}_opt.jpg'
-            ), optimize=True, progressive=True
-        )
 
 
 def get_url_from_name(name):

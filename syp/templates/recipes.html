@@ -1,7 +1,7 @@
 {% extends 'main_layout.html' %} {% block content %}
 
 <h1>Recetas</h1>
-<a href="" class="add_btn" style="margin-bottom: 1em">Nueva receta</a>
+<a href="{{ url_for('recipes.create_recipe') }}" class="add_btn" style="margin-bottom: 1em">Nueva receta</a>
 <table>
   <tr>
     <th>Nombre</th>
@@ -17,6 +17,13 @@
       <span class="label label-{{recipe.state.label}}">{{ recipe.state.state|upper }}</span>
     </td>
     <td>
+      <a
+        href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}"
+        class="icon fas fa-eye action_icon"
+        style="margin-right: 0.5em"
+        title="Ver receta."
+        ><span class="label">Ver receta.</span></a
+      >
       <a
         href="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}"
         class="icon fas fa-pencil action_icon"
