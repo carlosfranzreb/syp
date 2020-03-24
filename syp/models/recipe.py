@@ -2,6 +2,7 @@
 # pylint: disable=no-member, missing-class-docstring, too-few-public-methods
 
 from datetime import datetime as dt
+from flask import url_for
 
 from syp import db
 from syp.models.recipe_state import RecipeState
@@ -27,4 +28,11 @@ class Recipe(db.Model):
 
     steps = db.relationship('RecipeStep', backref='recipe', lazy=True)
     ingredients = db.relationship('Quantity', backref='recipe', lazy=True)
+
+    def image_path(self, folder):
+        """Returns the path for the recipe image in the given size. """
+        return url_for(
+            'static', filename=f'images/recipes/{folder}/{self.url}.jpg'
+        )
+
 

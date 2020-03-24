@@ -1,15 +1,12 @@
 """Functions to update recipes. """
 
 
-from os import path
-from PIL import Image
-from flask import current_app
-
 from syp.models.quantity import Quantity
 from syp.models.ingredient import Ingredient
 from syp.models.subrecipe import Subrecipe
 from syp.models.unit import Unit
 from syp.models.recipe_step import RecipeStep
+from syp.recipes.images import change_image
 from syp import db
 
 
@@ -17,11 +14,16 @@ def update_recipe(recipe, form):
     """ Find changes and update the appropriate elements. 
     Calls functions to update ingredients, steps, subrecipes and images. """
     if recipe.name != form.name.data:
+        old_url = recipe.url
         new_name = form.name.data
         recipe.name = new_name
         recipe.url = get_url_from_name(new_name)
-    if form.image.data:
-        save_image(form.image.data, recipe.url)
+        if form.image.data:  # new image,  new name
+            change_image(form.image.data, recipe.url, old_url)
+        else:  # same image, new name
+            change_image(None, recipe.url, old_url)
+    elif form.image.data:  # new image, same name
+        change_image(form.image.data, None, recipe.url)
     if recipe.intro != form.intro.data:
         recipe.intro = form.intro.data
     if recipe.text != form.text.data:
@@ -107,32 +109,6 @@ def update_steps(recipe, form):
         for step in recipe.steps:
             if step.step == step_name:
                 db.session.delete(step)
-
-
-def save_image(form_img, recipe_url):
-    """ Save new image. """
-    # TODO: Remove old one, or rename it when only name changes.
-    mark = Image.open(
-        path.join(current_app.root_path, 'static/images/icons/syp_circle.png')
-    )
-    mark.thumbnail((250, 250))
-    img = Image.open(form_img)
-    img.paste(mark, (30, 30), mark)
-    img = img.convert('RGB')
-    img.save(
-        path.join(
-            current_app.root_path,
-            f'static/images/recipes/large/{recipe_url}_opt.jpg'
-        ), optimize=True, progressive=True
-    )
-    for size in (600, 300):
-        img.thumbnail((size, size))
-        img.save(
-            path.join(
-                current_app.root_path,
-                f'static/images/recipes/{size}/{recipe_url}_{size}_opt.jpg'
-            ), optimize=True, progressive=True
-        )
 
 
 def get_url_from_name(name):

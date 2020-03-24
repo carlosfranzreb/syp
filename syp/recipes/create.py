@@ -1,11 +1,16 @@
+""" Functions related to the creation of recipes, which means
+writing new recipes to the DB. """
+
+
 from flask_login import current_user
 
 from syp.models.recipe import Recipe
 from syp.recipes import update
+from syp.recipes.images import store_image
 from syp import db
 
 
-def save_recipe(form):  # TODO: health is missing
+def save_recipe(form):
     """ Save newly created recipe. """
     recipe = Recipe(
         name=form.name.data,
@@ -26,5 +31,5 @@ def save_recipe(form):  # TODO: health is missing
     update.update_ingredients(recipe, form)
     db.session.commit()
     if form.image.data:
-        update.save_image(form.image.data, recipe.url)
+        store_image(form.image.data, recipe.url)
     return recipe

@@ -101,13 +101,14 @@ def edit_new_recipe(recipe_url):
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe)
         if len(errors) == 0:
+            recipe_url = update.update_recipe(recipe, form)
             if form.state.data == 1:
                 return redirect(url_for('recipes.overview'))
             new_state = form.state.data
             form.state.data = 1  # so it is not stored as finished.
             return redirect(url_for(  # check if ready for publishing.
                 'recipes.edit_recipe',
-                recipe_url=update.update_recipe(recipe, form),
+                recipe_url=recipe_url,
                 state=new_state
             ))  # TODO: Check instantly without redirecting
         for error in errors:

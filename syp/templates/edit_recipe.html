@@ -41,7 +41,7 @@
           {% endfor %}
         {% endif %}
       </div>
-      <img src="{{ url_for('static', filename='images/recipes/large/' + '_'.join(recipe.name.lower().replace("ñ", "n").split(' '))) + '_opt.jpg' }}" alt="{{ recipe.name }}" />
+      <img src="{{ recipe.image_path('large') }}" alt="{{ recipe.name }}" />
     </span>
 
   		<div class="container_times">

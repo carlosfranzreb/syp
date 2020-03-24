@@ -35,13 +35,12 @@ def get_recipes_by_ingredient(ing_name, items=9):
     If $name is not an ingredient or a subrecipe, return error message
     If ingredient is found, but there are no recipes with it, that means
     that there was a recipe and it was deleted."""
-    recipes = Recipe.query.filter_by(id_state=3) \
-                          .join(Quantity, Recipe.id == Quantity.id_recipe) \
-                          .join(Ingredient, Quantity.id_ingredient
-                                == Ingredient.id).filter(Ingredient.name
-                                                         .contains(ing_name)) \
-                          .with_entities(Recipe.name, Recipe.intro)
-
+    recipes = Recipe.query \
+        .filter_by(id_state=3) \
+        .join(Quantity, Recipe.id == Quantity.id_recipe) \
+        .join(Ingredient, Quantity.id_ingredient == Ingredient.id) \
+        .filter(Ingredient.name.contains(ing_name)) \
+        .with_entities(Recipe.name, Recipe.intro)
     recipes = recipes.union(get_subrecipes_by_ingredient(ing_name))
     page = request.args.get('page', 1, type=int)
     recipes = recipes.paginate(page=page, per_page=items)
@@ -56,12 +55,12 @@ def get_recipes_by_ingredient(ing_name, items=9):
 
 def get_subrecipes_by_ingredient(ing):
     """Returns recipes that contain a subrecipe with the ingredient"""
-    subs = Subrecipe.query.filter_by(is_deleted=False) \
-                          .join(Subquantity, Subrecipe.id ==
-                                Subquantity.id_subrecipe) \
-                          .join(Ingredient, Subquantity.id_ingredient ==
-                                Ingredient.id).filter(Ingredient.name
-                                                      .contains(ing)).all()
+    subs = Subrecipe.query \
+        .filter_by(is_deleted=False) \
+        .join(Subquantity, Subrecipe.id == Subquantity.id_subrecipe) \
+        .join(Ingredient, Subquantity.id_ingredient == Ingredient.id) \
+        .filter(Ingredient.name.contains(ing)) \
+        .all()
     # empty query, to extend in the for loop
     recipes = Recipe.query.filter_by(id=0)
     for subrecipe in subs:

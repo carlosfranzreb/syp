@@ -292,13 +292,9 @@
                         <div class="mini-posts">
                             {% for recipe in last_recipes[:4] %}
                             <article>
-                                <a
-                                    href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}"
-                                    class="image"
-                  ><img src="{{ url_for('static', filename='images/recipes/300/'
-                  + '_'.join(recipe.name.lower().replace("ñ", "n").split(' ')))
-                  + '_300_opt.jpg' }}" alt="{{ recipe.name }}" /></a
-                                >
+                                <a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image">
+                                    <img src="{{ recipe.image_path('300') }}" alt="{{ recipe.name }}" />
+                                </a>
                                 <p>{{ recipe.intro }}</p>
                             </article>
                             {% endfor %}
