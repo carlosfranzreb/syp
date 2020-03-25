@@ -40,10 +40,13 @@ def store_image(image, name):
 
 def delete_image(name):
     for folder in ['large', '600', '300']:
-        remove(path.join(
-            current_app.root_path,
-            f'static/images/recipes/{folder}/{name}.jpg'
-        ))
+        try:
+            remove(path.join(
+                    current_app.root_path,
+                    f'static/images/recipes/{folder}/{name}.jpg'
+            ))
+        except FileNotFoundError:
+            return
 
 
 def rename_image(src, dst):
