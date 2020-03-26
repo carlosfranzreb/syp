@@ -122,12 +122,18 @@
         </li>
 			{% endfor %}
 		</ul>
-    <a onclick="add_item(this)">Añadir ingrediente</a>
+    <a onclick="add_ingredient()">Añadir ingrediente</a>
     <datalist id="all_ingredients" style="display: none">
       {% for ing in all_ingredients %}
         <option value="{{ ing[0] }}"></option>
       {% endfor %}
     </datalist>
+
+    <select id="all_units" style="display: none" required>
+      {% for unit in all_units %}
+        <option value="{{ unit[0] }}">{{ unit[1] }}</option>
+      {% endfor %}
+    </select>
 	</article>
 
   <article id="steps">

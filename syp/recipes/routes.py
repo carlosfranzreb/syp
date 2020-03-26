@@ -88,6 +88,7 @@ def edit_recipe(recipe_url, state=None):
         is_edit_recipe=True,
         all_ingredients=get_all_ingredients(),
         all_subrecipes=utils.get_all_subrecipes(),
+        all_units=utils.get_all_units(),
         last_recipes=utils.get_last_recipes(4),
         description=f'Receta vegana y saludable: {recipe.name}. {recipe.intro}',
         keywords=utils.get_recipe_keywords(recipe)
@@ -126,6 +127,7 @@ def edit_new_recipe(recipe_url):
         is_edit_recipe=True,
         all_ingredients=get_all_ingredients(),
         all_subrecipes=utils.get_all_subrecipes(),
+        all_units=utils.get_all_units(),
         last_recipes=utils.get_last_recipes(4),
         description=f'Receta vegana y saludable: {recipe.name}. {recipe.intro}',
         keywords=utils.get_recipe_keywords(recipe),
@@ -171,6 +173,7 @@ def create_recipe():
         last_recipes=utils.get_last_recipes(4),
         all_ingredients=get_all_ingredients(),
         all_subrecipes=utils.get_all_subrecipes(),
+        all_units=utils.get_all_units(),
         form=form,
         is_edit_recipe=True
     )

@@ -92,11 +92,20 @@ def get_recipe_keywords(recipe):
 
 
 def get_all_subrecipes():
-    """ Get all non-deleted subrecipes of the user. """
+    """ Get all subrecipes of the user. """
     return Subrecipe.query \
         .filter_by(id_user=current_user.id) \
         .with_entities(Subrecipe.name) \
-        .order_by(Subrecipe.name).all()
+        .order_by(Subrecipe.name) \
+        .all()
+
+
+def get_all_units():
+    """ Get all units. """
+    return Unit.query \
+        .with_entities(Unit.id, Unit.singular) \
+        .order_by(Unit.singular) \
+        .all()
 
 
 def get_subrecipes(recipe):
