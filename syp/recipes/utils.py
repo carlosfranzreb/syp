@@ -117,9 +117,9 @@ def delete_recipe(recipe_id):
     """ Delete recipe by changing its state. Do delete the images
     as they take too much space. """
     recipe = Recipe.query.filter_by(id=recipe_id).first()
-    recipe.is_deleted = True
-    db.session.commit()
     delete_image(recipe.url)
+    db.session.delete(recipe)
+    db.session.commit()
 
 
 def create_recipe(form=None):

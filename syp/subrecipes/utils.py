@@ -27,7 +27,7 @@ def get_subrecipe_by_url(subrecipe_url):
 
 def delete_subrecipe(subrecipe):
     """ Marks subrecipe as deleted. """
-    subrecipe.is_deleted = True
+    db.session.delete(subrecipe)
     db.session.commit()
 
 
