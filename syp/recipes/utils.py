@@ -18,7 +18,6 @@ from syp import db
 
 def get_recipe_by_name(recipe_name):
     recipe = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(name=recipe_name) \
         .first()
     recipe.subrecipes = get_subrecipes(recipe)
@@ -27,7 +26,6 @@ def get_recipe_by_name(recipe_name):
 
 def get_recipe_by_url(recipe_url):
     recipe = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(url=recipe_url) \
         .first()
     recipe.subrecipes = get_subrecipes(recipe)
@@ -56,7 +54,6 @@ def get_last_recipes(limit=None):
     """ returns published recipes starting with the most recent one
         Images are sized 300 (small)"""
     recipes = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(id_state=3) \
         .order_by(Recipe.created_at.desc()) \
         .limit(limit).all()
@@ -68,7 +65,6 @@ def get_paginated_recipes(limit=None, items=9):
         recent one. Images are medium sized (600). """
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(id_state=3) \
         .order_by(Recipe.created_at.desc()) \
         .limit(limit).paginate(page=page, per_page=items)
@@ -81,7 +77,6 @@ def get_overview_recipes(limit=None, items=9):
     the most recent one. """
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(id_user=current_user.id) \
         .order_by(Recipe.created_at.desc()) \
         .limit(limit).paginate(page=page, per_page=items)
@@ -100,7 +95,6 @@ def get_all_subrecipes():
     """ Get all non-deleted subrecipes of the user. """
     return Subrecipe.query \
         .filter_by(id_user=current_user.id) \
-        .filter_by(is_deleted=False) \
         .with_entities(Subrecipe.name) \
         .order_by(Subrecipe.name).all()
 

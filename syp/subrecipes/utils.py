@@ -15,7 +15,6 @@ def get_paginated_subrecipes(limit=None, items=20):
     page = request.args.get('page', 1, type=int)
     subrecipes = Subrecipe.query \
         .filter_by(id_user=current_user.id) \
-        .filter_by(is_deleted=False) \
         .order_by(Subrecipe.created_at.desc()) \
         .limit(limit).paginate(page=page, per_page=items)
     return (page, subrecipes)
