@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from syp.subrecipes import utils, update, create, validate
 from syp.search.forms import SearchRecipeForm
-from syp.recipes.utils import get_last_recipes
+from syp.recipes.utils import get_last_recipes, get_all_units
 from syp.subrecipes.forms import SubrecipeForm
 from syp.models.unit import Unit
 from syp.ingredients.utils import get_all_ingredients
@@ -55,6 +55,7 @@ def edit_subrecipe(subrecipe_url):
         subrecipe=subrecipe,
         recipe_form=SearchRecipeForm(),
         all_ingredients=get_all_ingredients(),
+        all_units=get_all_units(),
         last_recipes=get_last_recipes(4),
         form=form,
         is_edit_recipe=True
@@ -101,6 +102,7 @@ def create_subrecipe(subrecipe_url):
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
         all_ingredients=get_all_ingredients(),
+        all_units=get_all_units(),
         form=form,
         is_edit_recipe=True,
         is_new_subrecipe=True
