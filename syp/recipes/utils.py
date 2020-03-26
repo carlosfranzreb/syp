@@ -61,7 +61,7 @@ def get_last_recipes(limit=None):
 
 
 def get_paginated_recipes(limit=None, items=9):
-    """ returns paginated recipes (published) starting with the most 
+    """ returns paginated recipes (published) starting with the most
         recent one. Images are medium sized (600). """
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
@@ -72,7 +72,7 @@ def get_paginated_recipes(limit=None, items=9):
 
 
 def get_overview_recipes(limit=None, items=9):
-    """ returns paginated recipes (all, not only published as above, 
+    """ returns paginated recipes (all, not only published as above,
     but only those that belong to the current user) starting with
     the most recent one. """
     page = request.args.get('page', 1, type=int)
@@ -108,10 +108,11 @@ def get_subrecipes(recipe):
             subrecipe_id = int(step.step)
             subrecipes.append(
                 Subrecipe.query.filter_by(id=subrecipe_id).first()
-            )                    
+            )
         except ValueError:  # Step is not a subrecipe.
             continue
     return subrecipes
+
 
 def delete_recipe(recipe_id):
     """ Delete recipe by changing its state. Do delete the images
@@ -131,7 +132,6 @@ def create_recipe(form=None):
             url="nueva_receta",
             id_user=current_user.id
         )
-    
 
 
 def add_choices(form):

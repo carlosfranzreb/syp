@@ -10,7 +10,7 @@ from syp.models.subrecipe import Subrecipe
 
 
 def get_paginated_subrecipes(limit=None, items=20):
-    """ Returns paginated recipes starting with the most recent one. 
+    """ Returns paginated recipes starting with the most recent one.
     It only returns recipes that have not been deleted. """
     page = request.args.get('page', 1, type=int)
     subrecipes = Subrecipe.query \
