@@ -36,6 +36,7 @@
       >
       <a
         href="{{ url_for('recipes.delete_recipe', recipe_url=recipe.url) }}"
+        onclick="return confirm('¿Seguro que quieres borrar la receta?')"
         style="margin-left: 0.5em"
         class="icon fas fa-trash action_icon"
         title="Borrar receta."

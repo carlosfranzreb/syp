@@ -10,12 +10,11 @@ from syp.models.subrecipe import Subrecipe
 
 
 def get_paginated_subrecipes(limit=None, items=20):
-    """ Returns paginated recipes starting with the most recent one. 
+    """ Returns paginated recipes starting with the most recent one.
     It only returns recipes that have not been deleted. """
     page = request.args.get('page', 1, type=int)
     subrecipes = Subrecipe.query \
         .filter_by(id_user=current_user.id) \
-        .filter_by(is_deleted=False) \
         .order_by(Subrecipe.created_at.desc()) \
         .limit(limit).paginate(page=page, per_page=items)
     return (page, subrecipes)
@@ -28,7 +27,7 @@ def get_subrecipe_by_url(subrecipe_url):
 
 def delete_subrecipe(subrecipe):
     """ Marks subrecipe as deleted. """
-    subrecipe.is_deleted = True
+    db.session.delete(subrecipe)
     db.session.commit()
 
 

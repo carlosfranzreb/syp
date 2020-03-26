@@ -27,6 +27,7 @@
       >
       <a
         href="{{ url_for('subrecipes.delete_subrecipe', subrecipe_url=subrecipe.url) }}"
+        onclick="return confirm('¿Seguro que quieres borrar la subreceta?')"
         style="margin-left: 0.5em"
         class="icon fas fa-trash action_icon"
         title="Borrar subreceta."

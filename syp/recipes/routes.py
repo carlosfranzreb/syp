@@ -88,9 +88,11 @@ def edit_recipe(recipe_url, state=None):
         is_edit_recipe=True,
         all_ingredients=get_all_ingredients(),
         all_subrecipes=utils.get_all_subrecipes(),
+        all_units=utils.get_all_units(),
         last_recipes=utils.get_last_recipes(4),
         description=f'Receta vegana y saludable: {recipe.name}. {recipe.intro}',
-        keywords=utils.get_recipe_keywords(recipe)
+        keywords=utils.get_recipe_keywords(recipe),
+        state=state
     )
 
 
@@ -105,16 +107,14 @@ def edit_new_recipe(recipe_url):
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe)
         if len(errors) == 0:
-            recipe_url = update.update_recipe(recipe, form)
+            recipe_url = update.update_recipe(recipe, form, valid=False)
             if form.state.data == 1:
                 return redirect(url_for('recipes.overview'))
-            new_state = form.state.data
-            form.state.data = 1  # so it is not stored as finished.
             return redirect(url_for(  # check if ready for publishing.
                 'recipes.edit_recipe',
                 recipe_url=recipe_url,
-                state=new_state
-            ))  # TODO: Check instantly without redirecting
+                state=form.state.data
+            ))  # TODO: check instantly without redirecting
         for error in errors:
             flash(error, 'danger')
     return render_template(
@@ -126,6 +126,7 @@ def edit_new_recipe(recipe_url):
         is_edit_recipe=True,
         all_ingredients=get_all_ingredients(),
         all_subrecipes=utils.get_all_subrecipes(),
+        all_units=utils.get_all_units(),
         last_recipes=utils.get_last_recipes(4),
         description=f'Receta vegana y saludable: {recipe.name}. {recipe.intro}',
         keywords=utils.get_recipe_keywords(recipe),
@@ -170,6 +171,8 @@ def create_recipe():
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
         all_ingredients=get_all_ingredients(),
+        all_subrecipes=utils.get_all_subrecipes(),
+        all_units=utils.get_all_units(),
         form=form,
         is_edit_recipe=True
     )

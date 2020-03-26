@@ -12,7 +12,6 @@ def get_recipes_by_name(recipe_name, items=9):
     the given name. Images are medium sized"""
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(id_state=3) \
         .filter(Recipe.name.contains(recipe_name)) \
         .order_by(Recipe.created_at.desc()) \

@@ -18,7 +18,6 @@ from syp import db
 
 def get_recipe_by_name(recipe_name):
     recipe = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(name=recipe_name) \
         .first()
     recipe.subrecipes = get_subrecipes(recipe)
@@ -27,7 +26,6 @@ def get_recipe_by_name(recipe_name):
 
 def get_recipe_by_url(recipe_url):
     recipe = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(url=recipe_url) \
         .first()
     recipe.subrecipes = get_subrecipes(recipe)
@@ -56,7 +54,6 @@ def get_last_recipes(limit=None):
     """ returns published recipes starting with the most recent one
         Images are sized 300 (small)"""
     recipes = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(id_state=3) \
         .order_by(Recipe.created_at.desc()) \
         .limit(limit).all()
@@ -64,11 +61,10 @@ def get_last_recipes(limit=None):
 
 
 def get_paginated_recipes(limit=None, items=9):
-    """ returns paginated recipes (published) starting with the most 
+    """ returns paginated recipes (published) starting with the most
         recent one. Images are medium sized (600). """
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(id_state=3) \
         .order_by(Recipe.created_at.desc()) \
         .limit(limit).paginate(page=page, per_page=items)
@@ -76,12 +72,11 @@ def get_paginated_recipes(limit=None, items=9):
 
 
 def get_overview_recipes(limit=None, items=9):
-    """ returns paginated recipes (all, not only published as above, 
+    """ returns paginated recipes (all, not only published as above,
     but only those that belong to the current user) starting with
     the most recent one. """
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(id_user=current_user.id) \
         .order_by(Recipe.created_at.desc()) \
         .limit(limit).paginate(page=page, per_page=items)
@@ -97,12 +92,20 @@ def get_recipe_keywords(recipe):
 
 
 def get_all_subrecipes():
-    """ Get all non-deleted subrecipes of the user. """
+    """ Get all subrecipes of the user. """
     return Subrecipe.query \
         .filter_by(id_user=current_user.id) \
-        .filter_by(is_deleted=False) \
         .with_entities(Subrecipe.name) \
-        .order_by(Subrecipe.name).all()
+        .order_by(Subrecipe.name) \
+        .all()
+
+
+def get_all_units():
+    """ Get all units. """
+    return Unit.query \
+        .with_entities(Unit.id, Unit.singular) \
+        .order_by(Unit.singular) \
+        .all()
 
 
 def get_subrecipes(recipe):
@@ -114,18 +117,19 @@ def get_subrecipes(recipe):
             subrecipe_id = int(step.step)
             subrecipes.append(
                 Subrecipe.query.filter_by(id=subrecipe_id).first()
-            )                    
+            )
         except ValueError:  # Step is not a subrecipe.
             continue
     return subrecipes
+
 
 def delete_recipe(recipe_id):
     """ Delete recipe by changing its state. Do delete the images
     as they take too much space. """
     recipe = Recipe.query.filter_by(id=recipe_id).first()
-    recipe.is_deleted = True
-    db.session.commit()
     delete_image(recipe.url)
+    db.session.delete(recipe)
+    db.session.commit()
 
 
 def create_recipe(form=None):
@@ -137,7 +141,6 @@ def create_recipe(form=None):
             url="nueva_receta",
             id_user=current_user.id
         )
-    
 
 
 def add_choices(form):
