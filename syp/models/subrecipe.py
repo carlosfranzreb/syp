@@ -22,8 +22,8 @@ class Subrecipe(db.Model):
     is_feminine = db.Column(db.Boolean, nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    steps = db.relationship('SubrecipeStep', backref='subrecipe', lazy=True)
-    ingredients = db.relationship('Subquantity', backref='subrecipe', lazy=True)
+    steps = db.relationship('SubrecipeStep', backref='subrecipe', lazy=True, cascade='delete')
+    ingredients = db.relationship('Subquantity', backref='subrecipe', lazy=True, cascade='delete')
 
     def uses(self):
         """ Returns the number of recipes on which the given subrecipe appears. """

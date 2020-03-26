@@ -26,8 +26,8 @@ class Recipe(db.Model):
     id_state = db.Column(db.Integer, db.ForeignKey('recipe_states.id'), nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    steps = db.relationship('RecipeStep', backref='recipe', lazy=True)
-    ingredients = db.relationship('Quantity', backref='recipe', lazy=True)
+    steps = db.relationship('RecipeStep', backref='recipe', lazy=True, cascade='delete')
+    ingredients = db.relationship('Quantity', backref='recipe', lazy=True, cascade='delete')
 
     def image_path(self, folder):
         """Returns the path for the recipe image in the given size. """
