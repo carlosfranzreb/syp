@@ -14,8 +14,8 @@
   {{ form.hidden_tag() }}
 
   {% if not state  %}
-    {% set f = form.state.process_data(recipe.state.id) %}
-    {% set f = form.season.process_data(recipe.season.id) %}
+    {% set f = form.state.process_data(recipe.id_state) %}
+    {% set f = form.season.process_data(recipe.id_season) %}
   {% endif %}
 
   <section>
