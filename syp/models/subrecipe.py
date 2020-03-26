@@ -20,7 +20,6 @@ class Subrecipe(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=dt.now())
     changed_at = db.Column(db.DateTime)
     is_feminine = db.Column(db.Boolean, nullable=False)
-    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     steps = db.relationship('SubrecipeStep', backref='subrecipe', lazy=True)
