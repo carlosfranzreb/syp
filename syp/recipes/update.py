@@ -42,7 +42,7 @@ def update_recipe(recipe, form):
     if recipe.id_season != form.season.data:
         recipe.id_season = form.season.data
     if recipe.id_state != form.state.data:
-        recipe.id_state = form.state.data   
+        recipe.id_state = form.state.data
     update_ingredients(recipe, form)
     update_steps(recipe, form)
     db.session.commit()
@@ -64,13 +64,12 @@ def update_ingredients(recipe, form):
                 ing.unit = Unit.query.filter_by(id=subform.unit.data).first()
         else:  # create new quantity
             new_ing = Ingredient.query.filter_by(name=ing_name).first()
-            quantity = Quantity(
+            db.session.add(Quantity(
                 amount=subform.amount.data,
                 id_recipe=recipe.id,
                 id_ingredient=new_ing.id,
                 id_unit=subform.unit.data
-            )
-            db.session.add(quantity)
+            ))
     for ing_name in deleted_ings:  # remove deleted quantities
         removed_q = recipe.ingredients[deleted_ings.index(ing_name)]
         db.session.delete(removed_q)
@@ -103,11 +102,13 @@ def update_steps(recipe, form):
                 deleted_steps.remove(step_name)
                 step.step_nr = idx + 1
             else:  # create new step
-                recipe.steps.append(RecipeStep(
+                new_step = RecipeStep(
                         step_nr=idx+1,
                         step=step_name,
                         id_recipe=recipe.id
-                ))
+                )
+                db.session.add(new_step)
+                recipe.steps.append(new_step)
     for step_name in deleted_steps:  # remove deleted steps
         for step in recipe.steps:
             if step.step == step_name:
