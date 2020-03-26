@@ -12,7 +12,7 @@ from syp.recipes.images import change_image
 from syp import db
 
 
-def update_recipe(recipe, form):
+def update_recipe(recipe, form, valid=True):
     """ Find changes and update the appropriate elements. 
     Calls functions to update ingredients, steps, subrecipes and images. """
     recipe.changed_at = dt.now()
@@ -42,7 +42,8 @@ def update_recipe(recipe, form):
     if recipe.id_season != form.season.data:
         recipe.id_season = form.season.data
     if recipe.id_state != form.state.data:
-        recipe.id_state = form.state.data
+        if valid or form.state.data == 1:
+            recipe.id_state = form.state.data
     update_ingredients(recipe, form)
     update_steps(recipe, form)
     db.session.commit()
