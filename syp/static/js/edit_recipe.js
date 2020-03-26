@@ -76,7 +76,26 @@ function add_item(link) {
     var items = list.children("li");
     var n_items = items.length;
     var first_item = items.first();
-    if (n_items == 1 && first_item.css("display") == "none") {
+    if (n_items == 0) {
+        let new_item;
+        if (div == "steps") {
+            let textarea = document.createElement('textarea');
+            textarea.setAttribute('class', 'recipe_step');
+            textarea.setAttribute('id', 'steps-0-step');
+            textarea.setAttribute('name', 'steps-0-step');
+            let anchor = document.createElement('a');
+            anchor.setAttribute('onclick', 'remove_item(this)');
+            anchor.innerHTML = 'Borrar paso';
+            new_item = document.createElement('li');
+            new_item.setAttribute('class', 'step_item');
+            new_item.appendChild(textarea);
+            new_item.appendChild(anchor);
+        } else {  // div = 'ingredients'
+            console.log('caca');
+        }
+        list.append(new_item);
+        return new_item;
+    } else if (n_items == 1 && first_item.css("display") == "none") {
         first_item.css("display", "block");
     } else {
         var new_item = first_item.clone();
@@ -108,7 +127,6 @@ function add_item(link) {
             );
             $(this).attr("for", new_id);
         });
-
         list.append(new_item);
         return new_item;
     }
