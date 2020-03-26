@@ -63,56 +63,71 @@ $(window).on("resize load", function() {
     }
 });
 
-function add_item(link) {
-    var list = "";
-    var div = $(link)
-        .parent()
-        .attr("id");
-    if (div == "steps") {
-        list = $(link).siblings("ol");
-    } else {
-        list = $(link).siblings("ul");
-    }
-    var items = list.children("li");
-    var n_items = items.length;
-    var first_item = items.first();
-    if (n_items == 1 && first_item.css("display") == "none") {
-        first_item.css("display", "block");
-    } else {
-        var new_item = first_item.clone();
-        // Change values
-        new_item.find("input, textarea").each(function() {
-            $(this).val("");
-        });
-        new_item
-            .find("select")
-            .first()
-            .val("0");
-        // Change IDS and names
-        new_item.find("input, select, textarea").each(function() {
-            var old_id = $(this).attr("id");
-            var new_id = old_id.replace(
-                /([a-zA-Z]+-)(\d+)(-[a-zA-Z]+)/,
-                "$1" + n_items + "$3"
-            );
-            $(this).attr("id", new_id);
-            $(this).attr("name", new_id);
-        });
-
-        //Change for attribute of associated label
-        new_item.find("label").each(function() {
-            var old_id = $(this).attr("for");
-            var new_id = old_id.replace(
-                /([a-zA-Z]+-)(\d+)(-[a-zA-Z]+)/,
-                "$1" + n_items + "$3"
-            );
-            $(this).attr("for", new_id);
-        });
-
-        list.append(new_item);
-        return new_item;
-    }
+function add_ingredient() {
+    let ingredient_list = document.getElementById('ingredients_list');
+    let ings_length = ingredient_list.getElementsByTagName('li').length;
+    let item_id = 'ingredients-' + ings_length;  // last field missing
+    let ing_label = document.createElement('label');
+    ing_label.setAttribute('for', item_id + '-ingredient');
+    ing_label.innerHTML = 'Ingrediente:';
+    let ing_field = document.createElement('span');
+    ing_field.innerHTML = `<input 
+        autocomplete="off" 
+        id="` + item_id + `-ingredient" 
+        list="all_ingredients" 
+        name="` + item_id + `-ingredient" 
+        type="text" 
+        required
+    >`;
+    let amount_label = document.createElement('label');
+    amount_label.setAttribute('for', item_id + '-amount');
+    amount_label.innerHTML = 'Cantidad:';
+    let amount_field = document.createElement('input');
+    amount_field.setAttribute('id', item_id + '-amount');
+    amount_field.setAttribute('name', item_id + '-amount');
+    amount_field.setAttribute('type', 'text');
+    amount_field.required = true;
+    let unit_label = document.createElement('label');
+    amount_label.setAttribute('for', item_id + '-unit');
+    amount_label.innerHTML = 'Unidad:';
+    let unit_field = document.getElementById('all_units').cloneNode(true);
+    unit_field.setAttribute('id', item_id + '-unit');
+    unit_field.setAttribute('name', item_id + '-unit');
+    unit_field.setAttribute('style', '');
+    let anchor = document.createElement('a');
+    anchor.setAttribute('onclick', 'remove_item(this)');
+    anchor.innerHTML = 'Borrar ingrediente';
+    let item = document.createElement('li');
+    item.className = 'ingredient_item';
+    item.appendChild(ing_label);
+    item.appendChild(ing_field);
+    item.appendChild(amount_label);
+    item.appendChild(amount_field);
+    item.appendChild(unit_label);
+    item.appendChild(unit_field);
+    item.appendChild(anchor);
+    ingredient_list.append(item);
 }
+
+
+function add_step() {
+    let step_list = document.getElementById('steps').children[1];
+    let steps_length = step_list.getElementsByTagName('li').length;
+    let textarea = document.createElement('textarea');
+    textarea.setAttribute('class', 'recipe_step');
+    textarea.setAttribute('id', 'steps-' + steps_length + '-step');
+    textarea.setAttribute('name', 'steps-' + steps_length + '-step');
+    let anchor = document.createElement('a');
+    anchor.setAttribute('onclick', 'remove_item(this)');
+    anchor.innerHTML = 'Borrar paso';
+    let item = document.createElement('li');
+    item.setAttribute('class', 'step_item');
+    item.appendChild(textarea);
+    item.appendChild(anchor);
+    step_list.append(item);
+    return item;
+}
+
 
 function remove_item(link) {
     var items = "";
@@ -187,18 +202,14 @@ function add_subrecipe() {
     let subrecipe = input.val();
     let obj = $("#all_subrecipes").find("option[value='" + subrecipe + "']");
     if (obj != null && obj.length > 0) {
-        let added_item = add_item(input.siblings("a:contains(paso)"));
+        let added_item = add_step();
         input.val(""); // Remove input.
         toggle_subrecipe_input();
-        added_item
-            .find("textarea")
-            .val("Receta: " + subrecipe)
-            .attr("readonly", true)
-            .addClass("is_subrecipe")
-            .children("a")
-            .attr("onclick", "remove_item(this)");
-    } else {
-        // don't allow submission
+        let textarea = added_item.firstChild;
+        textarea.innerHTML = "Receta: " + subrecipe;
+        textarea.setAttribute("readonly", true);
+        textarea.className += " is_subrecipe";
+    } else {  // don't allow submission
         alert("La subreceta que has escrito no existe. Elige una de la lista.");
     }
 }

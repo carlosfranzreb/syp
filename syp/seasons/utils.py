@@ -18,7 +18,6 @@ def get_season_recipes(season_nr=None, items=9):
         season_nr = get_season_nr(season_nr)
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
-        .filter_by(is_deleted=False) \
         .filter_by(id_state=3) \
         .filter(Recipe.id_season.in_((season_nr, 5))) \
         .order_by(Recipe.id_season) \

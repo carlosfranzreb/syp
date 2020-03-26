@@ -56,7 +56,6 @@ def get_recipes_by_ingredient(ing_name, items=9):
 def get_subrecipes_by_ingredient(ing):
     """Returns recipes that contain a subrecipe with the ingredient"""
     subs = Subrecipe.query \
-        .filter_by(is_deleted=False) \
         .join(Subquantity, Subrecipe.id == Subquantity.id_subrecipe) \
         .join(Ingredient, Subquantity.id_ingredient == Ingredient.id) \
         .filter(Ingredient.name.contains(ing)) \

@@ -13,7 +13,7 @@
 >
   {{ form.hidden_tag() }}
 
-  {% if title == recipe.name %}
+  {% if not state  %}
     {% set f = form.state.process_data(recipe.state.id) %}
     {% set f = form.season.process_data(recipe.season.id) %}
   {% endif %}
@@ -122,12 +122,18 @@
         </li>
 			{% endfor %}
 		</ul>
-    <a onclick="add_item(this)">Añadir ingrediente</a>
+    <a onclick="add_ingredient()">Añadir ingrediente</a>
     <datalist id="all_ingredients" style="display: none">
       {% for ing in all_ingredients %}
         <option value="{{ ing[0] }}"></option>
       {% endfor %}
     </datalist>
+
+    <select id="all_units" style="display: none" required>
+      {% for unit in all_units %}
+        <option value="{{ unit[0] }}">{{ unit[1] }}</option>
+      {% endfor %}
+    </select>
 	</article>
 
   <article id="steps">
@@ -152,7 +158,7 @@
         {% endif %}
 		  {% endfor %}
     </ol>
-    <a id="anchor_add_step" onclick="add_item(this)" style="margin-right: 2em">Añadir paso</a>
+    <a id="anchor_add_step" onclick="add_step()" style="margin-right: 2em">Añadir paso</a>
 
     <a id="anchor_add_subrecipe" onclick="toggle_subrecipe_input()">Añadir subreceta</a>
     <input id="choose_subrecipe" list="all_subrecipes" type="text">
