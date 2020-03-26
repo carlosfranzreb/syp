@@ -34,6 +34,7 @@ $(document).ready(function() {
         });
 });
 
+
 /* ELSE IF was not working, don't know why. */
 $(window).on("resize load", function() {
     var width = $(window).width();
@@ -63,6 +64,7 @@ $(window).on("resize load", function() {
     }
 });
 
+
 function add_ingredient() {
     let ingredient_list = document.getElementById('ingredients_list');
     let ings_length = ingredient_list.getElementsByTagName('li').length;
@@ -88,8 +90,8 @@ function add_ingredient() {
     amount_field.setAttribute('type', 'text');
     amount_field.required = true;
     let unit_label = document.createElement('label');
-    amount_label.setAttribute('for', item_id + '-unit');
-    amount_label.innerHTML = 'Unidad:';
+    unit_label.setAttribute('for', item_id + '-unit');
+    unit_label.innerHTML = 'Unidad:';
     let unit_field = document.getElementById('all_units').cloneNode(true);
     unit_field.setAttribute('id', item_id + '-unit');
     unit_field.setAttribute('name', item_id + '-unit');
@@ -130,8 +132,8 @@ function add_step() {
 
 
 function remove_item(link) {
-    var items = "";
-    var section = $(link)
+    let items = "";
+    let section = $(link)
         .closest("article")
         .attr("id");
     if (section == "steps") {
@@ -143,51 +145,32 @@ function remove_item(link) {
             .closest("ul")
             .children("li");
     }
-    var n_items = items.length;
-    if (n_items == 1) {
-        i = items.first();
-        i.find("input, textarea").each(function() {
-            $(this).val("");
-        });
-        i.find("select")
-            .first()
-            .val("0");
-        i.css("display", "none");
-    } else {
-        var item_id = $(link)
-            .siblings("input, textarea")
-            .attr("id");
-        var item_nr = parseInt(item_id.match(/[a-zA-Z]+-(\d+)-[a-zA-Z]+/)[1]);
-        var item = "";
-        if (item_nr < n_items - 1) {
-            for (idx = item_nr + 1; idx < n_items; idx++) {
-                item = items.eq(idx);
-                item.find("input, select, textarea").each(function() {
-                    var old_id = $(this).attr("id");
-                    var new_id = old_id.replace(
-                        /([a-zA-Z]+-)(\d+)(-[a-zA-Z]+)/,
-                        "$1" + (idx - 1).toString() + "$3"
-                    );
-                    $(this).attr("id", new_id);
-                    $(this).attr("name", new_id);
-                });
+    let item_id = $(link)
+        .siblings("input, textarea")
+        .attr("id");
+    let item_nr = parseInt(item_id.match(/[a-zA-Z]+-(\d+)-[a-zA-Z]+/)[1]);
+    let item = "";
+    if (item_nr < items.length - 1) {
+        for (idx = item_nr + 1; idx < items.length; idx++) {
+            item = items.eq(idx);
+            item.find("input, select, textarea").each(function() {
+                let old_id = $(this).attr("id");
+                let new_id = old_id.replace(idx, idx-1);
+                $(this).attr("id", new_id);
+                $(this).attr("name", new_id);
+            });
 
-                //Change for attribute of associated label
-                item.find("label").each(function() {
-                    var old_id = $(this).attr("for");
-                    var new_id = old_id.replace(
-                        /(ingredients-)(\d+)(-[a-zA-Z]+)/,
-                        "$1" + (idx - 1).toString() + "$3"
-                    );
-                    $(this).attr("for", new_id);
-                });
-            }
+            //Change for attribute of associated label
+            item.find("label").each(function() {
+                let old_id = $(this).attr("for");
+                let new_id = old_id.replace(idx, idx-1);
+                $(this).attr("for", new_id);
+            });
         }
-        $(link)
-            .parent()
-            .remove();
     }
+    $(link).parent().remove();
 }
+
 
 function toggle_subrecipe_input() {
     $("#choose_subrecipe").toggle();
@@ -196,6 +179,7 @@ function toggle_subrecipe_input() {
     let anchor = $("#anchor_add_subrecipe");
     anchor.text(anchor.text() == "Cancelar" ? "Añadir subreceta" : "Cancelar");
 }
+
 
 function add_subrecipe() {
     let input = $("#choose_subrecipe");
@@ -213,6 +197,7 @@ function add_subrecipe() {
         alert("La subreceta que has escrito no existe. Elige una de la lista.");
     }
 }
+
 
 function update_video() {
     $(".video-container")
