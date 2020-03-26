@@ -132,6 +132,28 @@ function add_item(link) {
     }
 }
 
+
+function add_step() {
+    let step_list = document.getElementById('steps').children[1];
+    console.log(step_list);
+    let steps_length = step_list.getElementsByTagName('li').length;
+    console.log(steps);
+    let textarea = document.createElement('textarea');
+    textarea.setAttribute('class', 'recipe_step');
+    textarea.setAttribute('id', 'steps-' + steps_length + '-step');
+    textarea.setAttribute('name', 'steps-' + steps_length + '-step');
+    let anchor = document.createElement('a');
+    anchor.setAttribute('onclick', 'remove_item(this)');
+    anchor.innerHTML = 'Borrar paso';
+    new_item = document.createElement('li');
+    new_item.setAttribute('class', 'step_item');
+    new_item.appendChild(textarea);
+    new_item.appendChild(anchor);
+    step_list.append(new_item);
+    return new_item;
+}
+
+
 function remove_item(link) {
     var items = "";
     var section = $(link)
@@ -205,18 +227,14 @@ function add_subrecipe() {
     let subrecipe = input.val();
     let obj = $("#all_subrecipes").find("option[value='" + subrecipe + "']");
     if (obj != null && obj.length > 0) {
-        let added_item = add_item(input.siblings("a:contains(paso)"));
+        let added_item = add_step();
         input.val(""); // Remove input.
         toggle_subrecipe_input();
-        added_item
-            .find("textarea")
-            .val("Receta: " + subrecipe)
-            .attr("readonly", true)
-            .addClass("is_subrecipe")
-            .children("a")
-            .attr("onclick", "remove_item(this)");
-    } else {
-        // don't allow submission
+        let textarea = added_item.firstChild;
+        textarea.innerHTML = "Receta: " + subrecipe;
+        textarea.setAttribute("readonly", true);
+        textarea.className += " is_subrecipe";
+    } else {  // don't allow submission
         alert("La subreceta que has escrito no existe. Elige una de la lista.");
     }
 }

@@ -170,6 +170,7 @@ def create_recipe():
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
         all_ingredients=get_all_ingredients(),
+        all_subrecipes=utils.get_all_subrecipes(),
         form=form,
         is_edit_recipe=True
     )
