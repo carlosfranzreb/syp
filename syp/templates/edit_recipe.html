@@ -144,18 +144,18 @@
       {% for subform in form.steps %}
         <li class="step_item">
           {% if subform.step.errors %}
-              <div class="invalid-feedback">
+              <div class="invalid-feedback" style="margin-top: -2em">
                 <span style="color: #991D1D">Si no necesitas este paso, bórralo.</span>
               </div>
               {{ subform.step(oninput="auto_grow(this)", class="recipe_step is-invalid") }}
           {% elif subform.step.data|int == 0 %}
-            {{ subform.step(oninput="auto_grow(this)", class="recipe_step") }}
+            {{ subform.step(oninput="auto_grow(this)", class="recipe_step", style="margin-top: -2em") }}
 
           {% else %}
             {% for subrecipe in recipe.subrecipes %}
               {% if subrecipe.id == subform.step.data|int %}
                 {% set f = subform.step.process_data(subrecipe.name) %}
-                {{ subform.step(oninput="auto_grow(this)", class="recipe_step is_subrecipe", readonly=true) }}
+                {{ subform.step(oninput="auto_grow(this)", class="recipe_step is_subrecipe", style="margin-top: -2em", readonly=true) }}
               {% endif %}
             {% endfor %}
           {% endif %}
@@ -164,7 +164,6 @@
 		  {% endfor %}
     </ol>
     <a id="anchor_add_step" onclick="add_step()" style="margin-right: 2em">Añadir paso</a>
-
     <a id="anchor_add_subrecipe" onclick="toggle_subrecipe_input()">Añadir subreceta</a>
     <input id="choose_subrecipe" list="all_subrecipes" type="text">
     <input id="subrecipe_button" class="primary" onclick="add_subrecipe()" value="Añadir" type="button" style="display: None">
