@@ -5,7 +5,7 @@ writing new recipes to the DB. """
 from flask_login import current_user
 
 from syp.models.recipe import Recipe
-from syp.recipes import update
+from syp.recipes import update, utils
 from syp.recipes.images import store_image
 from syp import db
 
@@ -14,7 +14,7 @@ def save_recipe(form):
     """ Save newly created recipe. """
     recipe = Recipe(
         name=form.name.data,
-        url=update.get_url_from_name(form.name.data),
+        url=utils.get_url_from_name(form.name.data),
         id_user=current_user.id,
         id_state=form.state.data,
         id_season=form.season.data,

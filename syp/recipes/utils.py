@@ -132,15 +132,13 @@ def delete_recipe(recipe_id):
     db.session.commit()
 
 
-def create_recipe(form=None):
-    """ Returns new recipe to populate the empty form or, if a form
-    is given, populates the returned object with the form. """
-    if form is None:
-        return Recipe(
-            name="Nueva receta",
-            url="nueva_receta",
-            id_user=current_user.id
-        )
+def create_recipe():
+    """ Returns new recipe to populate the empty form. """
+    return Recipe(
+        name="Nueva receta",
+        url="nueva_receta",
+        id_user=current_user.id
+    )
 
 
 def add_choices(form):
@@ -157,3 +155,14 @@ def add_choices(form):
             (u.id, u.singular) for u in Unit.query.order_by(Unit.singular)
         ]
     return form
+
+
+def get_url_from_name(name):
+    """ Help function. """
+    name = name.lower()
+    replacements = {'ñ': 'n', 'í': 'i', 'ó': 'o',
+                    'é': 'e', 'ú': 'u', 'á': 'a'}
+    for char in name:
+        if char in replacements.keys():
+            name = name.replace(char, replacements[char])
+    return name.replace(' ', '_')

@@ -114,7 +114,7 @@ def edit_new_recipe(recipe_url):
                 'recipes.edit_recipe',
                 recipe_url=recipe_url,
                 state=form.state.data
-            ))  # TODO: check instantly without redirecting
+            ))
         for error in errors:
             flash(error, 'danger')
     return render_template(
@@ -160,7 +160,7 @@ def create_recipe():
             return redirect(url_for(  # check if ready for publishing.
                 'recipes.edit_recipe',
                 recipe_url=recipe.url
-            ))  # TODO: Check instantly without redirecting
+            ))
         for error in errors:
             flash(error, 'danger')
     return render_template(

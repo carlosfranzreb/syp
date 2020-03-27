@@ -3,7 +3,7 @@
 
 from flask_login import current_user
 
-from syp.recipes.update import get_url_from_name
+from syp.recipes.utils import get_url_from_name
 from syp.models.subrecipe import Subrecipe
 from syp.models.subrecipe_step import SubrecipeStep
 from syp.models.ingredient import Ingredient

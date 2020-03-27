@@ -9,6 +9,7 @@ from syp.models.subrecipe import Subrecipe
 from syp.models.unit import Unit
 from syp.models.recipe_step import RecipeStep
 from syp.recipes.images import change_image
+from syp.recipes.utils import get_url_from_name
 from syp import db
 
 
@@ -117,13 +118,3 @@ def update_steps(recipe, form):
             if step.step == step_data:
                 db.session.delete(step)
 
-
-def get_url_from_name(name):
-    """ Help function. """
-    name = name.lower()
-    replacements = {'ñ': 'n', 'í': 'i', 'ó': 'o',
-                    'é': 'e', 'ú': 'u', 'á': 'a'}
-    for char in name:
-        if char in replacements.keys():
-            name = name.replace(char, replacements[char])
-    return name.replace(' ', '_')
