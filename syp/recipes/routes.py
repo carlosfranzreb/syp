@@ -137,7 +137,6 @@ def edit_new_recipe(recipe_url):
 @recipes.route("/borrar_receta/<recipe_url>")
 @login_required
 def delete_recipe(recipe_url):
-    # TODO: Window alert before deleting.
     recipe = utils.get_recipe_by_url(recipe_url)
     utils.delete_recipe(recipe.id)
     flash('La receta ha sido borrada.', 'success')
