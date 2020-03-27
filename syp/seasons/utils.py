@@ -5,6 +5,7 @@ from datetime import date
 from flask import abort, request
 
 from syp.models.recipe import Recipe
+from syp.models.season import Season
 from syp.search.utils import get_default_keywords
 
 
@@ -27,17 +28,16 @@ def get_season_recipes(season_nr=None, items=9):
 
 def get_season_name(season_nr):
     """ Retrieve season name given its ID. """
-    # TODO: Retrieve from DB, not hard-code it.
-    seasons = {1: 'invierno', 2: 'primavera', 3: 'verano', 4: 'otoño'}
-    return seasons[season_nr]
+    season = Season.query.filter_by(id=season_nr).first()
+    return season.name
 
 
 def get_season_nr(season_name):
     """Returns the number of the given season name
        If input is not a season, abort 404"""
-    seasons = {'invierno': 1, 'primavera': 2, 'verano': 3, 'otoño': 4}
-    if season_name in seasons:
-        return seasons[season_name]
+    season = Season.query.filter_by(name=season_name).first()
+    if season is not None:
+        return season.id
     else:
         return abort(404)
 

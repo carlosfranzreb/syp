@@ -7,7 +7,7 @@ from syp.models.unit import Unit
 from syp.models.subquantity import Subquantity
 from syp.models.ingredient import Ingredient
 from syp.models.subrecipe_step import SubrecipeStep
-from syp.recipes.update import get_url_from_name
+from syp.recipes.utils import get_url_from_name
 from syp import db
 
 

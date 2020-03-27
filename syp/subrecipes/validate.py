@@ -6,7 +6,7 @@ At least one non-empty step. Max. length of steps is checked by the form. """
 
 from syp.models.subrecipe import Subrecipe
 from syp.models.ingredient import Ingredient
-from syp.recipes.update import get_url_from_name
+from syp.recipes.utils import get_url_from_name
 
 
 def validate(form):

@@ -30,17 +30,17 @@ class RecipeForm(FlaskForm):
     state = SelectField('Estado:', coerce=int)
     intro = TextAreaField(
         'Un par de frases para promocionar la receta.',
-        validators=[DataRequired(), Length(min=80, max=180)]
+        validators=[DataRequired(), Length(max=180)]
     )
     text = TextAreaField(
         'Explicación detallada de la receta.',
-        validators=[DataRequired(), Length(min=600, max=1400)]
+        validators=[DataRequired(), Length(max=1400)]
     )
     steps = FieldList(FormField(StepForm), min_entries=1)
     ingredients = FieldList(FormField(IngredientForm), min_entries=1)
     health = TextAreaField(
         'Descripción de los nutrientes de la receta.',
-        validators=[DataRequired(), Length(min=300, max=600)]
+        validators=[DataRequired(), Length(max=600)]
     )
     link_video = StringField('Link del vídeo de YouTube.')
     save = SubmitField('Guardar')

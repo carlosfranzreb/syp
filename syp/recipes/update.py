@@ -9,6 +9,7 @@ from syp.models.subrecipe import Subrecipe
 from syp.models.unit import Unit
 from syp.models.recipe_step import RecipeStep
 from syp.recipes.images import change_image
+from syp.recipes.utils import get_url_from_name
 from syp import db
 
 
@@ -81,49 +82,39 @@ def update_steps(recipe, form):
     old_steps = [s.step for s in recipe.steps]
     deleted_steps = old_steps.copy()
     for idx, subform in enumerate(form.steps):
-        step_name = subform.step.data
-        if 'Receta: ' in step_name:  # step is a subrecipe
-            step_name = step_name[8:]  # Remove 'Receta: '
+        step_data = subform.step.data
+        if 'Receta: ' in step_data:  # step is a subrecipe
+            step_data = step_data[8:]  # Remove 'Receta: '
             subrecipe = Subrecipe.query.filter_by(
-                name=step_name
+                name=step_data
             ).first()
             if subrecipe.id in old_steps:  # change step nr
-                step = recipe.steps[old_steps.index(step_name)]
-                deleted_steps.remove(step_name)
+                step = recipe.steps[old_steps.index(step_data)]
+                deleted_steps.remove(step_data)
                 step.step_nr = idx + 1
             else:  # create new step for subrecipe
                 new_step = RecipeStep(
-                        step_nr=idx+1,
-                        step=subrecipe.id,
-                        id_recipe=recipe.id
-                )
-                db.session.add(new_step)  # TODO: Are both necessary?
-                recipe.steps.append(new_step)
-        else:  # step is not a subrecipe
-            if step_name in old_steps:  # change step_nr
-                step = recipe.steps[old_steps.index(step_name)]
-                deleted_steps.remove(step_name)
-                step.step_nr = idx + 1
-            else:  # create new step
-                new_step = RecipeStep(
-                        step_nr=idx+1,
-                        step=step_name,
-                        id_recipe=recipe.id
+                    step_nr=idx+1,
+                    step=subrecipe.id,
+                    id_recipe=recipe.id
                 )
                 db.session.add(new_step)
                 recipe.steps.append(new_step)
-    for step_name in deleted_steps:  # remove deleted steps
+        else:  # step is not a subrecipe
+            if step_data in old_steps:  # change step_nr
+                step = recipe.steps[old_steps.index(step_data)]
+                deleted_steps.remove(step_data)
+                step.step_nr = idx + 1
+            else:  # create new step
+                new_step = RecipeStep(
+                    step_nr=idx+1,
+                    step=step_data,
+                    id_recipe=recipe.id
+                )
+                db.session.add(new_step)
+                recipe.steps.append(new_step)
+    for step_data in deleted_steps:  # remove deleted steps
         for step in recipe.steps:
-            if step.step == step_name:
+            if step.step == step_data:
                 db.session.delete(step)
 
-
-def get_url_from_name(name):
-    """ Help function. """
-    name = name.lower()
-    replacements = {'ñ': 'n', 'í': 'i', 'ó': 'o',
-                    'é': 'e', 'ú': 'u', 'á': 'a'}
-    for char in name:
-        if char in replacements.keys():
-            name = name.replace(char, replacements[char])
-    return name.replace(' ', '_')

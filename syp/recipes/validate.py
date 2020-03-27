@@ -1,6 +1,6 @@
 from syp.models.ingredient import Ingredient
 from syp.models.recipe import Recipe
-from syp.recipes.update import get_url_from_name  # TODO: Should be in recipes.utils
+from syp.recipes.utils import get_url_from_name
 
 
 

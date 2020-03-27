@@ -60,7 +60,7 @@ def edit_recipe(recipe_url, state=None):
     recipe = utils.get_recipe_by_url(recipe_url)
     if recipe.id_user != current_user.id:
         return abort(404)
-    if state is None and recipe.id_state == 1:  # unfinished
+    if state is None and recipe.id_state == 1:  # unfinished recipe
         return redirect(url_for(
             'recipes.edit_new_recipe',
             recipe_url=recipe_url
@@ -68,6 +68,7 @@ def edit_recipe(recipe_url, state=None):
     form = utils.add_choices(RecipeForm(obj=recipe))
     if state is not None and state != 'edit':  # Add new state to form.
         form.state.process_data(int(state))
+        form.validate()
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe) + \
             validate.validate_edition(form)
@@ -108,13 +109,13 @@ def edit_new_recipe(recipe_url):
         errors = validate.validate_name(form, recipe)
         if len(errors) == 0:
             recipe_url = update.update_recipe(recipe, form, valid=False)
-            if form.state.data == 1:
+            if form.state.data == 1:  # create recipe and leave it unfinished
                 return redirect(url_for('recipes.overview'))
-            return redirect(url_for(  # check if ready for publishing.
+            return redirect(url_for(  # check if it is ready for publishing
                 'recipes.edit_recipe',
                 recipe_url=recipe_url,
                 state=form.state.data
-            ))  # TODO: check instantly without redirecting
+            ))
         for error in errors:
             flash(error, 'danger')
     return render_template(
@@ -134,33 +135,23 @@ def edit_new_recipe(recipe_url):
     )
 
 
-@recipes.route("/borrar_receta/<recipe_url>")
-@login_required
-def delete_recipe(recipe_url):
-    recipe = utils.get_recipe_by_url(recipe_url)
-    utils.delete_recipe(recipe.id)
-    flash('La receta ha sido borrada.', 'success')
-    return redirect(url_for('recipes.overview'))
-
-
 @recipes.route('/nueva_receta', methods=['GET', 'POST'])
 @login_required
 def create_recipe():
-    """
-    NewRecipeForm doesn't have requirements, so it can be saved unfinished.
-    """
+    """ NewRecipeForm doesn't have requirements, so it can be saved unfinished. """
     recipe = utils.create_recipe()
     form = utils.add_choices(NewRecipeForm(obj=recipe))
     if form.validate_on_submit():
         errors = validate.validate_name(form)
         if len(errors) == 0:
-            recipe = create.save_recipe(form)
-            if recipe.id_state == 1:
-                return redirect(url_for('recipes.overview',))
+            recipe = create.save_recipe(form, valid=False)
+            if form.state.data == 1:
+                return redirect(url_for('recipes.overview'))
             return redirect(url_for(  # check if ready for publishing.
                 'recipes.edit_recipe',
-                recipe_url=recipe.url
-            ))  # TODO: Check instantly without redirecting
+                recipe_url=recipe.url,
+                state=form.state.data
+            ))
         for error in errors:
             flash(error, 'danger')
     return render_template(
@@ -175,3 +166,12 @@ def create_recipe():
         form=form,
         is_edit_recipe=True
     )
+
+
+@recipes.route("/borrar_receta/<recipe_url>")
+@login_required
+def delete_recipe(recipe_url):
+    recipe = utils.get_recipe_by_url(recipe_url)
+    utils.delete_recipe(recipe.id)
+    flash('La receta ha sido borrada.', 'success')
+    return redirect(url_for('recipes.overview'))

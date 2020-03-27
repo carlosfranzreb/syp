@@ -63,22 +63,24 @@
         <span class="time_number">{{ form.season }}</span>
 			</div></center>
 
+    <h2>Introducción</h2>
     {% if form.intro.errors %}
-      {{ form.intro(id="textarea_h4", style="color: #991D1D") }}
-      <span style="color: #991D1D; font-weight: bolder">La introducción tiene que tener entre 80 y 180 caracteres.</span>
-      <br><br>
+      {{ form.intro(oninput="auto_grow(this)", style="color: #991D1D") }}
+      <span style="color: #991D1D; font-weight: bolder">¡Demasiado larga! La introducción puede tener máximo 180 caracteres.</span>
     {% else %}
-      {{ form.intro(id="textarea_h4") }}
+      {{ form.intro(oninput="auto_grow(this)", style="font-weight: bold") }}
     {% endif %}
+    <br><br>
 
+    <h2>Texto</h2>
     {% if form.text.errors %}
-      {{ form.text(id="textarea_p", style="color: #991D1D") }}
-      <span style="color: #991D1D; font-weight: bolder">El texto tiene que tener entre 600 y 1400 caracteres.</span>
+      {{ form.text(oninput="auto_grow(this)", style="color: #991D1D") }}
+      <span style="color: #991D1D; font-weight: bolder">¡Demasiado largo! El texto puede tener máximo 1400 caracteres..</span>
       <br><br>
     {% else %}
-      {{ form.text(id="textarea_p") }}
+      {{ form.text(oninput="auto_grow(this)") }}
     {% endif %}
-
+    <br><br>
   </section>
 
 	<article id="ingredients">
@@ -140,26 +142,28 @@
 	  <h2>Pasos</h2>
 		<ol>
       {% for subform in form.steps %}
-        {% if subform.step.data|int == 0 %}
-		     <li class="step_item">
-           {{ subform.step(class="recipe_step") }}
-           <a onclick="remove_item(this)">Borrar paso</a>
-         </li>
-        {% else %}
-          {% for subrecipe in recipe.subrecipes %}
-            {% if subrecipe.id == subform.step.data|int %}
-              {% set f = subform.step.process_data(subrecipe.name) %}
-              <li class="step_item">
-                {{ subform.step(class="recipe_step is_subrecipe", readonly=true) }}
-                <a onclick="remove_item(this)">Borrar paso</a>
-              </li>
-            {% endif %}
-    		  {% endfor %}
-        {% endif %}
+        <li class="step_item">
+          {% if subform.step.errors %}
+              <div class="invalid-feedback" style="margin-top: -2em">
+                <span style="color: #991D1D">Si no necesitas este paso, bórralo.</span>
+              </div>
+              {{ subform.step(oninput="auto_grow(this)", class="recipe_step is-invalid") }}
+          {% elif subform.step.data|int == 0 %}
+            {{ subform.step(oninput="auto_grow(this)", class="recipe_step", style="margin-top: -2em") }}
+
+          {% else %}
+            {% for subrecipe in recipe.subrecipes %}
+              {% if subrecipe.id == subform.step.data|int %}
+                {% set f = subform.step.process_data(subrecipe.name) %}
+                {{ subform.step(oninput="auto_grow(this)", class="recipe_step is_subrecipe", style="margin-top: -2em", readonly=true) }}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+          <a onclick="remove_item(this)">Borrar paso</a>
+        </li>
 		  {% endfor %}
     </ol>
     <a id="anchor_add_step" onclick="add_step()" style="margin-right: 2em">Añadir paso</a>
-
     <a id="anchor_add_subrecipe" onclick="toggle_subrecipe_input()">Añadir subreceta</a>
     <input id="choose_subrecipe" list="all_subrecipes" type="text">
     <input id="subrecipe_button" class="primary" onclick="add_subrecipe()" value="Añadir" type="button" style="display: None">
@@ -181,7 +185,13 @@
 
 	<article id="health">
 		<h2>Beneficios para la salud</h2>
-	  <p> {{ form.health(id="textarea_health") }} </p>
+    {% if form.health.errors %}
+      {{ form.health(oninput="auto_grow(this)", style="color: #991D1D") }}
+      <span style="color: #991D1D; font-weight: bolder">¡Demasiado largo! Los beneficios pueden tener máximo 600 caracteres.</span>
+      <br><br>
+    {% else %}
+      {{ form.health(oninput="auto_grow(this)") }}
+    {% endif %}
   </article>
 
   <center>
