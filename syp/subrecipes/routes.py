@@ -64,7 +64,6 @@ def edit_subrecipe(subrecipe_url):
 @subrecipes.route("/borrar_subreceta/<subrecipe_url>")
 @login_required
 def delete_subrecipe(subrecipe_url):
-    # TODO: Window alert before deleting.
     subrecipe = utils.get_subrecipe_by_url(subrecipe_url)
     if subrecipe.id_user != current_user.id:
         return abort(404)
