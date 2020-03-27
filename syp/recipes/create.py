@@ -10,13 +10,13 @@ from syp.recipes.images import store_image
 from syp import db
 
 
-def save_recipe(form):
+def save_recipe(form, valid=True):
     """ Save newly created recipe. """
     recipe = Recipe(
         name=form.name.data,
         url=utils.get_url_from_name(form.name.data),
         id_user=current_user.id,
-        id_state=form.state.data,
+        id_state=form.state.data if valid else 1,
         id_season=form.season.data,
         time_prep=form.time_prep.data,
         time_cook=form.time_cook.data,
