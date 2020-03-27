@@ -25,6 +25,9 @@ $(document).ready(function() {
             return false;
         }
     });
+    // Adjust step height
+    let elements = document.querySelectorAll('textarea');
+    elements.forEach(elem => auto_grow(elem));
     // Add 'Receta: ' before subrecipes. CSS ::before not working.
     $("#steps")
         .find("textarea")
