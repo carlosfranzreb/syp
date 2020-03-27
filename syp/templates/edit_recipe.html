@@ -142,22 +142,25 @@
 	  <h2>Pasos</h2>
 		<ol>
       {% for subform in form.steps %}
-        {% if subform.step.data|int == 0 %}
-		     <li class="step_item">
-           {{ subform.step(oninput="auto_grow(this)", class="recipe_step") }}
-           <a onclick="remove_item(this)">Borrar paso</a>
-         </li>
-        {% else %}
-          {% for subrecipe in recipe.subrecipes %}
-            {% if subrecipe.id == subform.step.data|int %}
-              {% set f = subform.step.process_data(subrecipe.name) %}
-              <li class="step_item">
+        <li class="step_item">
+          {% if subform.step.errors %}
+              <div class="invalid-feedback">
+                <span style="color: #991D1D">Si no necesitas este paso, bórralo.</span>
+              </div>
+              {{ subform.step(oninput="auto_grow(this)", class="recipe_step is-invalid") }}
+          {% elif subform.step.data|int == 0 %}
+            {{ subform.step(oninput="auto_grow(this)", class="recipe_step") }}
+
+          {% else %}
+            {% for subrecipe in recipe.subrecipes %}
+              {% if subrecipe.id == subform.step.data|int %}
+                {% set f = subform.step.process_data(subrecipe.name) %}
                 {{ subform.step(oninput="auto_grow(this)", class="recipe_step is_subrecipe", readonly=true) }}
-                <a onclick="remove_item(this)">Borrar paso</a>
-              </li>
-            {% endif %}
-    		  {% endfor %}
-        {% endif %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+          <a onclick="remove_item(this)">Borrar paso</a>
+        </li>
 		  {% endfor %}
     </ol>
     <a id="anchor_add_step" onclick="add_step()" style="margin-right: 2em">Añadir paso</a>
