@@ -65,20 +65,20 @@
 
     <h2>Introducción</h2>
     {% if form.intro.errors %}
-      {{ form.intro(id="textarea_h4", style="color: #991D1D") }}
+      {{ form.intro(oninput="auto_grow(this)", style="color: #991D1D") }}
       <span style="color: #991D1D; font-weight: bolder">¡Demasiado larga! La introducción puede tener máximo 180 caracteres.</span>
       <br><br>
     {% else %}
-      {{ form.intro(style="font-weight: bold") }}
+      {{ form.intro(oninput="auto_grow(this)", style="font-weight: bold") }}
     {% endif %}
 
     <h2>Texto</h2>
     {% if form.text.errors %}
-      {{ form.text(id="textarea_p", style="color: #991D1D") }}
+      {{ form.text(oninput="auto_grow(this)", style="color: #991D1D") }}
       <span style="color: #991D1D; font-weight: bolder">¡Demasiado largo! El texto puede tener máximo 1400 caracteres..</span>
       <br><br>
     {% else %}
-      {{ form.text() }}
+      {{ form.text(oninput="auto_grow(this)") }}
     {% endif %}
 
   </section>
@@ -144,7 +144,7 @@
       {% for subform in form.steps %}
         {% if subform.step.data|int == 0 %}
 		     <li class="step_item">
-           {{ subform.step(class="recipe_step") }}
+           {{ subform.step(oninput="auto_grow(this)", class="recipe_step") }}
            <a onclick="remove_item(this)">Borrar paso</a>
          </li>
         {% else %}
@@ -152,7 +152,7 @@
             {% if subrecipe.id == subform.step.data|int %}
               {% set f = subform.step.process_data(subrecipe.name) %}
               <li class="step_item">
-                {{ subform.step(class="recipe_step is_subrecipe", readonly=true) }}
+                {{ subform.step(oninput="auto_grow(this)", class="recipe_step is_subrecipe", readonly=true) }}
                 <a onclick="remove_item(this)">Borrar paso</a>
               </li>
             {% endif %}
@@ -184,11 +184,11 @@
 	<article id="health">
 		<h2>Beneficios para la salud</h2>
     {% if form.health.errors %}
-      {{ form.health(style="color: #991D1D") }}
+      {{ form.health(oninput="auto_grow(this)", style="color: #991D1D") }}
       <span style="color: #991D1D; font-weight: bolder">¡Demasiado largo! Los beneficios pueden tener máximo 600 caracteres.</span>
       <br><br>
     {% else %}
-      {{ form.health() }}
+      {{ form.health(oninput="auto_grow(this)") }}
     {% endif %}
   </article>
 

@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 
+
 $(document).ready(function() {
     // On first load, remove Ingredient(...) from name
     // The check is necessary because it shouldn't be cut when the form is validated
@@ -32,36 +33,6 @@ $(document).ready(function() {
                 $(this).text("Receta: " + $(this).text());
             }
         });
-});
-
-
-/* ELSE IF was not working, don't know why. */
-$(window).on("resize load", function() {
-    var width = $(window).width();
-    if (width < 450) {
-        $("#textarea_h4").attr("rows", "6");
-        $("#textarea_p").attr("rows", "40");
-        $("#textarea_health").attr("rows", "20");
-        $(".recipe_step").attr("rows", "15");
-    }
-    if (width >= 450) {
-        $("#textarea_h4").attr("rows", "5");
-        $("#textarea_p").attr("rows", "30");
-        $("#textarea_health").attr("rows", "15");
-        $(".recipe_step").attr("rows", "10");
-    }
-    if (width >= 580) {
-        $("#textarea_h4").attr("rows", "3");
-        $("#textarea_p").attr("rows", "24");
-        $("#textarea_health").attr("rows", "12");
-        $(".recipe_step").attr("rows", "8");
-    }
-    if (width >= 1280) {
-        $("#textarea_h4").attr("rows", "2");
-        $("#textarea_p").attr("rows", "14");
-        $("#textarea_health").attr("rows", "7");
-        $(".recipe_step").attr("rows", "5");
-    }
 });
 
 
@@ -117,6 +88,7 @@ function add_step() {
     let steps_length = step_list.getElementsByTagName('li').length;
     let textarea = document.createElement('textarea');
     textarea.setAttribute('class', 'recipe_step');
+    textarea.setAttribute('oninput', 'auto_grow(this)');
     textarea.setAttribute('id', 'steps-' + steps_length + '-step');
     textarea.setAttribute('name', 'steps-' + steps_length + '-step');
     let anchor = document.createElement('a');
@@ -203,4 +175,9 @@ function update_video() {
     $(".video-container")
         .find("iframe")
         .attr("src", $("#link_video").val());
+}
+
+function auto_grow(element) {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight)+"px";    
 }
