@@ -68,7 +68,7 @@ def edit_recipe(recipe_url, state=None):
     form = utils.add_choices(RecipeForm(obj=recipe))
     if state is not None and state != 'edit':  # Add new state to form.
         form.state.process_data(int(state))
-        form.save.process_data(True)
+        form.validate()
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe) + \
             validate.validate_edition(form)
