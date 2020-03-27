@@ -12,7 +12,6 @@ from syp.models.subquantity import Subquantity
 
 
 class Subrecipe(db.Model):
-    # TODO: add function that gets url from name automatically.
     __tablename__ = 'subrecipes'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
@@ -28,3 +27,4 @@ class Subrecipe(db.Model):
     def uses(self):
         """ Returns the number of recipes on which the given subrecipe appears. """
         return RecipeStep.query.filter_by(step=self.id).count()
+

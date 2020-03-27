@@ -9,7 +9,6 @@ from syp.models.recipe_state import RecipeState
 
 
 class Recipe(db.Model):
-    # TODO: add function that gets url from name automatically.
     __tablename__ = 'recipes'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
@@ -34,5 +33,4 @@ class Recipe(db.Model):
         return url_for(
             'static', filename=f'images/recipes/{folder}/{self.url}.jpg'
         )
-
 
