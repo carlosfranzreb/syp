@@ -92,11 +92,13 @@ def update_steps(recipe, form):
                 deleted_steps.remove(step_name)
                 step.step_nr = idx + 1
             else:  # create new step for subrecipe
-                recipe.steps.append(RecipeStep(
+                new_step = RecipeStep(
                         step_nr=idx+1,
                         step=subrecipe.id,
                         id_recipe=recipe.id
-                ))
+                )
+                db.session.add(new_step)  # TODO: Are both necessary?
+                recipe.steps.append(new_step)
         else:  # step is not a subrecipe
             if step_name in old_steps:  # change step_nr
                 step = recipe.steps[old_steps.index(step_name)]
