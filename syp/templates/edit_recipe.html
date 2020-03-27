@@ -67,10 +67,10 @@
     {% if form.intro.errors %}
       {{ form.intro(oninput="auto_grow(this)", style="color: #991D1D") }}
       <span style="color: #991D1D; font-weight: bolder">¡Demasiado larga! La introducción puede tener máximo 180 caracteres.</span>
-      <br><br>
     {% else %}
       {{ form.intro(oninput="auto_grow(this)", style="font-weight: bold") }}
     {% endif %}
+    <br><br>
 
     <h2>Texto</h2>
     {% if form.text.errors %}
@@ -80,7 +80,7 @@
     {% else %}
       {{ form.text(oninput="auto_grow(this)") }}
     {% endif %}
-
+    <br><br>
   </section>
 
 	<article id="ingredients">
