@@ -1,7 +1,7 @@
 {% extends 'main_layout.html' %} {% block content %}
 
 <h1>Subrecetas</h1>
-<a href="{{ url_for('subrecipes.create_subrecipe', subrecipe_url='nueva_subreceta') }}" class="add_btn" style="margin-bottom: 1em">Nueva subreceta</a>
+<a href="{{ url_for('subrecipes.create_subrecipe') }}" class="add_btn" style="margin-bottom: 1em">Nueva subreceta</a>
 <table>
   <tr>
     <th>Nombre</th>
