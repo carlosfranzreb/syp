@@ -1,7 +1,8 @@
 from urllib.parse import urlparse
+from flask import request
 
 
-def validate_url(url):
-    """ Verify that the URL belongs to the website. If not, return
-    the home URL to avoid phishing. """
-    return url
+def get_url():
+    """ Retrieve only the path not the host. """
+    parse = urlparse(request.args.get('url'))
+    return parse.path

@@ -21,8 +21,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.get_home'))
     form = LoginForm()
-    url = utils.validate_url(request.args.get('url'))
-    # ext_url = url_for(next_page)
+    url = utils.get_url()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None:
