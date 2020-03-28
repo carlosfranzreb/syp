@@ -3,7 +3,7 @@
     method="post"
     enctype="multipart/form-data"
     {% if is_new_subrecipe %}
-        action="{{ url_for('subrecipes.create_subrecipe', subrecipe_url=subrecipe.url) }}"
+        action="{{ url_for('subrecipes.create_subrecipe') }}"
     {% else %}
         action="{{ url_for('subrecipes.edit_subrecipe', subrecipe_url=subrecipe.url) }}"
     {% endif %}
