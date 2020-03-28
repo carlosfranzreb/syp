@@ -135,7 +135,7 @@
                             {% if current_user.is_authenticated %}
               <a href="" class="button">{{ current_user.username }}</a>
                             {% else %}
-              <a href="{{ url_for('users.login') }}" class="button"
+              <a href="{{ url_for('users.login', url=request.url) }}" class="button"
                                 >Iniciar sesión</a
                             >
                             {% endif %}

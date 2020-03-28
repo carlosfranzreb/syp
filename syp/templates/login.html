@@ -12,7 +12,7 @@
 </section>
 
 <section>
-  <form method="POST" action="">
+  <form method="POST" action="{{ url_for('users.login', url=url) }}">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
             <div class="form-group">
