@@ -184,3 +184,10 @@ function auto_grow(element) {
     element.style.height = "5px";
     element.style.height = (element.scrollHeight)+"px";    
 }
+
+function check_size(field) {
+    if (field.files[0].size > 19456) {  // 19MB
+        window.alert('¡La imagen no puede pesar más de 19 MB!');
+        field.value = '';
+    }
+}

@@ -34,7 +34,7 @@
   	<span class="image main">
       <div class="form-group">
         {{ form.image.label() }}
-        {{ form.image(class="form-control-file") }}
+        {{ form.image(class="form-control-file", onchange="check_size(this)") }}
         {% if form.image.errors %}
           {% for error in form.image.errors %}
             <span style="color: #991D1D">{{ error }}</span>
