@@ -6,6 +6,7 @@ from string import Template
 from flask import abort, request
 
 from syp.models.recipe import Recipe
+from syp.models.recipe_step import RecipeStep
 from syp.models.subrecipe import Subrecipe
 from syp.models.quantity import Quantity
 from syp.models.subquantity import Subquantity
@@ -39,17 +40,15 @@ def get_recipes_by_ingredient(ing_name, items=9):
         .filter_by(id_state=3) \
         .join(Quantity, Recipe.id == Quantity.id_recipe) \
         .join(Ingredient, Quantity.id_ingredient == Ingredient.id) \
-        .filter(Ingredient.name.contains(ing_name)) \
-        .with_entities(Recipe.name, Recipe.intro)
+        .filter(Ingredient.name.contains(ing_name))
     recipes = recipes.union(get_subrecipes_by_ingredient(ing_name))
     page = request.args.get('page', 1, type=int)
     recipes = recipes.paginate(page=page, per_page=items)
 
     if recipes.items == []:
-        recipes = Template('No tenemos recetas con $name. \
-                            ¡Prueba con otro ingrediente!') \
-                           .substitute(name=ing_name.lower())
-
+        recipes = Template(
+            'No tenemos recetas con $name. ¡Prueba con otro ingrediente!'
+        ).substitute(name=ing_name.lower())
     return (page, recipes)
 
 
@@ -63,10 +62,12 @@ def get_subrecipes_by_ingredient(ing):
     # empty query, to extend in the for loop
     recipes = Recipe.query.filter_by(id=0)
     for subrecipe in subs:
-        recipes = recipes.union(Recipe.query.filter(Recipe.subrecipes
-                                                    .contains(subrecipe)))
-
-    return recipes.with_entities(Recipe.name, Recipe.intro)
+        recipes = recipes.union(
+            Recipe.query
+            .join(RecipeStep, RecipeStep.id_recipe == Recipe.id)
+            .filter(RecipeStep.step == subrecipe.id)
+        )
+    return recipes
 
 
 def get_all_ingredients():
