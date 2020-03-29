@@ -83,7 +83,7 @@
         <ol>
             {% for subform in form.steps %}
                 <li class="step_item">
-                    {{ subform.step(class="recipe_step") }}
+                    {{ subform.step(oninput="auto_grow(this)", class="recipe_step") }}
                     <a onclick="remove_item(this)">Borrar paso</a>
                 </li>
                 {% if subform.step.errors %}
