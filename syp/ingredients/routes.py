@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required
 
 from syp.ingredients.forms import IngredientsForm, IngredientForm
-from syp.ingredients import utils, search, validate, update
+from syp.ingredients import utils, search, validate, update, create
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.utils import get_last_recipes
 
@@ -67,7 +67,7 @@ def search_ingredient(ing_url):
 @ingredients.route("/ingredientes")
 @login_required
 def overview():
-    """ Shows a list with all subrecipes. """
+    """ Shows a list with all ingredients. """
     return render_template(
         "ingredients.html",
         title="Ingredientes",
@@ -100,5 +100,30 @@ def edit_ingredient(ingredient_url):
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
         ingredient=ingredient,
+        is_edit_recipe=True
+    )
+
+
+@ingredients.route('/nuevo_ingrediente', methods=['GET', 'POST'])
+@login_required
+def create_ingredient():
+    ingredient = utils.create_ingredient()
+    form = IngredientForm(obj=ingredient)
+    if form.validate_on_submit():
+        errors = validate.validate_name(form)
+        if len(errors) > 0:
+            for error in errors:
+                flash(error, 'danger')
+        else:
+            create.save_ingredient(form)
+            flash('El nuevo ingrediente ha sido guardado.', 'success')
+            return redirect(url_for('ingredients.overview'))
+    return render_template(
+        "edit_ingredient.html",
+        title="Crear ingrediente",
+        ingredient=ingredient,
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        form=form,
         is_edit_recipe=True
     )

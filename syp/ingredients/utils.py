@@ -3,6 +3,7 @@
 
 
 from flask import abort, request
+from flask_login import current_user
 
 from syp.models.ingredient import Ingredient
 from syp.search.utils import get_default_keywords
@@ -54,3 +55,12 @@ def get_ing_keywords(ing_name=None):
                      buscar receta casera por ingrediente'
 
     return ' '.join(ing_keys.split())
+
+
+def create_ingredient():
+    """ Create empty ingredient without adding it to the session. """
+    return Ingredient(
+        name="Nuevo ingrediente",
+        url="nuevo_ingrediente",
+        created_by=current_user.id
+    )

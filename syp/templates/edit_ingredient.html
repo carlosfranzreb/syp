@@ -2,8 +2,8 @@
 <form
     method="post"
     enctype="multipart/form-data"
-    {% if is_new_subrecipe %}
-        action=""
+    {% if title == 'Crear ingrediente' %}
+        action="{{ url_for('ingredients.create_ingredient') }}"
     {% else %}
         action="{{ url_for('ingredients.edit_ingredient', ingredient_url=ingredient.url) }}"
     {% endif %}

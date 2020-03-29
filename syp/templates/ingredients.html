@@ -1,7 +1,7 @@
 {% extends 'main_layout.html' %} {% block content %}
 
 <h1>Ingredientes</h1>
-<a href="" class="add_btn" style="margin-bottom: 1em">Nuevo ingrediente</a>
+<a href="{{ url_for('ingredients.create_ingredient') }}" class="add_btn" style="margin-bottom: 1em">Nuevo ingrediente</a>
 <table>
   <tr>
     <th>Nombre</th>
@@ -23,8 +23,7 @@
         href="{{ url_for('ingredients.edit_ingredient', ingredient_url=ingredient.url) }}"
         class="icon fas fa-pencil action_icon"
         title="Editar ingrediente."
-        ><span class="label">Editar ingrediente.</span></a
-      >
+        ><span class="label">Editar ingrediente.</span></a>
       {% if current_user.id == ingredient.created_by %}
         <a
           href=""
