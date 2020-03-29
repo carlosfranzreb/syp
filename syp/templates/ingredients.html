@@ -1,64 +1,59 @@
-{% extends 'main_layout.html' %}
-{% block content %}
-  <section>
-    <header class="main">
-      <h1>Buscar por ingrediente</h1>
-    </header>
-    <div class="container" style="max-width: 400px">
-      <form method="post">
-        <div class="row">
-          <div class="col-sm">
-            {{ form.ingredient(list="all_ingredients", autocomplete="off", placeholder="Empieza a escribir.", style="margin: 0 0 5px 0; min-width: 140px") }}
-            <datalist id="all_ingredients" style="block">
-              {% for ing in all_ingredients %}
-                <option value="{{ ing[0] }}"></option>
-              {% endfor %}
-            </datalist>
-          </div>
-          <div class="col-sm">
-            {{ form.submit }}
-          </div>
-        </div>
-      </form>
-    </div>
-  </section>
+{% extends 'main_layout.html' %} {% block content %}
 
-  {% if recipes is not none %}
-    <section>
-    	<header class="major">
-    		<h2>Recetas con {{title.lower()}}</h2>
-    	</header>
-    	<div class="posts">
+<h1>Ingredientes</h1>
+<a href="{{ url_for('ingredients.create_ingredient') }}" class="add_btn" style="margin-bottom: 1em">Nuevo ingrediente</a>
+<table>
+  <tr>
+    <th>Nombre</th>
+    <th>Creador</th>
+    <th>Último cambio</th>
+    <th>Acciones</th>
+  </tr>
+  {% for ingredient in ingredients.items %}
+  <tr>
+    <td>{{ ingredient.name }}</td>
+    <td>{{ ingredient.creator.username }}</td>
+    {% if ingredient.changed_at %}
+      <td>{{ ingredient.changed_at.strftime("%d-%m-%Y") }}</td>
+    {% else %}
+      <td>{{ ingredient.created_at.strftime("%d-%m-%Y") }}</td>
+    {% endif %}
+    <td>
+      <a
+        href="{{ url_for('ingredients.edit_ingredient', ingredient_url=ingredient.url) }}"
+        class="icon fas fa-pencil action_icon"
+        title="Editar ingrediente."
+        ><span class="label">Editar ingrediente.</span></a>
+      {% if current_user.id == ingredient.created_by %}
+        <a
+          href="{{ url_for('ingredients.delete_ingredient', ingredient_url=ingredient.url) }}"
+          onclick="return confirm('¿Seguro que quieres borrar el ingrediente?')"
+          style="margin-left: 0.5em"
+          class="icon fas fa-trash action_icon"
+          title="Borrar ingrediente."
+        ><span class="label">Borrar ingrediente.</span></a>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
 
-          {% for recipe in recipes.items %}
-            <article>
-        			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image">
-                <img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
-              </a>
-        			<h3>{{ recipe.name }}</h3>
-        			<p>{{ recipe.intro }}</p>
-        			<ul class="actions">
-        				<li><a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="button">Abrir</a></li>
-        			</ul>
-        		</article>
-          {% endfor %}
+<center>
+  {% for page_num in ingredients.iter_pages(left_edge=1, right_edge=1,
+  left_current=1, right_current=2) %} {% if page_num %} {% if ingredients.page ==
+  page_num %}
+  <a
+    class="btn btn-danger mb-4"
+    href="{{ url_for('ingredients.overview', page=page_num) }}"
+    >{{ page_num }}</a
+  >
+  {% else %}
+  <a
+    class="btn btn-danger mb-4"
+    href="{{ url_for('ingredients.overview', page=page_num) }}"
+    >{{ page_num }}</a
+  >
+  {% endif %} {% else %} ... {% endif %} {% endfor %}
+</center>
 
-    	</div>
-
-      <center>
-        {% for page_num in recipes.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-          {% if page_num %}
-            {% if recipes.page == page_num %}
-              <a class="btn btn-danger mb-4" href="{{ url_for('ingredients.search_ingredient', ing_url=chosen_url, page=page_num) }}">{{ page_num }}</a>
-            {% else %}
-              <a class="btn btn-outline-danger mb-4" href="{{ url_for('ingredients.search_ingredient', ing_url=chosen_url, page=page_num) }}">{{ page_num }}</a>
-            {% endif %}
-          {% else %}
-            ...
-          {% endif %}
-        {% endfor %}
-      </center>
-
-    </section>
-  {% endif %}
-{% endblock %}
+{% endblock content %}

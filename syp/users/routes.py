@@ -3,7 +3,7 @@
 
 
 from flask import render_template, url_for, flash, redirect, request, Blueprint
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user
 
 from syp import bcrypt
 from syp.models.user import User
@@ -38,3 +38,10 @@ def login():
         last_recipes=get_last_recipes(4),
         url=url
     )
+
+@users.route('/logout')
+def logout():
+    """ Logout and return to previous page. If the page requires a login,
+    a 404 error will be thrown. """
+    logout_user()
+    return redirect(utils.get_url())

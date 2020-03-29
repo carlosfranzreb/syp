@@ -21,11 +21,11 @@ def validate(form):
         )
     elif Subrecipe.query.filter_by(name=name).first() is not None:
         errors.append(
-            f'Ya existe una subreceta llamada "{name}". Cambia el nombre!'
+            f'Ya existe una subreceta llamada "{name}". ¡Cambia el nombre!'
         )
     elif Subrecipe.query.filter_by(url=url).first() is not None:
         errors.append(
-            f'Ya existe una subreceta cuya URL es "{url}". Cambia el nombre!'
+            f'Ya existe una subreceta cuya URL es "{url}". ¡Cambia el nombre!'
         )
     return errors + validate_ingredients(form)
 
