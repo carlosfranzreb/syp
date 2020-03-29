@@ -73,8 +73,13 @@ def update_ingredients(recipe, form):
                 id_unit=subform.unit.data
             ))
     for ing_name in deleted_ings:  # remove deleted quantities
-        removed_q = recipe.ingredients[deleted_ings.index(ing_name)]
-        db.session.delete(removed_q)
+        ing = Ingredient.query.filter_by(name=ing_name).first()
+        db.session.delete(
+            Quantity.query
+            .filter_by(id_recipe=recipe.id)
+            .filter_by(id_ingredient=ing.id)
+            .first()
+        )
 
 
 def update_steps(recipe, form):
