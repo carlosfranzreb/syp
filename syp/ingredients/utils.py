@@ -31,7 +31,7 @@ def get_all_ingredients():
 
 
 def get_paginated_ingredients(limit=None, items=20):
-    """ Returns paginated ingredients. """
+    """ Returns paginated ingredients."""
     page = request.args.get('page', 1, type=int)
     ingredients = Ingredient.query \
         .filter_by(is_deleted=False) \

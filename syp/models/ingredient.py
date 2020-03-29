@@ -18,6 +18,9 @@ class Ingredient(db.Model):
     is_valid = db.Column(db.Boolean, default=False)
     is_deleted = db.Column(db.Boolean, default=False)
 
+    creator = db.relationship(
+        'User', backref='ingredient', foreign_keys='Ingredient.created_by', lazy=True
+    )
 
     def __repr__(self):
         return self.name

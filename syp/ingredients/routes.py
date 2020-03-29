@@ -73,5 +73,5 @@ def overview():
         title="Subrecetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
-        subrecipes=utils.get_paginated_ingredients()[1],
+        ingredients=utils.get_paginated_ingredients()[1],
     )
