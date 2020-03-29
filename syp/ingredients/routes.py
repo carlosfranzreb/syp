@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
-from flask_login import login_required
+from flask import Blueprint, render_template, redirect, url_for, flash, abort
+from flask_login import login_required, current_user
 
 from syp.ingredients.forms import IngredientsForm, IngredientForm
 from syp.ingredients import utils, search, validate, update, create
@@ -127,3 +127,17 @@ def create_ingredient():
         form=form,
         is_edit_recipe=True
     )
+
+
+@ingredients.route("/borrar_subreceta/<ingredient_url>")
+@login_required
+def delete_ingredient(ingredient_url):
+    ingredient = utils.get_ingredient_by_url(ingredient_url)
+    if ingredient.created_by != current_user.id:
+        return abort(404)
+    if ingredient.uses() > 0:
+        flash('El ingrediente no se puede borrar. Hay recetas que lo usan.', 'danger')
+    else:
+        utils.delete_ingredient(ingredient)
+        flash('El ingrediente ha sido borrado.', 'success')
+    return redirect(url_for('ingredients.overview'))

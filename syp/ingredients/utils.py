@@ -7,6 +7,7 @@ from flask_login import current_user
 
 from syp.models.ingredient import Ingredient
 from syp.search.utils import get_default_keywords
+from syp import db
 
 
 def get_ingredient_by_name(name):
@@ -62,3 +63,10 @@ def create_ingredient():
         url="nuevo_ingrediente",
         created_by=current_user.id
     )
+
+
+def delete_ingredient(ingredient):
+    """ Delete ingredient. """
+    db.session.delete(ingredient)
+    db.session.commit()
+

@@ -26,8 +26,8 @@
         ><span class="label">Editar ingrediente.</span></a>
       {% if current_user.id == ingredient.created_by %}
         <a
-          href=""
-          onclick="return confirm('¿Seguro que quieres borrar la ingrediente?')"
+          href="{{ url_for('ingredients.delete_ingredient', ingredient_url=ingredient.url) }}"
+          onclick="return confirm('¿Seguro que quieres borrar el ingrediente?')"
           style="margin-left: 0.5em"
           class="icon fas fa-trash action_icon"
           title="Borrar ingrediente."

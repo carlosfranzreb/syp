@@ -1,7 +1,8 @@
 """ Models for the DB used by SQLAlchemy. """
 # pylint: disable=no-member, missing-class-docstring, too-few-public-methods
 
-
+from syp.models.quantity import Quantity
+from syp.models.subquantity import Subquantity
 from syp import db
 
 
@@ -24,5 +25,9 @@ class Ingredient(db.Model):
     def __repr__(self):
         return self.name
 
-
+    def uses(self):
+        """ Returns the amount of recipes and subrecipes that use it. """
+        recipe_count = Quantity.query.filter_by(id_ingredient=self.id).count()
+        subrecipe_count = Subquantity.query.filter_by(id_ingredient=self.id).count()
+        return recipe_count + subrecipe_count
 
