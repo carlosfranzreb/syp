@@ -20,7 +20,7 @@
     {% endif %}
     <td>
       <a
-        href=""
+        href="{{ url_for('ingredients.edit_ingredient', ingredient_url=ingredient.url) }}"
         class="icon fas fa-pencil action_icon"
         title="Editar ingrediente."
         ><span class="label">Editar ingrediente.</span></a

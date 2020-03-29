@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required
 
-from syp.ingredients.forms import IngredientsForm
-from syp.ingredients import utils, search
+from syp.ingredients.forms import IngredientsForm, IngredientForm
+from syp.ingredients import utils, search, validate, update
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.utils import get_last_recipes
 
@@ -64,14 +64,41 @@ def search_ingredient(ing_url):
     )
 
 
-@ingredients.route("/subrecetas")
+@ingredients.route("/ingredientes")
 @login_required
 def overview():
     """ Shows a list with all subrecipes. """
     return render_template(
         "ingredients.html",
-        title="Subrecetas",
+        title="Ingredientes",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
         ingredients=utils.get_paginated_ingredients()[1],
+    )
+
+
+@ingredients.route("/editar_ingrediente/<ingredient_url>", methods=["GET", "POST"])
+@login_required
+def edit_ingredient(ingredient_url):
+    ingredient = utils.get_ingredient_by_url(ingredient_url)
+    form = IngredientForm(obj=ingredient)
+    if form.validate_on_submit():
+        errors = list()
+        if form.name.data != ingredient.name:
+            errors = validate.validate_name(form)
+        if len(errors) > 0:
+            for error in errors:
+                flash(error, 'danger')
+        else:
+            update.update_ingredient(ingredient, form)
+            flash("Los cambios han sido guardados.", "success")
+            return redirect(url_for("ingredients.overview"))
+    return render_template(
+        "edit_ingredient.html",
+        title="Editar ingrediente",
+        form=form,
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        ingredient=ingredient,
+        is_edit_recipe=True
     )

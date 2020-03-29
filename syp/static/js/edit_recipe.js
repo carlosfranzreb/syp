@@ -2,6 +2,10 @@
 
 
 $(document).ready(function() {
+    // Adjust textarea heights to their contents
+    let elements = document.querySelectorAll('textarea');
+    elements.forEach(elem => auto_grow(elem));
+    console.log(elements);
     // On first load, remove Ingredient(...) from name
     // The check is necessary because it shouldn't be cut when the form is validated
     var ingredients = $(".ul_pepper").children("li");
@@ -25,9 +29,6 @@ $(document).ready(function() {
             return false;
         }
     });
-    // Adjust step height
-    let elements = document.querySelectorAll('textarea');
-    elements.forEach(elem => auto_grow(elem));
     // Add 'Receta: ' before subrecipes. CSS ::before not working.
     $("#steps")
         .find("textarea")
