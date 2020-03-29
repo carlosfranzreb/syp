@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
+from flask_login import login_required
+
 from syp.ingredients.forms import IngredientsForm
-from syp.ingredients import utils
+from syp.ingredients import utils, search
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.utils import get_last_recipes
 
@@ -41,7 +43,7 @@ def search_ingredient(ing_url):
                                 ing_url=ingredient.url))
 
     ing = utils.get_ingredient_by_url(ing_url)
-    page, recs = utils.get_recipes_by_ingredient(ing.name)
+    page, recs = search.get_recipes_by_ingredient(ing.name)
     if isinstance(recs, str):
         flash(recs, 'danger')
         return redirect(url_for('ingredients.search_all_ingredients'))
@@ -61,3 +63,15 @@ def search_ingredient(ing_url):
         keywords=utils.get_ing_keywords(ing.name)
     )
 
+
+@ingredients.route("/subrecetas")
+@login_required
+def overview():
+    """ Shows a list with all subrecipes. """
+    return render_template(
+        "ingredients.html",
+        title="Subrecetas",
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        subrecipes=utils.get_paginated_ingredients()[1],
+    )
