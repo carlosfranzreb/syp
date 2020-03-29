@@ -20,7 +20,7 @@ def search_all_ingredients():
         Por si tienes algún capricho, o un ingrediente con el que no \
         sabes qué hacer.'
     return render_template(
-        'ingredients.html',
+        'search_ingredients.html',
         title='Ingredientes',
         recipe_form=SearchRecipeForm(),
         form=form,
@@ -49,7 +49,7 @@ def search_ingredient(ing_url):
     desc = f'Recetas veganas y saludables con {ing.name}. Por si se te antoja \
         {ing.name}, o lo compraste y buscas inspiración.'
     return render_template(
-        'ingredients.html',
+        'search_ingredients.html',
         title=ing.name,
         chosen_url=ing_url,
         recipe_form=SearchRecipeForm(),
