@@ -180,7 +180,7 @@
                                 </li>
                             {% else %}
                                 <li>
-                                    <a href="{{ url_for('users.login') }}" title="Iniciar sesión.">
+                                    <a href="{{ url_for('users.login', url=request.url) }}" title="Iniciar sesión.">
                                         Iniciar sesión
                                     </a>
                                 </li>
