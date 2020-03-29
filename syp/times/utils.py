@@ -27,10 +27,10 @@ def get_recipes_by_time(time, items=9):
         .paginate(page=page, per_page=items)
 
     if recipes.items == []:
-        recipes = Template('No tenemos recetas que se hagan en menos de $time \
-                            minutos. Dedícale un poco más de tiempo; \
-                            no te arrepentirás').substitute(time=time)
-
+        recipes = Template(
+            'No tenemos recetas que se hagan en menos de $time \
+            minutos. Dedícale un poco más de tiempo; no te arrepentirás'
+        ).substitute(time=time)
     return (page, recipes)
 
 
