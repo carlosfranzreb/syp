@@ -16,7 +16,6 @@ class Ingredient(db.Model):
     changed_at = db.Column(db.DateTime)  # nullable not necessary because of default.
     changed_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     is_valid = db.Column(db.Boolean, default=False)
-    is_deleted = db.Column(db.Boolean, default=False)
 
     creator = db.relationship(
         'User', backref='ingredient', foreign_keys='Ingredient.created_by', lazy=True

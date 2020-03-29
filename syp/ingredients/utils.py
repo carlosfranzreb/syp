@@ -11,14 +11,14 @@ from syp.search.utils import get_default_keywords
 
 def get_ingredient_by_name(name):
     ing = Ingredient.query.filter_by(name=name).first()
-    if ing is None or ing.is_deleted:
+    if ing is None:
         return abort(404)
     return ing
 
 
 def get_ingredient_by_url(url):
     ing = Ingredient.query.filter_by(url=url).first()
-    if ing is None or ing.is_deleted:
+    if ing is None:
         return abort(404)
     return ing
 
@@ -26,7 +26,6 @@ def get_ingredient_by_url(url):
 def get_all_ingredients():
     """ returns name of all ingredients as a list of tuples """
     return Ingredient.query \
-        .filter_by(is_deleted=False) \
         .with_entities(Ingredient.name) \
         .order_by(Ingredient.name).all()
 
@@ -35,7 +34,6 @@ def get_paginated_ingredients(limit=None, items=20):
     """ Returns paginated ingredients."""
     page = request.args.get('page', 1, type=int)
     ingredients = Ingredient.query \
-        .filter_by(is_deleted=False) \
         .order_by(Ingredient.name) \
         .limit(limit) \
         .paginate(page=page, per_page=items)
