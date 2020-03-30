@@ -55,3 +55,14 @@ def sort_by_state(desc, limit=None, items=9):
             .order_by(Recipe.id_state) \
             .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
+
+
+def search_name(name, limit=None, items=9):
+    """ Search recipe list. """
+    page = request.args.get('page', 1, type=int)
+    recipes = Recipe.query \
+        .filter_by(id_user=current_user.id) \
+        .filter(Recipe.name.contains(name)) \
+        .order_by(Recipe.name) \
+        .limit(limit).paginate(page=page, per_page=items)
+    return (page, recipes)

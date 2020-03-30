@@ -30,45 +30,59 @@ def get_recipe(recipe_url):
     )
 
 
-@recipes.route("/recetas/ordenar_por_nombre/desc_<desc>")
+@recipes.route("/recetas/ordenar_por_nombre/desc_<arg>")
 @login_required
-def sort_by_name(desc):
+def sort_by_name(arg):
     """ Shows a list with all recipes of the user, ordered by name. """
     return render_template(
         "recipes.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
-        recipes=overview.sort_by_name(desc)[1],
-        desc=desc
+        recipes=overview.sort_by_name(arg)[1],
+        arg=arg
     )
 
 
-@recipes.route("/recetas/ordenar_por_fecha/desc_<desc>")
+@recipes.route("/recetas/ordenar_por_fecha/desc_<arg>")
 @login_required
-def sort_by_date(desc):
+def sort_by_date(arg):
     """ Shows a list with all recipes of the user, ordered by date. """
     return render_template(
         "recipes.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
-        recipes=overview.sort_by_date(desc)[1],
-        desc=desc
+        recipes=overview.sort_by_date(arg)[1],
+        arg=arg
     )
 
 
-@recipes.route("/recetas/ordenar_por_estado/desc_<desc>")
+@recipes.route("/recetas/ordenar_por_estado/desc_<arg>")
 @login_required
-def sort_by_state(desc):
+def sort_by_state(arg):
     """ Shows a list with all recipes of the user, ordered by state. """
     return render_template(
         "recipes.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
-        recipes=overview.sort_by_state(desc)[1],
-        desc=desc
+        recipes=overview.sort_by_state(arg)[1],
+        arg=arg
+    )
+
+
+@recipes.route("/recetas/buscar_nombre/<arg>")
+@login_required
+def search_name(arg):
+    """ Shows a list with all recipes of the user, ordered by state. """
+    return render_template(
+        "recipes.html",
+        title="Recetas",
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        recipes=overview.search_name(arg)[1],
+        arg=arg
     )
 
 
@@ -139,7 +153,7 @@ def edit_new_recipe(recipe_url):
         if len(errors) == 0:
             recipe_url = update.update_recipe(recipe, form, valid=False)
             if form.state.data == 1:  # create recipe and leave it unfinished
-                return redirect(url_for('recipes.sort_by_date', desc='True'))
+                return redirect(url_for('recipes.sort_by_date', arg='True'))
             return redirect(url_for(  # check if it is ready for publishing
                 'recipes.edit_recipe',
                 recipe_url=recipe_url,
@@ -175,7 +189,7 @@ def create_recipe():
         if len(errors) == 0:
             recipe = create.save_recipe(form, valid=False)
             if form.state.data == 1:
-                return redirect(url_for('recipes.sort_by_date', desc='True'))
+                return redirect(url_for('recipes.sort_by_date', arg='True'))
             return redirect(url_for(  # check if ready for publishing.
                 'recipes.edit_recipe',
                 recipe_url=recipe.url,
@@ -203,4 +217,4 @@ def delete_recipe(recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     utils.delete_recipe(recipe.id)
     flash('La receta ha sido borrada.', 'success')
-    return redirect(url_for('recipes.sort_by_date', desc='True'))
+    return redirect(url_for('recipes.sort_by_date', arg='True'))
