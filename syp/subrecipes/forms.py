@@ -30,3 +30,9 @@ class SubrecipeForm(FlaskForm):
     ingredients = FieldList(FormField(IngredientForm), min_entries=1)
     case = SelectField("Artículo:", coerce=int)
     save = SubmitField("Guardar")
+
+
+class SearchForm(FlaskForm):
+    """ Look for subrecipe by name in the overview. """
+    name = StringField(validators=[DataRequired()])
+    submit = SubmitField('Buscar')
