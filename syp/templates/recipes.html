@@ -1,17 +1,18 @@
 {% extends 'main_layout.html' %} {% block content %}
 
 <h1>Recetas</h1>
+
 <a href="{{ url_for('recipes.create_recipe') }}" class="add_btn" style="margin-bottom: 1em">Nueva receta</a>
 <table>
   <tr>
     <th>
-      <a href="{{ url_for('recipes.sort_by_name', arg=arg != 'True') }}">Nombre</a>
+      <a class="action_icon icon" href="{{ url_for('recipes.sort_by_name', arg=arg != 'True') }}">Nombre</a>
     </th>
     <th>
-      <a href="{{ url_for('recipes.sort_by_date', arg=arg != 'True') }}">Último cambio</a>
+      <a class="action_icon icon" href="{{ url_for('recipes.sort_by_date', arg=arg != 'True') }}">Último cambio</a>
     </th>
     <th>
-      <a href="{{ url_for('recipes.sort_by_state', arg=arg != 'True') }}">Estado</a>
+      <a class="action_icon icon" href="{{ url_for('recipes.sort_by_state', arg=arg != 'True') }}">Estado</a>
     </th>
     <th>Acciones</th>
   </tr>
