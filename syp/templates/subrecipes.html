@@ -3,7 +3,7 @@
 <h1>Subrecetas</h1>
 <form method='post' action="{{ url_for('subrecipes.sort_by_name', arg=True) }}">
   {{ search_form.hidden_tag() }}
-  {{ search_form.name(placeholder="Buscar receta", style="max-width: 300px") }}
+  {{ search_form.name(placeholder="Buscar subreceta", style="max-width: 300px") }}
 </form>
 <a href="{{ url_for('subrecipes.create_subrecipe') }}" class="add_btn" style="margin-bottom: 1em">Nueva subreceta</a>
 <table>
