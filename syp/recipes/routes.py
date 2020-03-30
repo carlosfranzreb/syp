@@ -30,19 +30,6 @@ def get_recipe(recipe_url):
     )
 
 
-@recipes.route("/recetas")
-@login_required
-def get_overview():
-    """ Shows a list with all recipes of the user. """
-    return render_template(
-        "recipes.html",
-        title="Recetas",
-        recipe_form=SearchRecipeForm(),
-        last_recipes=utils.get_last_recipes(4),
-        recipes=overview.get_recipes()[1],
-    )
-
-
 @recipes.route("/recetas/ordenar_por_nombre/desc_<desc>")
 @login_required
 def sort_by_name(desc):
@@ -52,7 +39,8 @@ def sort_by_name(desc):
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
-        recipes=overview.sort_by_name(desc)[1]
+        recipes=overview.sort_by_name(desc)[1],
+        desc=desc
     )
 
 
@@ -65,7 +53,8 @@ def sort_by_date(desc):
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
-        recipes=overview.sort_by_date(desc)[1]
+        recipes=overview.sort_by_date(desc)[1],
+        desc=desc
     )
 
 
@@ -78,7 +67,8 @@ def sort_by_state(desc):
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
-        recipes=overview.sort_by_state(desc)[1]
+        recipes=overview.sort_by_state(desc)[1],
+        desc=desc
     )
 
 
@@ -149,7 +139,7 @@ def edit_new_recipe(recipe_url):
         if len(errors) == 0:
             recipe_url = update.update_recipe(recipe, form, valid=False)
             if form.state.data == 1:  # create recipe and leave it unfinished
-                return redirect(url_for('recipes.get_overview'))
+                return redirect(url_for('recipes.sort_by_date', desc='True'))
             return redirect(url_for(  # check if it is ready for publishing
                 'recipes.edit_recipe',
                 recipe_url=recipe_url,
@@ -185,7 +175,7 @@ def create_recipe():
         if len(errors) == 0:
             recipe = create.save_recipe(form, valid=False)
             if form.state.data == 1:
-                return redirect(url_for('recipes.get_overview'))
+                return redirect(url_for('recipes.sort_by_date', desc='True'))
             return redirect(url_for(  # check if ready for publishing.
                 'recipes.edit_recipe',
                 recipe_url=recipe.url,
@@ -213,4 +203,4 @@ def delete_recipe(recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     utils.delete_recipe(recipe.id)
     flash('La receta ha sido borrada.', 'success')
-    return redirect(url_for('recipes.get_overview'))
+    return redirect(url_for('recipes.sort_by_date', desc='True'))

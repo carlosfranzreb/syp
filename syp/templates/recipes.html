@@ -108,13 +108,13 @@
   page_num %}
   <a
     class="btn btn-danger mb-4"
-    href="{{ url_for('recipes.get_overview', page=page_num) }}"
+    href="{{ url_for(request.endpoint, desc=desc, page=page_num) }}"
     >{{ page_num }}</a
   >
   {% else %}
   <a
     class="btn btn-danger mb-4"
-    href="{{ url_for('recipes.get_overview', page=page_num) }}"
+    href="{{ url_for(request.endpoint, desc=desc, page=page_num) }}"
     >{{ page_num }}</a
   >
   {% endif %} {% else %} ... {% endif %} {% endfor %}
