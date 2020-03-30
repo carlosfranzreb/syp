@@ -157,7 +157,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{ url_for('recipes.overview') }}" title="Ver mis recetas.">
+                                            <a href="{{ url_for('recipes.get_overview') }}" title="Ver mis recetas.">
                                                 Mis recetas
                                             </a>
                                         </li>
@@ -314,6 +314,9 @@
         {% endif %}
         {% if title == 'Subrecetas' %}
         <script src="{{url_for('static', filename='js/subrecipes.js')}}"></script>
+		{% endif %}
+        {% if title == 'Subrecetas' or title == 'Recetas' or title == 'Ingredientes' %}
+            <script src="{{ url_for('static', filename='js/overview.js') }}"/></script>
 		{% endif %} 
         <script src="{{url_for('static', filename='js/browser.min.js')}}"></script>
         <script src="{{url_for('static', filename='js/breakpoints.min.js')}}"></script>
