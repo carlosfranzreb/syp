@@ -42,6 +42,33 @@ def get_overview():
         recipes=overview.get_recipes()[1],
     )
 
+
+@recipes.route("/recetas/ordenar_por_nombre/desc_<desc>")
+@login_required
+def sort_by_name(desc):
+    """ Shows a list with all recipes of the user, ordered by name. """
+    return render_template(
+        "recipes.html",
+        title="Recetas",
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        recipes=overview.sort_by_name(desc)[1]
+    )
+
+
+@recipes.route("/recetas/ordenar_por_fecha/desc_<desc>")
+@login_required
+def sort_by_date(desc):
+    """ Shows a list with all recipes of the user, ordered by date. """
+    return render_template(
+        "recipes.html",
+        title="Recetas",
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        recipes=overview.sort_by_date(desc)[1]
+    )
+
+
 @recipes.route("/recetas/ordenar_por_estado/desc_<desc>")
 @login_required
 def sort_by_state(desc):
@@ -51,7 +78,7 @@ def sort_by_state(desc):
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
-        recipes=overview.sort_by_state(desc)[1],
+        recipes=overview.sort_by_state(desc)[1]
     )
 
 

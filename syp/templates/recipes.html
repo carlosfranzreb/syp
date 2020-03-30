@@ -7,36 +7,61 @@
     <th>Nombre
       <a class="icon fas fa-filter action_icon" onclick="toggle_filters(this)"></a>
       <div class="filters" style="display: none">
-        <a class="icon fas fa-sort-alpha-down action_icon" onclick="sort_descending(this)" title="Ordenar A-Z"></a>
-        <a class="icon fas fa-sort-alpha-desc action_icon" onclick="sort_ascending(this)" title="Ordenar Z-A"></a>
-        <a class="icon fas fa-search action_icon" onclick="open_search(this)" title="Buscar"></a>
+        <a 
+          class="icon fas fa-sort-alpha-down action_icon" 
+          href="{{ url_for('recipes.sort_by_name', desc=False) }}" 
+          title="Ordenar A-Z">
+        </a>
+        <a 
+          class="icon fas fa-sort-alpha-desc action_icon" 
+          href="{{ url_for('recipes.sort_by_name', desc=True) }}" 
+          title="Ordenar Z-A">
+        </a>
+        <a 
+          class="icon fas fa-search action_icon" 
+          href="" 
+          title="Buscar">
+        </a>
       </div>
     </th>
     <th>Último cambio
       <a class="icon fas fa-filter action_icon" onclick="toggle_filters(this)"></a>
       <div class="filters" style="display: none">
-        <a class="icon fas fa-sort-alpha-down action_icon" onclick="sort_descending(this)" title="Ordenar A-Z"></a>
-        <a class="icon fas fa-sort-alpha-desc action_icon" onclick="sort_ascending(this)" title="Ordenar Z-A"></a>
-        <a class="icon fas fa-search action_icon" onclick="open_search(this)" title="Buscar"></a>
+        <a 
+          class="icon fas fa-sort-alpha-down action_icon" 
+          href="{{ url_for('recipes.sort_by_date', desc=False) }}" 
+          title="Más antigua primero">
+        </a>
+        <a 
+          class="icon fas fa-sort-alpha-desc action_icon" 
+          href="{{ url_for('recipes.sort_by_date', desc=True) }}" 
+          title="Más reciente primero">
+        </a>
+        <a 
+          class="icon fas fa-search action_icon" 
+          href="" 
+          title="Buscar">
+        </a>
       </div>
     </th>
     <th>Estado
       <a class="icon fas fa-filter action_icon" onclick="toggle_filters(this)"></a>
       <div class="filters" style="display: none">
         <a 
-          class="icon fas fa-sort-alpha-down action_icon" 
+          class="icon fas fa-sort-numeric-down action_icon" 
           href="{{ url_for('recipes.sort_by_state', desc=False) }}" 
-          title="Ordenar A-Z">
+          title="Sin terminar primero">
         </a>
         <a 
-          class="icon fas fa-sort-alpha-desc action_icon" 
+          class="icon fas fa-sort-numeric-desc action_icon" 
           href="{{ url_for('recipes.sort_by_state', desc=True) }}" 
-          title="Ordenar Z-A">
+          title="Publicadas primero">
         </a>
         <a 
           class="icon fas fa-search action_icon" 
           href="" 
-          title="Buscar"></a>
+          title="Buscar">
+        </a>
       </div>
     </th>
     <th>Acciones</th>
