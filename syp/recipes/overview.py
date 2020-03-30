@@ -8,18 +8,6 @@ from flask_login import current_user
 from syp.models.recipe import Recipe
 
 
-def get_recipes(limit=None, items=9):
-    """ returns paginated recipes (all, not only published as above,
-    but only those that belong to the current user) starting with
-    the most recent one. """
-    page = request.args.get('page', 1, type=int)
-    recipes = Recipe.query \
-        .filter_by(id_user=current_user.id) \
-        .order_by(Recipe.created_at.desc()) \
-        .limit(limit).paginate(page=page, per_page=items)
-    return (page, recipes)
-
-
 def sort_by_name(desc, limit=None, items=9):
     """ Sort overview recipes by name. """
     page = request.args.get('page', 1, type=int)
