@@ -80,3 +80,9 @@ class NewRecipeForm(FlaskForm):
         validators=[Length(max=1400)]
     )
     save = SubmitField('Guardar')
+
+
+class SearchForm(FlaskForm):
+    """ Look for recipe by name in the overview. """
+    name = StringField(validators=[DataRequired()])
+    submit = SubmitField('Buscar')

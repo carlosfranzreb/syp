@@ -8,7 +8,7 @@ from flask_login import login_required, current_user
 from syp.recipes import utils, update, validate, create, overview
 from syp.ingredients.utils import get_all_ingredients
 from syp.search.forms import SearchRecipeForm
-from syp.recipes.forms import RecipeForm, NewRecipeForm
+from syp.recipes.forms import RecipeForm, NewRecipeForm, SearchForm
 
 
 recipes = Blueprint('recipes', __name__)
@@ -30,17 +30,39 @@ def get_recipe(recipe_url):
     )
 
 
-@recipes.route("/recetas/ordenar_por_nombre/desc_<arg>")
+@recipes.route("/recetas/ordenar_por_nombre/desc_<arg>", methods=['GET', 'POST'])
 @login_required
 def sort_by_name(arg):
-    """ Shows a list with all recipes of the user, ordered by name. """
+    """ Shows a list with all recipes of the user, ordered by name.
+    Also, if the search form is submitted, it redirects to the
+    search_by_name route."""
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect(url_for(
+            'recipes.search_by_name', arg=form.name.data
+        ))
     return render_template(
-        "recipes.html",
-        title="Recetas",
+        'recipes.html',
+        title='Recetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
         recipes=overview.sort_by_name(arg)[1],
-        arg=arg
+        arg=arg,
+        search_form=form
+    )
+
+
+@recipes.route("/recetas/buscar/<arg>")
+@login_required
+def search_by_name(arg):
+    return render_template(
+        'recipes.html',
+        title='Recetas',
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        recipes=overview.search_name(arg)[1],
+        arg='True',
+        search_form=SearchForm()
     )
 
 
@@ -54,7 +76,8 @@ def sort_by_date(arg):
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
         recipes=overview.sort_by_date(arg)[1],
-        arg=arg
+        arg=arg,
+        search_form=SearchForm()
     )
 
 
@@ -68,21 +91,8 @@ def sort_by_state(arg):
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
         recipes=overview.sort_by_state(arg)[1],
-        arg=arg
-    )
-
-
-@recipes.route("/recetas/buscar_nombre/<arg>")
-@login_required
-def search_name(arg):
-    """ Shows a list with all recipes of the user, ordered by state. """
-    return render_template(
-        "recipes.html",
-        title="Recetas",
-        recipe_form=SearchRecipeForm(),
-        last_recipes=utils.get_last_recipes(4),
-        recipes=overview.search_name(arg)[1],
-        arg=arg
+        arg=arg,
+        search_form=SearchForm()
     )
 
 
