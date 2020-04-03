@@ -9,7 +9,7 @@ from wtforms import (
     TextAreaField,
     FloatField,
 )
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, InputRequired, Length
 
 
 class StepForm(Form):
@@ -18,7 +18,7 @@ class StepForm(Form):
 
 class IngredientForm(Form):
     ingredient = StringField("Ingrediente:")  # checked manually.
-    amount = FloatField("Cantidad:", validators=[DataRequired()])
+    amount = FloatField("Cantidad:", validators=[InputRequired()])
     unit = SelectField("Unidad:", coerce=int)  # an option is always chosen.
 
 
