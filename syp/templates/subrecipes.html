@@ -1,6 +1,7 @@
 {% extends 'main_layout.html' %} {% block content %}
 
 <h1>Subrecetas</h1>
+
 <form method='post' action="{{ url_for('subrecipes.sort_by_name', arg=True) }}">
   {{ search_form.hidden_tag() }}
   {{ search_form.name(placeholder="Buscar subreceta", style="max-width: 300px") }}
@@ -50,17 +51,13 @@
   {% for page_num in subrecipes.iter_pages(left_edge=1, right_edge=1,
   left_current=1, right_current=2) %} {% if page_num %} {% if subrecipes.page ==
   page_num %}
-  <a
-    class="btn btn-danger mb-4"
-    href="{{ url_for(request.endpoint, arg=arg, page=page_num) }}"
-    >{{ page_num }}</a
-  >
+  <a class="btn btn-danger mb-4" href="{{ url_for(request.endpoint, arg=arg, page=page_num) }}">
+    {{ page_num }}
+  </a>
   {% else %}
-  <a
-    class="btn btn-danger mb-4"
-    href="{{ url_for(request.endpoint, arg=arg, page=page_num) }}"
-    >{{ page_num }}</a
-  >
+  <a class="btn btn-danger mb-4" href="{{ url_for(request.endpoint, arg=arg, page=page_num) }}">
+    {{ page_num }}
+  </a>
   {% endif %} {% else %} ... {% endif %} {% endfor %}
 </center>
 
