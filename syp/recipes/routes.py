@@ -5,10 +5,10 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, abort
 from flask_login import login_required, current_user
 
-from syp.recipes import utils, update, validate, create
+from syp.recipes import utils, update, validate, create, overview
 from syp.ingredients.utils import get_all_ingredients
 from syp.search.forms import SearchRecipeForm
-from syp.recipes.forms import RecipeForm, NewRecipeForm
+from syp.recipes.forms import RecipeForm, NewRecipeForm, SearchForm
 
 
 recipes = Blueprint('recipes', __name__)
@@ -30,16 +30,69 @@ def get_recipe(recipe_url):
     )
 
 
-@recipes.route("/recetas")
+@recipes.route("/recetas/ordenar_por_nombre/desc_<arg>", methods=['GET', 'POST'])
 @login_required
-def overview():
-    """ Shows a list with all recipes of the user. """
+def sort_by_name(arg):
+    """ Shows a list with all recipes of the user, ordered by name.
+    Also, if the search form is submitted, it redirects to the
+    search_by_name route."""
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect(url_for(
+            'recipes.search_by_name', arg=form.name.data
+        ))
+    return render_template(
+        'recipes.html',
+        title='Recetas',
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        recipes=overview.sort_by_name(arg)[1],
+        arg=arg,
+        search_form=form
+    )
+
+
+@recipes.route("/recetas/buscar/<arg>")
+@login_required
+def search_by_name(arg):
+    return render_template(
+        'recipes.html',
+        title='Recetas',
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        recipes=overview.search_name(arg)[1],
+        arg='True',
+        search_form=SearchForm()
+    )
+
+
+@recipes.route("/recetas/ordenar_por_fecha/desc_<arg>")
+@login_required
+def sort_by_date(arg):
+    """ Shows a list with all recipes of the user, ordered by date. """
     return render_template(
         "recipes.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
-        recipes=utils.get_overview_recipes()[1],
+        recipes=overview.sort_by_date(arg)[1],
+        arg=arg,
+        search_form=SearchForm()
+    )
+
+
+@recipes.route("/recetas/ordenar_por_estado/desc_<arg>")
+@login_required
+def sort_by_state(arg):
+    """ Shows a list with all recipes of the user, ordered by state. """
+    return render_template(
+        "recipes.html",
+        title="Recetas",
+        recipe_form=SearchRecipeForm(),
+        last_recipes=utils.get_last_recipes(4),
+        recipes=overview.sort_by_state(arg)[1],
+        arg=arg,
+        search_form=SearchForm()
     )
 
 
@@ -110,7 +163,7 @@ def edit_new_recipe(recipe_url):
         if len(errors) == 0:
             recipe_url = update.update_recipe(recipe, form, valid=False)
             if form.state.data == 1:  # create recipe and leave it unfinished
-                return redirect(url_for('recipes.overview'))
+                return redirect(url_for('recipes.sort_by_date', arg='True'))
             return redirect(url_for(  # check if it is ready for publishing
                 'recipes.edit_recipe',
                 recipe_url=recipe_url,
@@ -146,7 +199,7 @@ def create_recipe():
         if len(errors) == 0:
             recipe = create.save_recipe(form, valid=False)
             if form.state.data == 1:
-                return redirect(url_for('recipes.overview'))
+                return redirect(url_for('recipes.sort_by_date', arg='True'))
             return redirect(url_for(  # check if ready for publishing.
                 'recipes.edit_recipe',
                 recipe_url=recipe.url,
@@ -174,4 +227,4 @@ def delete_recipe(recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     utils.delete_recipe(recipe.id)
     flash('La receta ha sido borrada.', 'success')
-    return redirect(url_for('recipes.overview'))
+    return redirect(url_for('recipes.sort_by_date', arg='True'))

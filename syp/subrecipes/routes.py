@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, abort
 from flask_login import login_required, current_user
 
-from syp.subrecipes import utils, update, create, validate
+from syp.subrecipes import utils, update, create, validate, overview
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.utils import get_last_recipes, get_all_units
-from syp.subrecipes.forms import SubrecipeForm
+from syp.subrecipes.forms import SubrecipeForm, SearchForm
 from syp.models.unit import Unit
 from syp.ingredients.utils import get_all_ingredients
 
@@ -12,16 +12,54 @@ from syp.ingredients.utils import get_all_ingredients
 subrecipes = Blueprint("subrecipes", __name__)
 
 
-@subrecipes.route("/subrecetas")
+@subrecipes.route("/subrecetas/ordenar_por_nombre/desc_<arg>", methods=['GET', 'POST'])
 @login_required
-def overview():
-    """ Shows a list with all subrecipes. """
+def sort_by_name(arg):
+    """ Shows a list with all subrecipes of the user, ordered by name.
+    Also, if the search form is submitted, it redirects to the
+    search_by_name route."""
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect(url_for(
+            'subrecipes.search_by_name', arg=form.name.data
+        ))
+    return render_template(
+        'subrecipes.html',
+        title='Subrecetas',
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        subrecipes=overview.sort_by_name(arg)[1],
+        arg=arg,
+        search_form=form
+    )
+
+
+@subrecipes.route("/subrecetas/buscar/<arg>")
+@login_required
+def search_by_name(arg):
+    return render_template(
+        'subrecipes.html',
+        title='Subrecetas',
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        subrecipes=overview.search_name(arg)[1],
+        arg='True',
+        search_form=SearchForm()
+    )
+
+
+@subrecipes.route("/subrecetas/ordenar_por_fecha/desc_<arg>")
+@login_required
+def sort_by_date(arg):
+    """ Shows a list with all subrecipes of the user, ordered by date. """
     return render_template(
         "subrecipes.html",
         title="Subrecetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
-        subrecipes=utils.get_paginated_subrecipes()[1],
+        subrecipes=overview.sort_by_date(arg)[1],
+        arg=arg,
+        search_form=SearchForm()
     )
 
 
@@ -48,7 +86,7 @@ def edit_subrecipe(subrecipe_url):
         else:
             update.update_subrecipe(subrecipe, form)
             flash("Los cambios han sido guardados.", "success")
-            return redirect(url_for("subrecipes.overview"))
+            return redirect(url_for("subrecipes.sort_by_date", arg='True'))
     return render_template(
         "edit_subrecipe.html",
         title="Editar subreceta",
@@ -72,7 +110,7 @@ def delete_subrecipe(subrecipe_url):
     else:
         utils.delete_subrecipe(subrecipe)
         flash('La subreceta ha sido borrada.', 'success')
-    return redirect(url_for('subrecipes.overview'))
+    return redirect(url_for("subrecipes.sort_by_date", arg='True'))
 
 
 @subrecipes.route('/nueva_subreceta', methods=['GET', 'POST'])
@@ -93,7 +131,7 @@ def create_subrecipe():
         else:
             create.save_subrecipe(form)
             flash('La nueva subreceta ha sido guardada.', 'success')
-            return redirect(url_for('subrecipes.overview'))
+            return redirect(url_for("subrecipes.sort_by_date", arg='True'))
     return render_template(
         "edit_subrecipe.html",
         title="Crear subreceta",

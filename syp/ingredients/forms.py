@@ -14,3 +14,9 @@ class IngredientForm(FlaskForm):
     name = StringField('Nombre', validators=[DataRequired(), Length(max=50)])
     health = TextAreaField('Comentario', validators=[DataRequired()])
     save = SubmitField('Guardar')
+
+
+class SearchForm(FlaskForm):
+    """ Look for subrecipe by name in the overview. """
+    name = StringField(validators=[DataRequired()])
+    submit = SubmitField('Buscar')

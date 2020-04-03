@@ -1,12 +1,22 @@
 {% extends 'main_layout.html' %} {% block content %}
 
 <h1>Recetas</h1>
+<form method='post' action="{{ url_for('recipes.sort_by_name', arg=True) }}">
+  {{ search_form.hidden_tag() }}
+  {{ search_form.name(placeholder="Buscar receta", style="max-width: 300px") }}
+</form>
 <a href="{{ url_for('recipes.create_recipe') }}" class="add_btn" style="margin-bottom: 1em">Nueva receta</a>
 <table>
   <tr>
-    <th>Nombre</th>
-    <th>Último cambio</th>
-    <th>Estado</th>
+    <th>
+      <a class="action_icon icon" href="{{ url_for('recipes.sort_by_name', arg=arg != 'True') }}">Nombre</a>
+    </th>
+    <th>
+      <a class="action_icon icon" href="{{ url_for('recipes.sort_by_date', arg=arg != 'True') }}">Último cambio</a>
+    </th>
+    <th>
+      <a class="action_icon icon" href="{{ url_for('recipes.sort_by_state', arg=arg != 'True') }}">Estado</a>
+    </th>
     <th>Acciones</th>
   </tr>
   {% for recipe in recipes.items %}
@@ -24,7 +34,6 @@
       <a
         href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}"
         class="icon fas fa-eye action_icon"
-        style="margin-right: 0.5em"
         title="Ver receta."
         ><span class="label">Ver receta.</span></a
       >
@@ -37,7 +46,6 @@
       <a
         href="{{ url_for('recipes.delete_recipe', recipe_url=recipe.url) }}"
         onclick="return confirm('¿Seguro que quieres borrar la receta?')"
-        style="margin-left: 0.5em"
         class="icon fas fa-trash action_icon"
         title="Borrar receta."
       ><span class="label">Borrar receta.</span></a
@@ -53,13 +61,13 @@
   page_num %}
   <a
     class="btn btn-danger mb-4"
-    href="{{ url_for('recipes.overview', page=page_num) }}"
+    href="{{ url_for(request.endpoint, arg=arg, page=page_num) }}"
     >{{ page_num }}</a
   >
   {% else %}
   <a
     class="btn btn-danger mb-4"
-    href="{{ url_for('recipes.overview', page=page_num) }}"
+    href="{{ url_for(request.endpoint, arg=arg, page=page_num) }}"
     >{{ page_num }}</a
   >
   {% endif %} {% else %} ... {% endif %} {% endfor %}

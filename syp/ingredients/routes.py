@@ -1,16 +1,68 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
 
-from syp.ingredients.forms import IngredientsForm, IngredientForm
-from syp.ingredients import utils, search, validate, update, create
+from syp.ingredients.forms import IngredientsForm, IngredientForm, SearchForm
+from syp.ingredients import utils, search, validate, update, create, overview
 from syp.search.forms import SearchRecipeForm
 from syp.recipes.utils import get_last_recipes
 
 ingredients = Blueprint('ingredients', __name__)
 
 
+@ingredients.route("/ingredientes/ordenar_por_nombre/desc_<arg>", methods=['GET', 'POST'])
+@login_required
+def sort_by_name(arg):
+    """ Shows a list with all ingredients, ordered by name.
+    Also, if the search form is submitted, it redirects to the
+    search_by_name route."""
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect(url_for(
+            'ingredients.search_by_name', arg=form.name.data
+        ))
+    return render_template(
+        'ingredients.html',
+        title='Ingredientes',
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        ingredients=overview.sort_by_name(arg)[1],
+        arg=arg,
+        search_form=form
+    )
+
+
+@ingredients.route("/ingredients/buscar/<arg>")
+@login_required
+def search_by_name(arg):
+    return render_template(
+        'ingredients.html',
+        title='Ingredientes',
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        ingredients=overview.search_name(arg)[1],
+        arg='True',
+        search_form=SearchForm()
+    )
+
+
+@ingredients.route("/ingredientes/ordenar_por_fecha/desc_<arg>")
+@login_required
+def sort_by_date(arg):
+    """ Shows a list with all ingredients of the user, ordered by date. """
+    return render_template(
+        "ingredients.html",
+        title="Ingredientes",
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        ingredients=overview.sort_by_date(arg)[1],
+        arg=arg,
+        search_form=SearchForm()
+    )
+
+
 @ingredients.route('/buscar_por_ingrediente', methods=['GET', 'POST'])
 def search_all_ingredients():
+    """ Function that searchs for recipes that contain the given ingredient. """
     form = IngredientsForm()
     if form.is_submitted():
         ingredient = utils.get_ingredient_by_name(form.ingredient.data)
@@ -61,19 +113,6 @@ def search_ingredient(ing_url):
         last_recipes=get_last_recipes(4),
         description=' '.join(desc.split()),
         keywords=utils.get_ing_keywords(ing.name)
-    )
-
-
-@ingredients.route("/ingredientes")
-@login_required
-def overview():
-    """ Shows a list with all ingredients. """
-    return render_template(
-        "ingredients.html",
-        title="Ingredientes",
-        recipe_form=SearchRecipeForm(),
-        last_recipes=get_last_recipes(4),
-        ingredients=utils.get_paginated_ingredients()[1],
     )
 
 
@@ -129,7 +168,7 @@ def create_ingredient():
     )
 
 
-@ingredients.route("/borrar_subreceta/<ingredient_url>")
+@ingredients.route("/borrar_ingrediente/<ingredient_url>")
 @login_required
 def delete_ingredient(ingredient_url):
     ingredient = utils.get_ingredient_by_url(ingredient_url)

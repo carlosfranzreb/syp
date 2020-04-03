@@ -1,11 +1,19 @@
 {% extends 'main_layout.html' %} {% block content %}
 
 <h1>Subrecetas</h1>
+<form method='post' action="{{ url_for('subrecipes.sort_by_name', arg=True) }}">
+  {{ search_form.hidden_tag() }}
+  {{ search_form.name(placeholder="Buscar subreceta", style="max-width: 300px") }}
+</form>
 <a href="{{ url_for('subrecipes.create_subrecipe') }}" class="add_btn" style="margin-bottom: 1em">Nueva subreceta</a>
 <table>
   <tr>
-    <th>Nombre</th>
-    <th>Último cambio</th>
+    <th>
+      <a class="action_icon icon" href="{{ url_for('subrecipes.sort_by_name', arg=arg != 'True') }}">Nombre</a>
+    </th>
+    <th>
+      <a class="action_icon icon" href="{{ url_for('subrecipes.sort_by_date', arg=arg != 'True') }}">Último cambio</a>
+    </th>
     <th>N° de usos</th>
     <th>Acciones</th>
   </tr>
@@ -44,13 +52,13 @@
   page_num %}
   <a
     class="btn btn-danger mb-4"
-    href="{{ url_for('subrecipes.overview', page=page_num) }}"
+    href="{{ url_for(request.endpoint, arg=arg, page=page_num) }}"
     >{{ page_num }}</a
   >
   {% else %}
   <a
     class="btn btn-danger mb-4"
-    href="{{ url_for('subrecipes.overview', page=page_num) }}"
+    href="{{ url_for(request.endpoint, arg=arg, page=page_num) }}"
     >{{ page_num }}</a
   >
   {% endif %} {% else %} ... {% endif %} {% endfor %}
