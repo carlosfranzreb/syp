@@ -155,7 +155,7 @@ def create_ingredient():
                 flash(error, 'danger')
         else:
             create.save_ingredient(form)
-            flash('El nuevo ingrediente ha sido guardado.', 'success')
+            flash('El ingrediente ha sido creado.', 'success')
             return redirect(url_for('ingredients.overview'))
     return render_template(
         "edit_ingredient.html",

@@ -161,6 +161,7 @@ def edit_new_recipe(recipe_url):
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe)
         if len(errors) == 0:
+            flash('Los cambios han sido guardados.', 'success')
             recipe_url = update.update_recipe(recipe, form, valid=False)
             if form.state.data == 1:  # create recipe and leave it unfinished
                 return redirect(url_for('recipes.sort_by_date', arg='True'))
@@ -199,6 +200,7 @@ def create_recipe():
         if len(errors) == 0:
             recipe = create.save_recipe(form, valid=False)
             if form.state.data == 1:
+                flash('La receta ha sido creada.', 'success')
                 return redirect(url_for('recipes.sort_by_date', arg='True'))
             return redirect(url_for(  # check if ready for publishing.
                 'recipes.edit_recipe',
