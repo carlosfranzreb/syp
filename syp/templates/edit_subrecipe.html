@@ -2,6 +2,7 @@
 <form
     method="post"
     enctype="multipart/form-data"
+    autocomplete="off"
     {% if is_new_subrecipe %}
         action="{{ url_for('subrecipes.create_subrecipe') }}"
     {% else %}
