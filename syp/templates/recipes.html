@@ -6,7 +6,7 @@
   {{ search_form.name(placeholder="Buscar receta", style="max-width: 300px") }}
 </form>
 <a href="{{ url_for('recipes.create_recipe') }}" class="add_btn" style="margin-bottom: 1em">Nueva receta</a>
-<table>
+<table id="overview_table">
   <tr>
     <th>
       <a class="action_icon icon" href="{{ url_for('recipes.sort_by_name', arg=arg != 'True') }}">Nombre</a>

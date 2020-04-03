@@ -6,7 +6,7 @@
   {{ search_form.name(placeholder="Buscar ingrediente", style="max-width: 300px") }}
 </form>
 <a href="{{ url_for('ingredients.create_ingredient') }}" class="add_btn" style="margin-bottom: 1em">Nuevo ingrediente</a>
-<table>
+<table id="overview_table">
   <tr>
     <th>
       <a class="action_icon icon" href="{{ url_for('ingredients.sort_by_name', arg=arg != 'True') }}">Nombre</a>
