@@ -11,7 +11,9 @@
     <th>
       <a class="action_icon icon" href="{{ url_for('ingredients.sort_by_name', arg=arg != 'True') }}">Nombre</a>
     </th>
-    <th>Creador</th>
+    <th>
+      <a class="action_icon icon" href="{{ url_for('ingredients.sort_by_creator', arg=arg != 'True') }}">Creador</a>
+    </th>
     <th>
       <a class="action_icon icon" href="{{ url_for('ingredients.sort_by_date', arg=arg != 'True') }}">Último cambio</a>
     </th>

@@ -16,7 +16,6 @@ def sort(order, desc, limit, items):
         .order_by(order) \
         .limit(limit).paginate(page=page, per_page=items)
     return (page, ingredients)
-    
 
 
 def sort_by_name(desc, limit=None, items=9):
@@ -28,7 +27,12 @@ def sort_by_date(desc, limit=None, items=9):
     """ Sort overview ingredient by date. """
     order = func.coalesce(Ingredient.changed_at, Ingredient.created_at)
     return sort(order, desc, limit, items)
-        
+
+
+def sort_by_creator(desc, limit=None, items=9):
+    """ Sort overview ingredient by date. """
+    order = Ingredient.creator.name
+    return sort(order, desc, limit, items)
 
 
 def search_name(name, limit=None, items=9):

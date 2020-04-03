@@ -60,6 +60,21 @@ def sort_by_date(arg):
     )
 
 
+@ingredients.route("/ingredientes/ordenar_por_fecha/desc_<arg>")
+@login_required
+def sort_by_creator(arg):
+    """ Shows a list with all ingredients of the user, ordered by creator. """
+    return render_template(
+        "ingredients.html",
+        title="Ingredientes",
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        ingredients=overview.sort_by_creator(arg)[1],
+        arg=arg,
+        search_form=SearchForm()
+    )
+
+
 @ingredients.route('/buscar_por_ingrediente', methods=['GET', 'POST'])
 def search_all_ingredients():
     """ Function that searchs for recipes that contain the given ingredient. """
@@ -131,7 +146,7 @@ def edit_ingredient(ingredient_url):
         else:
             update.update_ingredient(ingredient, form)
             flash("Los cambios han sido guardados.", "success")
-            return redirect(url_for("ingredients.overview"))
+            return redirect(url_for('ingredients.sort_by_date', arg='True'))
     return render_template(
         "edit_ingredient.html",
         title="Editar ingrediente",
@@ -156,7 +171,7 @@ def create_ingredient():
         else:
             create.save_ingredient(form)
             flash('El ingrediente ha sido creado.', 'success')
-            return redirect(url_for('ingredients.overview'))
+            return redirect(url_for('ingredients.sort_by_date', arg='True'))
     return render_template(
         "edit_ingredient.html",
         title="Crear ingrediente",
@@ -179,4 +194,4 @@ def delete_ingredient(ingredient_url):
     else:
         utils.delete_ingredient(ingredient)
         flash('El ingrediente ha sido borrado.', 'success')
-    return redirect(url_for('ingredients.overview'))
+    return redirect(url_for('ingredients.sort_by_date', arg='True'))
