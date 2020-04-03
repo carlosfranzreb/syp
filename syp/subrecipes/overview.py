@@ -8,41 +8,26 @@ from sqlalchemy import func
 from syp.models.subrecipe import Subrecipe
 
 
+def sort(order, desc, limit, items):
+    """ Return subrecipes sorted with the given order. """
+    if desc == 'True':
+        order = order.desc()
+    page = request.args.get('page', 1, type=int)
+    subrecipes = Subrecipe.query \
+        .order_by(order) \
+        .limit(limit).paginate(page=page, per_page=items)
+    return (page, subrecipes)
+
+
 def sort_by_name(desc, limit=None, items=9):
     """ Sort overview subrecipes by name. """
-    page = request.args.get('page', 1, type=int)
-    if desc == 'True':
-        recipes = Subrecipe.query \
-            .filter_by(id_user=current_user.id) \
-            .order_by(Subrecipe.name.desc()) \
-            .limit(limit).paginate(page=page, per_page=items)
-    else:
-        recipes = Subrecipe.query \
-            .filter_by(id_user=current_user.id) \
-            .order_by(Subrecipe.name) \
-            .limit(limit).paginate(page=page, per_page=items)
-    return (page, recipes)
+    return sort(Subrecipe.name, desc, limit, items)
 
 
 def sort_by_date(desc, limit=None, items=9):
     """ Sort overview subrecipes by name. """
-    page = request.args.get('page', 1, type=int)
-    if desc == 'True':
-        recipes = Subrecipe.query \
-            .filter_by(id_user=current_user.id) \
-            .order_by(func.coalesce(
-                Subrecipe.changed_at, Subrecipe.created_at
-            ).desc()) \
-            .limit(limit).paginate(page=page, per_page=items)
-    else:
-        recipes = Subrecipe.query \
-            .filter_by(id_user=current_user.id) \
-            .order_by(func.coalesce(
-                Subrecipe.changed_at, Subrecipe.created_at
-            )) \
-            .order_by(Subrecipe.created_at) \
-            .limit(limit).paginate(page=page, per_page=items)
-    return (page, recipes)
+    order = func.coalesce(Subrecipe.changed_at, Subrecipe.created_at)
+    return sort(order, desc, limit, items)
 
 
 def search_name(name, limit=None, items=9):

@@ -2,43 +2,33 @@
 
 
 from flask import request
-from flask_login import current_user
 from sqlalchemy import func
 
 from syp.models.ingredient import Ingredient
 
 
+def sort(order, desc, limit, items):
+    """ Return ingredients sorted with the given order. """
+    if desc == 'True':
+        order = order.desc()
+    page = request.args.get('page', 1, type=int)
+    ingredients = Ingredient.query \
+        .order_by(order) \
+        .limit(limit).paginate(page=page, per_page=items)
+    return (page, ingredients)
+    
+
+
 def sort_by_name(desc, limit=None, items=9):
     """ Sort overview ingredient by name. """
-    page = request.args.get('page', 1, type=int)
-    if desc == 'True':
-        recipes = Ingredient.query \
-            .order_by(Ingredient.name.desc()) \
-            .limit(limit).paginate(page=page, per_page=items)
-    else:
-        recipes = Ingredient.query \
-            .order_by(Ingredient.name) \
-            .limit(limit).paginate(page=page, per_page=items)
-    return (page, recipes)
+    return sort(Ingredient.name, desc, limit, items)
 
 
 def sort_by_date(desc, limit=None, items=9):
-    """ Sort overview ingredient by name. """
-    page = request.args.get('page', 1, type=int)
-    if desc == 'True':
-        recipes = Ingredient.query \
-            .order_by(func.coalesce(
-                Ingredient.changed_at, Ingredient.created_at
-            ).desc()) \
-            .limit(limit).paginate(page=page, per_page=items)
-    else:
-        recipes = Ingredient.query \
-            .order_by(func.coalesce(
-                Ingredient.changed_at, Ingredient.created_at
-            )) \
-            .order_by(Ingredient.created_at) \
-            .limit(limit).paginate(page=page, per_page=items)
-    return (page, recipes)
+    """ Sort overview ingredient by date. """
+    order = func.coalesce(Ingredient.changed_at, Ingredient.created_at)
+    return sort(order, desc, limit, items)
+        
 
 
 def search_name(name, limit=None, items=9):
