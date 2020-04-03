@@ -26,5 +26,5 @@ class Subrecipe(db.Model):
 
     def uses(self):
         """ Returns the number of recipes on which the given subrecipe appears. """
-        return RecipeStep.query.filter_by(step=self.id).count()
+        return RecipeStep.query.filter_by(step=str(self.id)).count()
 
