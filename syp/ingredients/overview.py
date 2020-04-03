@@ -3,7 +3,7 @@
 
 from flask import request
 from flask_login import current_user
-# from sqlalchemy import func
+from sqlalchemy import func
 
 from syp.models.ingredient import Ingredient
 
@@ -27,11 +27,15 @@ def sort_by_date(desc, limit=None, items=9):
     page = request.args.get('page', 1, type=int)
     if desc == 'True':
         recipes = Ingredient.query \
-            .order_by(Ingredient.created_at.desc()) \
+            .order_by(func.coalesce(
+                Ingredient.changed_at, Ingredient.created_at
+            ).desc()) \
             .limit(limit).paginate(page=page, per_page=items)
     else:
-    # .order_by(func.coalesce(Recipe.changed_at, Recipe.created_at)) \
         recipes = Ingredient.query \
+            .order_by(func.coalesce(
+                Ingredient.changed_at, Ingredient.created_at
+            )) \
             .order_by(Ingredient.created_at) \
             .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
