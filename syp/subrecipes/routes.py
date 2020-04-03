@@ -130,7 +130,7 @@ def create_subrecipe():
                 flash(error, 'danger')
         else:
             create.save_subrecipe(form)
-            flash('La nueva subreceta ha sido guardada.', 'success')
+            flash('La subreceta ha sido creada.', 'success')
             return redirect(url_for("subrecipes.sort_by_date", arg='True'))
     return render_template(
         "edit_subrecipe.html",

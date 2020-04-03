@@ -3,6 +3,7 @@
 <form 
   method="post" 
   enctype="multipart/form-data"
+  autocomplete="off"
   {% if title == 'Crear receta' %}
     action="{{ url_for('recipes.create_recipe') }}"
   {% elif is_new_recipe %}

@@ -2,6 +2,7 @@
 <form
     method="post"
     enctype="multipart/form-data"
+    autocomplete="off"
     {% if title == 'Crear ingrediente' %}
         action="{{ url_for('ingredients.create_ingredient') }}"
     {% else %}

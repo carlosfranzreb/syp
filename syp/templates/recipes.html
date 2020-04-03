@@ -6,7 +6,7 @@
   {{ search_form.name(placeholder="Buscar receta", style="max-width: 300px") }}
 </form>
 <a href="{{ url_for('recipes.create_recipe') }}" class="add_btn" style="margin-bottom: 1em">Nueva receta</a>
-<table>
+<table id="overview_table">
   <tr>
     <th>
       <a class="action_icon icon" href="{{ url_for('recipes.sort_by_name', arg=arg != 'True') }}">Nombre</a>
@@ -21,7 +21,7 @@
   </tr>
   {% for recipe in recipes.items %}
   <tr>
-    <td>{{ recipe.name }}</td>
+    <td><a class="icon action_icon" href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}">{{ recipe.name }}</a></td>
     {% if recipe.changed_at %}
       <td>{{ recipe.changed_at.strftime("%d-%m-%Y") }}</td>
     {% else %}
@@ -31,12 +31,6 @@
       <span class="label label-{{recipe.state.label}}">{{ recipe.state.state|upper }}</span>
     </td>
     <td>
-      <a
-        href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}"
-        class="icon fas fa-eye action_icon"
-        title="Ver receta."
-        ><span class="label">Ver receta.</span></a
-      >
       <a
         href="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}"
         class="icon fas fa-pencil action_icon"
