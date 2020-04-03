@@ -5,7 +5,6 @@ $(document).ready(function() {
     // Adjust textarea heights to their contents
     let elements = document.querySelectorAll('textarea');
     elements.forEach(elem => auto_grow(elem));
-    console.log(elements);
     // On first load, remove Ingredient(...) from name
     // The check is necessary because it shouldn't be cut when the form is validated
     var ingredients = $(".ul_pepper").children("li");
@@ -187,7 +186,7 @@ function auto_grow(element) {
 }
 
 function check_size(field) {
-    if (field.files[0].size > 19456) {  // 19MB
+    if (field.files[0].size > 19000000) {  // 19MB
         window.alert('¡La imagen no puede pesar más de 19 MB!');
         field.value = '';
     }
