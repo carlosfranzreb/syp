@@ -14,7 +14,7 @@ def get_home():
             que tengas, los ingredientes que tengas por casa, tus antojos, y \
             la temporada. Échale un vistazo a nuestros buscadores, o déjanos \
             inspirarte con la receta de la semana.'
-    return render_template('home.html',
+    return render_template('view_home.html',
                            title='Inicio',
                            recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(9),
@@ -26,7 +26,7 @@ def get_home():
 def get_philosophy():
     desc = 'En este blog queremos demostrar que no hace falta sacrificar el \
             sabor para ser vegano, ni para mantener un buen estado de salud.'
-    return render_template('philosophy.html',
+    return render_template('view_philosophy.html',
                            title='Filosofía',
                            recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(4),
@@ -38,7 +38,7 @@ def get_philosophy():
 def get_privacy():
     desc = 'La privacidad de tus datos es muy importante para nosotros. \
             Tanto, que no almacenamos ninguno en nuestras bases de datos'
-    return render_template('privacy.html',
+    return render_template('view_privacy.html',
                            title='Privacidad',
                            recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(4),
@@ -50,7 +50,7 @@ def get_privacy():
 def get_donate():
     desc = 'Con vuestras donaciones hacemos de este blog un proyecto \
             sostenible y libre de anuncios.'
-    return render_template('donate.html',
+    return render_template('view_donate.html',
                            title='Donar',
                            recipe_form=SearchRecipeForm(),
                            last_recipes=get_last_recipes(4),

@@ -19,7 +19,7 @@ def get_recipe(recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     desc = f'Receta vegana y saludable: {recipe.name}. {recipe.intro}'
     return render_template(
-        'recipe.html',
+        'view_recipe.html',
         title=recipe.name,
         recipe_form=SearchRecipeForm(),
         recipe=recipe,

@@ -31,7 +31,7 @@ def login():
             return redirect(url)
         flash('La contraseña es incorrecta. Vuelve a intentarlo.', 'danger')
     return render_template(
-        'login.html',
+        'view_login.html',
         title='Login',
         form=form,
         recipe_form=SearchRecipeForm(),
