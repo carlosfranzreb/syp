@@ -2,8 +2,8 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, \
-    BooleanField, TextField
-from wtforms.validators import DataRequired, Email
+    BooleanField, TextAreaField
+from wtforms.validators import DataRequired, Email, Length
 from flask_wtf.file import FileField, FileAllowed
 
 
@@ -17,9 +17,13 @@ class LoginForm(FlaskForm):
 
 class ProfileForm(FlaskForm):
     """ Form to edit profile data. """
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    username = StringField('Nombre de usuario', validators=[DataRequired()])
+    email = StringField(
+        'Email', validators=[DataRequired(), Email()]
+    )
+    username = StringField(
+        'Nombre de usuario', validators=[DataRequired(), Length(max=20)]
+    )
     password = PasswordField('Contraseña')
     image = FileField('Foto', validators=[FileAllowed(['jpg', 'png'])])
-    intro = TextField('Introducción')
+    intro = TextAreaField('Introducción')
     save = SubmitField('Guardar')
