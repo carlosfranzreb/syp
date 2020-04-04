@@ -106,9 +106,9 @@ def search_ingredient(ing_url):
     form = IngredientsForm()
     if form.is_submitted():
         ingredient = utils.get_ingredient_by_name(form.ingredient.data)
-        return redirect(url_for('ingredients.search_ingredient',
-                                ing_url=ingredient.url))
-
+        return redirect(url_for(
+            'ingredients.search_ingredient', ing_url=ingredient.url
+        ))
     ing = utils.get_ingredient_by_url(ing_url)
     page, recs = search.get_recipes_by_ingredient(ing.name)
     if isinstance(recs, str):
