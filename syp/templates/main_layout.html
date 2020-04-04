@@ -311,6 +311,7 @@
             <script src="{{url_for('static', filename='js/recipe.js')}}"></script>
         {% elif is_edit_recipe %}
             <script src="{{url_for('static', filename='js/edit_recipe.js')}}"></script>
+            <script src="{{url_for('static', filename='js/edit.js')}}"></script>
         {% endif %}
         {% if 'Editar' in title or 'Crear' in title %}
             <script src="{{url_for('static', filename='js/edit.js')}}"></script>
