@@ -24,7 +24,7 @@ def sort_by_name(arg):
             'subrecipes.search_by_name', arg=form.name.data
         ))
     return render_template(
-        'subrecipes.html',
+        'overview_subrecipe.html',
         title='Subrecetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -38,7 +38,7 @@ def sort_by_name(arg):
 @login_required
 def search_by_name(arg):
     return render_template(
-        'subrecipes.html',
+        'overview_subrecipe.html',
         title='Subrecetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -53,7 +53,7 @@ def search_by_name(arg):
 def sort_by_date(arg):
     """ Shows a list with all subrecipes of the user, ordered by date. """
     return render_template(
-        "subrecipes.html",
+        "overview_subrecipe.html",
         title="Subrecetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),

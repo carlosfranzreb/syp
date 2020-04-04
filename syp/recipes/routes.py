@@ -42,7 +42,7 @@ def sort_by_name(arg):
             'recipes.search_by_name', arg=form.name.data
         ))
     return render_template(
-        'recipes.html',
+        'overview_recipe.html',
         title='Recetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -56,7 +56,7 @@ def sort_by_name(arg):
 @login_required
 def search_by_name(arg):
     return render_template(
-        'recipes.html',
+        'overview_recipe.html',
         title='Recetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -71,7 +71,7 @@ def search_by_name(arg):
 def sort_by_date(arg):
     """ Shows a list with all recipes of the user, ordered by date. """
     return render_template(
-        "recipes.html",
+        "overview_recipe.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -86,7 +86,7 @@ def sort_by_date(arg):
 def sort_by_state(arg):
     """ Shows a list with all recipes of the user, ordered by state. """
     return render_template(
-        "recipes.html",
+        "overview_recipe.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),

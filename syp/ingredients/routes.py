@@ -21,7 +21,7 @@ def sort_by_name(arg):
             'ingredients.search_by_name', arg=form.name.data
         ))
     return render_template(
-        'ingredients.html',
+        'overview_ingredient.html',
         title='Ingredientes',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -35,7 +35,7 @@ def sort_by_name(arg):
 @login_required
 def search_by_name(arg):
     return render_template(
-        'ingredients.html',
+        'overview_ingredient.html',
         title='Ingredientes',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -50,7 +50,7 @@ def search_by_name(arg):
 def sort_by_date(arg):
     """ Shows a list with all ingredients of the user, ordered by date. """
     return render_template(
-        "ingredients.html",
+        "overview_ingredient.html",
         title="Ingredientes",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -65,7 +65,7 @@ def sort_by_date(arg):
 def sort_by_creator(arg):
     """ Shows a list with all ingredients of the user, ordered by creator. """
     return render_template(
-        "ingredients.html",
+        "overview_ingredient.html",
         title="Ingredientes",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
