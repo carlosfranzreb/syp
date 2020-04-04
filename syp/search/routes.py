@@ -22,7 +22,7 @@ def search_all_recipes():
     platos muy variados, algunas rápidas, otras más elaboradas, pero todas \
     bien explicadas y con vídeo incluido.'
     return render_template(
-        'all.html',
+        'search_recipe.html',
         title='Recetas',
         recipe_form=SearchRecipeForm(),
         recipes=recs,
@@ -45,7 +45,7 @@ def search_recipe(recipe_name):
         flash(recs, 'danger')
         return redirect(url_for('search.search_all_recipes'))
     return render_template(
-        'all.html',
+        'search_recipe.html',
         title=recipe_name,
         recipe_form=SearchRecipeForm(),
         recipes=recs,
