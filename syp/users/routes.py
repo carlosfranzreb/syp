@@ -7,7 +7,7 @@ from flask_login import login_user, current_user, logout_user
 
 from syp import bcrypt
 from syp.models.user import User
-from syp.users.forms import LoginForm
+from syp.users.forms import LoginForm, ProfileForm
 from syp.recipes.utils import get_last_recipes
 from syp.search.forms import SearchRecipeForm
 from syp.users import utils
@@ -45,3 +45,19 @@ def logout():
     a 404 error will be thrown. """
     logout_user()
     return redirect(utils.get_url())
+
+
+@users.route('/editar_perfil', methods=['GET', 'POST'])
+def edit_profile():
+    """ Edit profile of the cook. """
+    form = ProfileForm(obj=current_user)
+    if form.validate_on_submit():
+        # update profile
+        flash('Los cambios han sido guardados', 'success')
+    return render_template(
+        'edit_profile.html',
+        title='Editar perfil',
+        form=form,
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+    )

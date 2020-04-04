@@ -1,0 +1,60 @@
+{% extends 'main_layout.html' %} {% block content %}
+<h1>Editar perfil</h1>
+<form
+    method="post"
+    enctype="multipart/form-data"
+    autocomplete="off"
+    action="{{ url_for('users.edit_profile') }}"
+>
+    {{ form.hidden_tag() }}
+    <article>
+        <h2>Información personal</h2>
+        {{ form.email.label }}
+        {% if form.email.errors %}
+            {{ form.name(id="input_h1", style="color:#991D1D") }}
+            <span style="color: #991D1D; font-weight: bolder">
+                El email no tiene el formato adecuado.
+            </span>
+        {% else %} 
+            {{ form.email }} 
+        {% endif %}
+        <br />
+        {{ form.username.label }}
+        {% if form.username.errors %}
+            {{ form.username(style="color:#991D1D") }}
+            <span style="color: #991D1D; font-weight: bolder">
+                ¡Demasiado largo!
+            </span>
+        {% else %} 
+            {{ form.username }} 
+        {% endif %}
+        {{ form.password.label(style="margin-top: 1em") }}
+        {% if form.password.errors %}
+            {{ form.password(style="color:#991D1D") }}
+            <span style="color: #991D1D; font-weight: bolder">
+                ¡Demasiado larga!
+            </span>
+        {% else %} 
+            {{ form.password(placeholder="Nueva contraseña") }} 
+        {% endif %}
+    </article>
+
+    <article style="margin-top: 2em">
+        <h2>Información pública</h2>
+        {{ form.image.label }}
+        {{ form.image(class="form-control-file") }}
+        {% if form.image.errors %}
+          {% for error in form.image.errors %}
+            <span style="color: #991D1D">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+        {{ form.intro.label(style="margin-top: 1em") }}
+        {{ form.intro(placeholder="Preséntate ante tus seguidores (opcional)", oninput="auto_grow(this)") }}     
+    </article>
+
+    <center>
+        {{ form.save(class="primary", style="margin-top: 1em") }}
+    </center>
+</form>
+
+{% endblock content %}
