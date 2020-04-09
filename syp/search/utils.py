@@ -1,8 +1,8 @@
 """ Help functions for the search-by-name page. """
 
 
-from flask import request
 from string import Template
+from flask import request
 
 from syp.models.recipe import Recipe
 
