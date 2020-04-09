@@ -79,6 +79,4 @@ def view_profile(username):
         user_recipes=utils.last_user_recipes(user.id),
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
-    )   
-
-
+    )
