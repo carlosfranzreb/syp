@@ -15,7 +15,7 @@
         <div class="col-sm">
           {{ recipe_form.recipe(list="all_recipes", autocomplete="off", placeholder="Buscar receta.", style="margin: 0 0 5px 0; min-width: 140px") }}
           <datalist id="all_recipes">
-            {% for rec in last_recipes %}
+            {% for rec in last_recipes %} <!-- TODO: offer all recipes, not only last ones.-->
               <option value="{{ rec.name }}"></option>
             {% endfor %}
           </datalist>
