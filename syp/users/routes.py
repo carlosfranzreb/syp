@@ -68,7 +68,7 @@ def edit_profile():
         last_recipes=get_last_recipes(4),
     )
 
-@users.route('/cocinero/<username>')
+@users.route('/<username>')
 def view_profile(username):
     """ Returns the user home page, with an intro and recipes. """
     user = utils.get_user(username)
