@@ -35,7 +35,7 @@
 
         {% for recipe in recipes.items %}
           <article>
-      			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image">
+      			<a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="image">
               <img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
             </a>
       			<h3>{{ recipe.name }}</h3>
@@ -48,7 +48,7 @@
               </tr>
             </table>
       			<ul class="actions">
-      				<li><a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="button">Abrir</a></li>
+      				<li><a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="button">Abrir</a></li>
       			</ul>
       		</article>
         {% endfor %}
