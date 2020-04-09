@@ -1,6 +1,7 @@
 """ User object """
 # pylint: disable=no-member, missing-class-docstring, too-few-public-methods
 
+from flask import url_for
 from flask_login import UserMixin
 
 from syp import db, login_manager
@@ -22,3 +23,8 @@ class User(db.Model, UserMixin):
     intro = db.Column(db.Text)
     recipes = db.relationship('Recipe', backref='user', lazy=True)
 
+    def image_path(self):
+        """Returns the path for the user image. """
+        return url_for(
+            'static', filename=f'images/users/{self.username}.jpg'
+        )
