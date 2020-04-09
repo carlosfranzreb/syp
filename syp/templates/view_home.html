@@ -98,7 +98,6 @@
 		<h2>Últimas recetas</h2>
 	</header>
 	<div class="posts">
-
       {% for recipe in last_recipes[1:] %}
         <article>
     			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image">
@@ -111,7 +110,6 @@
     			</ul>
     		</article>
       {% endfor %}
-
 	</div>
 </section>
 
