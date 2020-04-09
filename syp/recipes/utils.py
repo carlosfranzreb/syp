@@ -53,11 +53,10 @@ def discard_duplicates(recipe):
 def get_last_recipes(limit=None):
     """ returns published recipes starting with the most recent one
         Images are sized 300 (small)"""
-    recipes = Recipe.query \
+    return Recipe.query \
         .filter_by(id_state=3) \
         .order_by(Recipe.created_at.desc()) \
         .limit(limit).all()
-    return recipes
 
 
 def get_paginated_recipes(limit=None, items=9):
