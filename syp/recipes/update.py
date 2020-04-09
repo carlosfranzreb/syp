@@ -8,7 +8,7 @@ from syp.models.ingredient import Ingredient
 from syp.models.subrecipe import Subrecipe
 from syp.models.unit import Unit
 from syp.models.recipe_step import RecipeStep
-from syp.recipes.images import change_image
+from syp.utils import images
 from syp.recipes.utils import get_url_from_name
 from syp import db
 
@@ -23,11 +23,11 @@ def update_recipe(recipe, form, valid=True):
         recipe.name = new_name
         recipe.url = get_url_from_name(new_name)
         if form.image.data:  # new image,  new name
-            change_image(form.image.data, recipe.url, old_url)
+            images.change_image(form.image.data, 'recipes', recipe.url, old_url)
         else:  # same image, new name
-            change_image(None, recipe.url, old_url)
+            images.change_image(None, 'recipes', recipe.url, old_url)
     elif form.image.data:  # new image, same name
-        change_image(form.image.data, None, recipe.url)
+        images.change_image(form.image.data, 'recipes', None, recipe.url)
     if recipe.intro != form.intro.data:
         recipe.intro = form.intro.data
     if recipe.text != form.text.data:

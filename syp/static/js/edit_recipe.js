@@ -2,9 +2,6 @@
 
 
 $(document).ready(function() {
-    // Adjust textarea heights to their contents
-    let elements = document.querySelectorAll('textarea');
-    elements.forEach(elem => auto_grow(elem));
     // On first load, remove Ingredient(...) from name
     // The check is necessary because it shouldn't be cut when the form is validated
     var ingredients = $(".ul_pepper").children("li");
@@ -21,19 +18,12 @@ $(document).ready(function() {
             ingredient.val(ing_val.substring(12, ing_val.length - 2));
         });
     }
-    // Disable submit on enter
-    $(window).keydown(function(event) {
-        if (event.keyCode == 13) {
-            event.preventDefault();
-            return false;
-        }
-    });
-    // Add 'Receta: ' before subrecipes. CSS ::before not working.
+    // Add 'Subreceta: ' before subrecipes. CSS ::before not working.
     $("#steps")
         .find("textarea")
         .each(function() {
             if ($(this).hasClass("is_subrecipe")) {
-                $(this).text("Receta: " + $(this).text());
+                $(this).text("Subreceta: " + $(this).text());
             }
         });
 });
@@ -178,16 +168,4 @@ function update_video() {
     $(".video-container")
         .find("iframe")
         .attr("src", $("#link_video").val());
-}
-
-function auto_grow(element) {
-    element.style.height = "5px";
-    element.style.height = (element.scrollHeight)+"px";    
-}
-
-function check_size(field) {
-    if (field.files[0].size > 19000000) {  // 19MB
-        window.alert('¡La imagen no puede pesar más de 19 MB!');
-        field.value = '';
-    }
 }

@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     pw = db.Column(db.String(60), nullable=False)
-    birth_date = db.Column(db.DateTime, nullable=False)
+    birth_date = db.Column(db.DateTime)
+    intro = db.Column(db.Text)
     recipes = db.relationship('Recipe', backref='user', lazy=True)
 

@@ -5,7 +5,7 @@
 from flask import abort, request
 from flask_login import current_user
 
-from syp.recipes.images import delete_image
+from syp.utils.images import delete_image
 from syp.search.utils import get_default_keywords
 from syp.models.recipe import Recipe
 from syp.models.subrecipe import Subrecipe
@@ -116,7 +116,7 @@ def delete_recipe(recipe_id):
     """ Delete recipe by changing its state. Do delete the images
     as they take too much space. """
     recipe = Recipe.query.filter_by(id=recipe_id).first()
-    delete_image(recipe.url)
+    delete_image(recipe.url, 'recipes')
     db.session.delete(recipe)
     db.session.commit()
 

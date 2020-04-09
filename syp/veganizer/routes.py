@@ -20,7 +20,7 @@ def get_veganizer():
         desc = "Envíanos tus recetas favoritas, y nosotros idearemos versiones \
                 veganas y saludables, para que tu paladar mantenga el listón y \
                 las viejas costumbres no desaparezcan"
-        return render_template('veganizer.html',
+        return render_template('view_veganizer.html',
                                title='Veganizador',
                                recipe_form=SearchRecipeForm(),
                                form=form,

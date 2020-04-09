@@ -2,15 +2,15 @@
 #pylint: disable = missing-function-docstring, invalid-name
 
 
-from flask import render_template, url_for, flash, redirect, request, Blueprint
-from flask_login import login_user, current_user, logout_user
+from flask import render_template, url_for, flash, redirect, Blueprint
+from flask_login import login_user, current_user, logout_user, login_required
 
 from syp import bcrypt
 from syp.models.user import User
-from syp.users.forms import LoginForm
+from syp.users.forms import LoginForm, ProfileForm
 from syp.recipes.utils import get_last_recipes
 from syp.search.forms import SearchRecipeForm
-from syp.users import utils
+from syp.users import utils, update, validate
 
 
 users = Blueprint('users', __name__)
@@ -31,7 +31,7 @@ def login():
             return redirect(url)
         flash('La contraseña es incorrecta. Vuelve a intentarlo.', 'danger')
     return render_template(
-        'login.html',
+        'view_login.html',
         title='Login',
         form=form,
         recipe_form=SearchRecipeForm(),
@@ -45,3 +45,25 @@ def logout():
     a 404 error will be thrown. """
     logout_user()
     return redirect(utils.get_url())
+
+
+@users.route('/editar_perfil', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    """ Edit profile of the cook. """
+    form = ProfileForm(obj=current_user)
+    if form.validate_on_submit():
+        errors = validate.validate_user(form, current_user)
+        if len(errors) == 0:
+            update.update_user(current_user, form)
+            flash('Los cambios han sido guardados', 'success')
+        else:
+            for error in errors:
+                flash(error, 'danger')
+    return render_template(
+        'edit_profile.html',
+        title='Editar perfil',
+        form=form,
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+    )
