@@ -6,7 +6,7 @@ from flask_login import current_user
 
 from syp.models.recipe import Recipe
 from syp.recipes import update, utils
-from syp.recipes.images import store_image
+from syp.utils.images import store_image
 from syp import db
 
 
@@ -31,5 +31,5 @@ def save_recipe(form, valid=True):
     update.update_ingredients(recipe, form)
     db.session.commit()
     if form.image.data:
-        store_image(form.image.data, recipe.url)
+        store_image(form.image.data, 'recipes', recipe.url)
     return recipe
