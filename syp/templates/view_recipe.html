@@ -13,6 +13,7 @@
         <li><h1> {{ recipe.name }} </h1></li>
       </ul>
     </div>
+	<h5>Receta de {{ recipe.user.username }}, publicada el {{ recipe.created_at.strftime("%d-%m-%Y") }}</h5> <!-- TODO: use published_at instead of created_at.-->
 	</header>
 
 	<span class="image main"><img src="{{ recipe.image_path('large') }}" alt="{{ recipe.name }}" /></span>
