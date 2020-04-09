@@ -1,0 +1,47 @@
+{% extends 'main_layout.html' %}
+{% block content %}
+<section>
+	<header class="main" id="recipe_header">
+        <h1> {{ user.username }} </h1>
+        <!-- TODO: Social media here -->
+	</header>
+	<span class="image main">
+        <img src="{{ user.image_path() }}" alt="{{ user.username }}" />
+    </span>
+	<p> {{ user.intro }} </p>
+</section>
+
+<section>
+	<header class="major">
+		<h2>Mis recetas</h2>
+	</header>
+	<div class="posts">
+      {% for recipe in user_recipes %}
+        <article>
+    			<a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="image">
+					<img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
+				</a>
+    			<h3>{{ recipe.name }}</h3>
+    			<p>{{ recipe.intro }}</p>
+				<table style="font-size: 75%; text-align: center">
+					<tr>
+					<td>{{ recipe.season.name | upper }}</td>
+					<td>{{ recipe.time_cook + recipe.time_prep }} MIN.</td>
+					</tr>
+				</table>
+    			<ul class="actions">
+    				<li><a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="button">Abrir</a></li>
+    			</ul>
+    		</article>
+      {% endfor %}
+	</div>
+    <!-- TODO: Option to view all user recipes. 
+    Include search by user in search options, and redirect there. -->
+</section>
+
+<center>
+	<div>
+		<h4>Échale un vistazo a otros cocineros <a style="color: #599A00; text-decoration: underline" href="" title="Ver todas los cocineros">aquí</a>.</h4>
+	</div>
+</center>
+{% endblock content %}

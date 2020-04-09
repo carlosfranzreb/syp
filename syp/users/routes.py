@@ -67,3 +67,16 @@ def edit_profile():
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
     )
+
+@users.route('/<username>')
+def view_profile(username):
+    """ Returns the user home page, with an intro and recipes. """
+    user = utils.get_user(username)
+    return render_template(
+        'view_profile.html',
+        title=username,
+        user=user,
+        user_recipes=utils.last_user_recipes(user.id),
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+    )

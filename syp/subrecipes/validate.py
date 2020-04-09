@@ -4,6 +4,8 @@ Ingredients must be chosen from the list.
 At least one non-empty step. Max. length of steps is checked by the form. """
 
 
+from flask_login import current_user
+
 from syp.models.subrecipe import Subrecipe
 from syp.models.ingredient import Ingredient
 from syp.recipes.utils import get_url_from_name
@@ -15,15 +17,16 @@ def validate(form):
     errors = list()
     name = form.name.data  # name of the subrecipe.
     url = get_url_from_name(name)
+    query = Subrecipe.query.filter_by(id_user=current_user.id)
     if name == 'Nueva subreceta':
         errors.append(
             'Cambia el nombre de la subreceta donde pone "Nueva subreceta"'
         )
-    elif Subrecipe.query.filter_by(name=name).first() is not None:
+    elif query.filter_by(name=name).first() is not None:
         errors.append(
             f'Ya existe una subreceta llamada "{name}". ¡Cambia el nombre!'
         )
-    elif Subrecipe.query.filter_by(url=url).first() is not None:
+    elif query.filter_by(url=url).first() is not None:
         errors.append(
             f'Ya existe una subreceta cuya URL es "{url}". ¡Cambia el nombre!'
         )

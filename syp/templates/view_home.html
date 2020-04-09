@@ -10,7 +10,7 @@
 		</header>
 		<p>{{ last_recipes[0].intro }}</p>
 		<ul class="actions">
-			<li><a class="button big" href="{{ url_for('recipes.get_recipe', recipe_url=last_recipes[0].url) }}">Abrir la receta</a></li>
+			<li><a class="button big" href="{{ url_for('recipes.get_recipe', username=last_recipes[0].user.username, recipe_url=last_recipes[0].url) }}">Abrir la receta</a></li>
 		</ul>
 	</div>
 	<span class="image object">
@@ -98,20 +98,25 @@
 		<h2>Últimas recetas</h2>
 	</header>
 	<div class="posts">
-
       {% for recipe in last_recipes[1:] %}
         <article>
-    			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image">
+    			<a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="image">
 					<img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
 				</a>
     			<h3>{{ recipe.name }}</h3>
     			<p>{{ recipe.intro }}</p>
+				<table style="font-size: 75%; text-align: center">
+					<tr>
+						<td>{{ recipe.user.username | upper }}</td>
+						<td>{{ recipe.season.name | upper }}</td>
+						<td>{{ recipe.time_cook + recipe.time_prep }} MIN.</td>
+					</tr>
+				</table>
     			<ul class="actions">
-    				<li><a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="button">Abrir</a></li>
+    				<li><a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="button">Abrir</a></li>
     			</ul>
     		</article>
       {% endfor %}
-
 	</div>
 </section>
 

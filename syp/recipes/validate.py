@@ -1,8 +1,8 @@
+from flask_login import current_user
+
 from syp.models.ingredient import Ingredient
 from syp.models.recipe import Recipe
 from syp.recipes.utils import get_url_from_name
-
-
 
 
 def validate_name(form, recipe=None):
@@ -12,22 +12,23 @@ def validate_name(form, recipe=None):
         return list()  # It has already been validated.
     errors = list()
     url = get_url_from_name(name)
+    query = Recipe.query.filter_by(id_user=current_user.id)
     if name == 'Nueva receta':
         errors.append(
             'Cambia el nombre de la receta donde pone "Nueva receta"'
         )
-    elif Recipe.query.filter_by(name=name).count() != 0:
+    elif query.filter_by(name=name).count() != 0:
         errors.append(
-            f'Ya existe una receta llamada "{name}". Cambia el nombre!'
+            f'Ya tienes una receta llamada "{name}". ¡Cambia el nombre!'
         )
-    elif Recipe.query.filter_by(url=url).count() != 0:
+    elif query.filter_by(url=url).count() != 0:
         errors.append(
-            f'Ya existe una receta cuya URL es "{url}". Cambia el nombre!'
+            f'Ya tienes una receta cuya URL es "{url}". ¡Cambia el nombre!'
         )
     return errors
 
 def validate_edition(form):
-    """ Validate a form after an edition. 
+    """ Validate a form after an edition.
     Ensure that all ingredients are in the DB and the video link
     is correct. If not, return the appropiate errors. """
     errors = list()

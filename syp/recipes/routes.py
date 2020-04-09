@@ -14,8 +14,8 @@ from syp.recipes.forms import RecipeForm, NewRecipeForm, SearchForm
 recipes = Blueprint('recipes', __name__)
 
 
-@recipes.route('/receta/<recipe_url>', methods=['GET', 'POST'])
-def get_recipe(recipe_url):
+@recipes.route('/<username>/receta/<recipe_url>', methods=['GET', 'POST'])
+def get_recipe(username, recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     desc = f'Receta vegana y saludable: {recipe.name}. {recipe.intro}'
     return render_template(
