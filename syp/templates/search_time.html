@@ -38,8 +38,15 @@
       			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image">
               <img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
             </a>
-      			<h3>{{ recipe.name }} - {{ recipe.time_cook + recipe.time_prep }} minutos</h3>
+      			<h3>{{ recipe.name }}</h3>
       			<p>{{ recipe.intro }}</p>
+            <table style="font-size: 75%">
+              <tr>
+                <td>{{ recipe.user.username | upper }}</td>
+                <td>{{ recipe.season.name | upper }}</td>
+                <td>{{ recipe.time_cook + recipe.time_prep }} MIN.</td>
+              </tr>
+            </table>
       			<ul class="actions">
       				<li><a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="button">Abrir</a></li>
       			</ul>
