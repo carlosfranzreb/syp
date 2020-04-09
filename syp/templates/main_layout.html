@@ -186,11 +186,18 @@
                                 </li>
                             {% endif %}
                             <li>
-                                <a href="{{ url_for('main.get_home') }}">Inicio</a></li>
+                                <a href="{{ url_for('main.get_home') }}" title="Ver la página de inicio">
+                                    Inicio
+                                </a>
+                            </li>
                             <li>
-                                <a href="{{ url_for('search.search_all_recipes') }}"
-                                    title="Ver todas las recetas">
+                                <a href="{{ url_for('search.search_all_recipes') }}" title="Ver todas las recetas">
                                     Recetas
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('users.all_cooks') }}" title="Ver todos los cocineros">
+                                    Cocineros
                                 </a>
                             </li>
                             <li>

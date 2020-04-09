@@ -2,12 +2,12 @@
 #pylint: disable = missing-function-docstring, invalid-name
 
 
-from flask import render_template, url_for, flash, redirect, Blueprint
+from flask import render_template, url_for, flash, redirect, Blueprint, abort
 from flask_login import login_user, current_user, logout_user, login_required
 
 from syp import bcrypt
 from syp.models.user import User
-from syp.users.forms import LoginForm, ProfileForm
+from syp.users.forms import LoginForm, ProfileForm, CookForm
 from syp.recipes.utils import get_last_recipes
 from syp.search.forms import SearchRecipeForm
 from syp.users import utils, update, validate
@@ -72,6 +72,8 @@ def edit_profile():
 def view_profile(username):
     """ Returns the user home page, with an intro and recipes. """
     user = utils.get_user(username)
+    if user is None:
+        return abort(404)
     return render_template(
         'view_profile.html',
         title=username,
@@ -79,4 +81,53 @@ def view_profile(username):
         user_recipes=utils.last_user_recipes(user.id),
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
+    )
+
+
+@users.route('/cocineros', methods=['GET', 'POST'])
+def all_cooks():
+    form = CookForm()
+    if form.is_submitted():
+        return redirect(url_for(
+            'users.search_cook',
+            username=form.username.data
+        ))
+    page, cooks = utils.paginated_cooks()
+    desc = 'Todas nuestras recetas, veganas y saludables. Aquí encontrarás \
+    platos muy variados, algunas rápidas, otras más elaboradas, pero todas \
+    bien explicadas y con vídeo incluido.'
+    return render_template(
+        'search_cooks.html',
+        title='Cocineros',
+        cook_form=form,
+        all_usernames=utils.all_usernames(),
+        cooks=cooks,
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(4),
+        description=' '.join(desc.split()),
+        keywords=utils.get_cook_keywords()
+    )
+
+
+@users.route('/cocineros/<username>', methods=['GET', 'POST'])
+def search_cook(username):
+    form = CookForm()
+    if form.is_submitted():
+        return redirect(url_for(
+            'search.search_recipe',
+            recipe_name=form.recipe.data
+        ))
+    page, cooks = utils.get_cooks(username)
+    if isinstance(cooks, str):
+        flash(cooks, 'danger')
+        return redirect(url_for('utils.all_cooks'))
+    return render_template(
+        'search_cooks.html',
+        title=username,
+        cook_form=form,
+        all_usernames=utils.all_usernames(),
+        cooks=cooks,
+        recipe_form=SearchRecipeForm(),
+        last_recipes=get_last_recipes(),
+        keywords=utils.get_cook_keywords(username)
     )
