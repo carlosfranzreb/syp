@@ -27,3 +27,10 @@ class ProfileForm(FlaskForm):
     image = FileField('Foto', validators=[FileAllowed(['jpg', 'png'])])
     intro = TextAreaField('Introducción')
     save = SubmitField('Guardar')
+
+
+class CookForm(FlaskForm):
+    """ Form to search for cooks by username. """
+    username = StringField('Nombre', validators=[DataRequired()])
+    submit = SubmitField('Buscar')
+
