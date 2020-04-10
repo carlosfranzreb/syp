@@ -112,7 +112,7 @@ def edit_recipe(recipe_url, state=None):
     should proceed, instead of redirecting to edit_new_recipe. """
     recipe = utils.get_recipe_by_url(recipe_url)
     if recipe.id_user != current_user.id:
-        return abort(404)
+        return abort(403)
     if state is None and recipe.id_state == 1:  # unfinished recipe
         return redirect(url_for(
             'recipes.edit_new_recipe',
@@ -156,7 +156,7 @@ def edit_new_recipe(recipe_url):
     """ Recipe state = 'Unfinished'. Validation is not thorough. """
     recipe = utils.get_recipe_by_url(recipe_url)
     if recipe.id_user != current_user.id:
-        return abort(404)
+        return abort(403)
     form = utils.add_choices(NewRecipeForm(obj=recipe))
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe)

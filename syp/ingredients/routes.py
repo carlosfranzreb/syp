@@ -188,7 +188,7 @@ def create_ingredient():
 def delete_ingredient(ingredient_url):
     ingredient = utils.get_ingredient_by_url(ingredient_url)
     if ingredient.created_by != current_user.id:
-        return abort(404)
+        return abort(403)
     if ingredient.uses() > 0:
         flash('El ingrediente no se puede borrar. Hay recetas que lo usan.', 'danger')
     else:
