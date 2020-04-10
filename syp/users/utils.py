@@ -4,6 +4,7 @@ from flask import request
 
 from syp.models.user import User
 from syp.models.recipe import Recipe
+from syp.models.web import Web
 from syp.search.utils import get_default_keywords
 
 
@@ -65,3 +66,17 @@ def get_cook_keywords(username='SyP'):
     search_keys += f'recetas saludables de {username}, '
     search_keys += f'recetas caseras de {username}'
     return ' '.join(search_keys.split())
+
+
+def add_choices(form, user):
+    """Add choices for the social media select field of the form.
+    Retrieve them from the DB. Also selects the right choice. """
+    for subform in form.media:
+        subform.web.choices = [
+            (w.id, w.name) for w in Web.query.order_by(Web.name)
+        ]
+        for medium in user.media:
+            if medium.username == subform.username.data:
+                subform.web.process_data(medium.id_web)
+                break
+    return form

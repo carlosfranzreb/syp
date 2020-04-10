@@ -42,7 +42,14 @@
           {% endfor %}
         {% endif %}
         {{ form.intro.label(style="margin-top: 1em") }}
-        {{ form.intro(placeholder="Preséntate ante tus seguidores (opcional)", oninput="auto_grow(this)") }}     
+        {{ form.intro(placeholder="Preséntate ante tus seguidores.", oninput="auto_grow(this)") }}     
+        <br>
+        <h3>Redes sociales</h3>
+        {% for subform in form.media %}           
+            {{ subform.web }}
+            {{ subform.username }}
+            <br>
+        {% endfor %}
     </article>
 
     <center>
