@@ -36,7 +36,11 @@
                     <img src="{{ cook.image_path() }}" alt="{{ cook.username }}" />
                 </a>
                 <h3>{{ cook.name }}</h3>
-                <p>{{ cook.intro }}</p>
+                {% if cook.intro | length > 150 %}
+                  <p>{{ cook.intro[:147] }}...</p>
+                {% else %}
+                  <p>{{ cook.intro }}</p>
+                {% endif %}
                 <ul class="actions">
                     <li><a href="{{ url_for('users.view_profile', username=cook.username) }}" class="button">Ver perfil</a></li>
                 </ul>
