@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133554712-1"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag("js", new Date());
-            gtag("config", "UA-133554712-1");
-        </script>
+        {% if cookies is none and title != 'Privacidad' %}
+            <div id="politica_de_privacidad" class="modal_window">
+                <div>
+                    <a href="#" class="modal_close"></a>
+                    <h2>Política de privacidad</h2><br>
+                    <p>
+                        Esta página utiliza AddThis para compartir recetas, y Google Analytics
+                        para averiguar cómo los usuarios interactúan con la página. Puedes leer 
+                        nuestra política de privacidad
+                        <a href="{{ url_for('main.get_privacy') }}">aquí</a>
+                    </p>
+                    <p>
+                        Guardaremos tu respuesta junto con tu dirección IP para no preguntarte
+                        cada vez que entres. En caso de que tu respuesta sea negativa, te volveré
+                        a preguntar en 30 días, con la esperanza de que hayas cambiado de opinión
+                        y me ayudes a mejorar la página. Si quieres que borre estos datos me puedes
+                        mandar un mail a saludypimienta@outlook.com
+                    </p>
+                    <a class="button primary" href="{{ url_for('main.cookies', accepts=True, url=request.url) }}">Acepto</a>
+                    <a class="button" href="{{ url_for('main.cookies', accepts=False, url=request.url) }}">No acepto</a>
+                </div>
+            </div>
+            <script>window.location.href = '#politica_de_privacidad'</script>
+        {% elif cookies %}
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133554712-1"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+                gtag("js", new Date());
+                gtag("config", "UA-133554712-1");
+            </script>
+        {% endif %}
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -26,6 +51,9 @@
             href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
             integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
             crossorigin="anonymous"
+        />
+        <link rel="stylesheet" type="text/css"
+            href="{{ url_for('static', filename='css/modals.css') }}"
         />
         <link rel="stylesheet" type="text/css"
             href="{{ url_for('static', filename='css/main.css') }}"
@@ -314,10 +342,12 @@
             crossorigin="anonymous"
         ></script>
         {% if is_recipe %}
-            <script
-                type="text/javascript"
-                src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5c4f12a15338a3ff"
-            ></script>
+            {% if cookies %}
+                <script
+                    type="text/javascript"
+                    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5c4f12a15338a3ff"
+                ></script>
+            {% endif %}
             <script src="{{url_for('static', filename='js/recipe.js')}}"></script>
         {% elif is_edit_recipe %}
             <script src="{{url_for('static', filename='js/edit_recipe.js')}}"></script>

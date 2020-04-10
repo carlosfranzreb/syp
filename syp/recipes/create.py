@@ -1,7 +1,7 @@
 """ Functions related to the creation of recipes, which means
 writing new recipes to the DB. """
 
-
+from datetime import datetime as dt
 from flask_login import current_user
 
 from syp.models.recipe import Recipe
@@ -27,6 +27,8 @@ def save_recipe(form, valid=True):
     )
     db.session.add(recipe)
     db.session.commit()
+    if recipe.id_state == 3:
+        recipe.published_at = dt.now()
     update.update_steps(recipe, form)
     update.update_ingredients(recipe, form)
     db.session.commit()

@@ -45,6 +45,8 @@ def update_recipe(recipe, form, valid=True):
     if recipe.id_state != form.state.data:
         if valid or form.state.data == 1:
             recipe.id_state = form.state.data
+            if recipe.id_state == 3:
+                recipe.published_at = dt.now()
     update_ingredients(recipe, form)
     update_steps(recipe, form)
     db.session.commit()
@@ -122,4 +124,3 @@ def update_steps(recipe, form):
         for step in recipe.steps:
             if step.step == step_data:
                 db.session.delete(step)
-

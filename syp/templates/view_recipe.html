@@ -2,18 +2,23 @@
 {% block content %}
 <section>
 	<header class="main" id="recipe_header">
-	{% if current_user.is_authenticated %}
+	{% if recipe.id_user == current_user.id %}
 		<span class="label label-{{recipe.state.label}}">{{ recipe.state.state|upper }}</span>
 	{% endif %}
     <div id="action_icons_container">
       <ul class="icons">
-        {% if current_user.is_authenticated %}
+        {% if recipe.id_user == current_user.id %}
             <li><a href="{{ url_for('recipes.edit_recipe', recipe_url=recipe.url) }}" class="icon fas fa-pencil" title="Editar receta."><span class="label">Editar receta.</span></a></li>
         {% endif %}
         <li><h1> {{ recipe.name }} </h1></li>
       </ul>
     </div>
-	<h5>Receta de {{ recipe.user.username }}, publicada el {{ recipe.created_at.strftime("%d-%m-%Y") }}</h5> <!-- TODO: use published_at instead of created_at.-->
+	{% if recipe.id_state == 3 %}
+		<h5>
+			Receta de <a href="{{ url_for('users.view_profile', username=recipe.user.username) }}">{{ recipe.user.username }}</a>,
+			publicada el {{ recipe.published_at.strftime("%d-%m-%Y") }}
+		</h5>
+	{% endif %}
 	</header>
 
 	<span class="image main"><img src="{{ recipe.image_path('large') }}" alt="{{ recipe.name }}" /></span>

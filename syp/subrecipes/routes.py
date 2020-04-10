@@ -68,7 +68,7 @@ def sort_by_date(arg):
 def edit_subrecipe(subrecipe_url):
     subrecipe = utils.get_subrecipe_by_url(subrecipe_url)
     if subrecipe.id_user != current_user.id:
-        return abort(404)
+        return abort(403)
     form = SubrecipeForm(obj=subrecipe)
     for subform in form.ingredients:
         subform.unit.choices = [
@@ -104,7 +104,7 @@ def edit_subrecipe(subrecipe_url):
 def delete_subrecipe(subrecipe_url):
     subrecipe = utils.get_subrecipe_by_url(subrecipe_url)
     if subrecipe.id_user != current_user.id:
-        return abort(404)
+        return abort(403)
     if subrecipe.uses() > 0:
         flash('La subreceta no se puede borrar. Hay recetas que la usan.', 'danger')
     else:

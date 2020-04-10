@@ -3654,3 +3654,14 @@ button:disabled,
     margin-top: 0;
     padding-top: 0;
 }
+
+/* After this, made by charlo */
+.recipe_info_box {
+    font-size: 75%;
+    text-align: center
+}
+
+.recipe_info_box a {
+    border-bottom: none;
+    color: #000;
+}
