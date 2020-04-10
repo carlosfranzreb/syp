@@ -56,7 +56,6 @@
         </ul>
         <a class="button" onclick="add_item()">Añadir cuenta</a>
         <select id="all_media" style="display: none" required>
-            <option value="" disabled selected>Escoge una red social</option>
             {% for medium in all_media %}
                 <option value="{{ medium[0] }}">{{ medium[1] }}</option>
             {% endfor %}
