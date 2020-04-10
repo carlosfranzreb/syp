@@ -21,9 +21,8 @@ class User(db.Model, UserMixin):
     pw = db.Column(db.String(60), nullable=False)
     birth_date = db.Column(db.DateTime)
     intro = db.Column(db.Text)
-    recipes = db.relationship('Recipe', backref='user', lazy=True)
 
-    media = db.relationship('SocialMedia', backref='user', lazy=True, cascade='delete')
+    recipes = db.relationship('Recipe', backref='user', lazy=True)
 
     def image_path(self):
         """Returns the path for the user image. """
