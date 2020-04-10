@@ -29,7 +29,7 @@
             {{ form.username }} 
         {% endif %}
         {{ form.password.label(style="margin-top: 1em") }}
-        {{ form.password(placeholder="Nueva contraseña", onchange="repeat_password(this)") }} 
+        {{ form.password(placeholder="Nueva contraseña", onchange="repeat_password(this)", autocomplete="new-password") }} 
     </article>
 
     <article style="margin-top: 2em">

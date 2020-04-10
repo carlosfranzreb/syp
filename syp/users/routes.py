@@ -64,7 +64,6 @@ def edit_profile():
         'edit_profile.html',
         title='Editar perfil',
         form=form,
-        user=current_user,
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
     )
