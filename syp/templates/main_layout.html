@@ -19,8 +19,10 @@
                         y me ayudes a mejorar la página. Si quieres que borre estos datos me puedes
                         mandar un mail a saludypimienta@outlook.com
                     </p>
-                    <a class="button primary" href="{{ url_for('main.cookies', accepts=True, url=request.url) }}">Acepto</a>
-                    <a class="button" href="{{ url_for('main.cookies', accepts=False, url=request.url) }}">No acepto</a>
+                    <center>
+                        <a style="margin-bottom: 1em" class="button primary" href="{{ url_for('main.cookies', accepts=True, url=request.url) }}">Acepto</a>
+                        <a class="button" href="{{ url_for('main.cookies', accepts=False, url=request.url) }}">No acepto</a>
+                    </center>
                 </div>
             </div>
             <script>window.location.href = '#politica_de_privacidad'</script>
