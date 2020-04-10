@@ -14,6 +14,7 @@ def sort(order, desc, limit, items):
         order = order.desc()
     page = request.args.get('page', 1, type=int)
     recipes = Recipe.query \
+        .filter_by(id_user=current_user.id) \
         .order_by(order) \
         .limit(limit).paginate(page=page, per_page=items)
     return (page, recipes)
