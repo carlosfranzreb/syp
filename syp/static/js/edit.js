@@ -5,9 +5,13 @@ $(document).ready(function() {
     let elements = document.querySelectorAll('textarea');
     elements.forEach(elem => auto_grow(elem));
     // Disable submit on enter
-    $(window).keydown(function(event) {
-        if (event.keyCode == 13) {
-            event.preventDefault();
+    $('form input').keydown(function (e) {
+        if (e.keyCode == 13) {
+            var inputs = $(this).parents("form").eq(0).find(":input");
+            if (inputs[inputs.index(this) + 1] != null) {                    
+                inputs[inputs.index(this) + 1].focus();
+            }
+            e.preventDefault();
             return false;
         }
     });
