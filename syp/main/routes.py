@@ -1,10 +1,12 @@
-from flask import Blueprint, render_template, send_from_directory
+from flask import Blueprint, render_template, send_from_directory, redirect
 from syp.recipes.utils import get_last_recipes
 from syp.search.forms import SearchRecipeForm
 from syp.search.utils import get_default_keywords
-
+from syp.users.utils import get_url
+from syp.main import utils
 
 main = Blueprint('main', __name__)
+
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -64,6 +66,14 @@ def get_donate():
         description=' '.join(desc.split()),
         keywords=get_default_keywords() + ', donación'
     )
+
+
+@main.route('/aceptar_cookies/<accepts>')
+def cookies(accepts):
+    """ Saves response to cookie banner and returns to
+    the previous URL. """
+    utils.save_cookies_consent(accepts == 'True')
+    return redirect(get_url())
 
 
 @main.route('/robots.txt')
