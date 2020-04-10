@@ -8,7 +8,7 @@ from syp.models.ingredient import Ingredient
 from syp.models.subrecipe import Subrecipe
 from syp.models.unit import Unit
 from syp.models.recipe_step import RecipeStep
-from syp.recipes.images import change_image
+from syp.utils import images
 from syp.recipes.utils import get_url_from_name
 from syp import db
 
@@ -23,11 +23,11 @@ def update_recipe(recipe, form, valid=True):
         recipe.name = new_name
         recipe.url = get_url_from_name(new_name)
         if form.image.data:  # new image,  new name
-            change_image(form.image.data, recipe.url, old_url)
+            images.change_image(form.image.data, 'recipes', recipe.url, old_url)
         else:  # same image, new name
-            change_image(None, recipe.url, old_url)
+            images.change_image(None, 'recipes', recipe.url, old_url)
     elif form.image.data:  # new image, same name
-        change_image(form.image.data, None, recipe.url)
+        images.change_image(form.image.data, 'recipes', None, recipe.url)
     if recipe.intro != form.intro.data:
         recipe.intro = form.intro.data
     if recipe.text != form.text.data:
@@ -45,6 +45,8 @@ def update_recipe(recipe, form, valid=True):
     if recipe.id_state != form.state.data:
         if valid or form.state.data == 1:
             recipe.id_state = form.state.data
+            if recipe.id_state == 3:
+                recipe.published_at = dt.now()
     update_ingredients(recipe, form)
     update_steps(recipe, form)
     db.session.commit()
@@ -122,4 +124,3 @@ def update_steps(recipe, form):
         for step in recipe.steps:
             if step.step == step_data:
                 db.session.delete(step)
-

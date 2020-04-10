@@ -18,7 +18,7 @@ def search_time_undefined():
             prisa, o buscas un plato más elaborado. Sin importar lo que \
             tardes, ¡dedícale tiempo a degustarlo!'
     return render_template(
-        'time.html',
+        'search_time.html',
         title='Tiempo',
         recipe_form=SearchRecipeForm(),
         form=form,
@@ -42,7 +42,7 @@ def search_time(time):
              minutos. Sin importar lo que tardes, ¡dedícale tiempo a \
              degustarlo!'
     return render_template(
-        'time.html',
+        'search_time.html',
         title=f'{time} minutos',
         recipe_form=SearchRecipeForm(),
         form=form,

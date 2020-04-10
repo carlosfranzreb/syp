@@ -21,7 +21,7 @@
   </tr>
   {% for recipe in recipes.items %}
   <tr>
-    <td><a class="icon action_icon" href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}">{{ recipe.name }}</a></td>
+    <td><a class="icon action_icon" href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}">{{ recipe.name }}</a></td>
     {% if recipe.changed_at %}
       <td>{{ recipe.changed_at.strftime("%d-%m-%Y") }}</td>
     {% else %}

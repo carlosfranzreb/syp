@@ -1,0 +1,71 @@
+{% extends 'main_layout.html' %}
+{% block content %}
+<section>
+	<header class="main" id="recipe_header">
+        <h1> {{ user.username }} </h1>
+		<ul class="icons">
+			{% for medium in user.media %}
+				<li>
+					<a class="{{ medium.web.icon }}"
+						href="{{ medium.web.link }}{{ medium.username }}"
+						title="Ir al {{ medium.web.name | lower }} de {{ user.username }}"
+						target="_blank"
+					><span class="label">{{ medium.web.name }}</span></a>
+				</li>
+			{% endfor %}
+		</ul>
+	</header>
+	<span class="image main">
+        <img src="{{ user.image_path() }}" alt="{{ user.username }}" />
+    </span>
+	<p> {{ user.intro }} </p>
+</section>
+
+<section>
+	<header class="major">
+		<h2>Mis recetas</h2>
+	</header>
+	<div class="posts">
+      {% for recipe in user_recipes %}
+        <article>
+    			<a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="image">
+					<img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
+				</a>
+    			<h3>{{ recipe.name }}</h3>
+    			<p>{{ recipe.intro }}</p>
+				<table class="recipe_info_box">
+					<tr>
+						<td>
+							<a href="{{ url_for('seasons.search_season', season_name=recipe.season.name) }}">
+								{{ recipe.season.name | upper }}
+							</a>
+						</td>
+						<td>
+							<a href="{{ url_for('times.search_time', time=recipe.time_cook + recipe.time_prep) }}">
+								{{ recipe.time_cook + recipe.time_prep }} MIN.
+							</a>
+						</td>
+					</tr>
+				</table>
+    			<ul class="actions">
+    				<li><a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="button">Abrir</a></li>
+    			</ul>
+    		</article>
+      {% endfor %}
+	</div>
+    <!-- TODO: Option to view all user recipes. 
+    Include search by user in search options, and redirect there. -->
+</section>
+
+<center>
+	<div>
+		<h4>Échale un vistazo a otros cocineros 
+			<a 
+				style="color: #599A00; text-decoration: underline" 
+				href="{{ url_for('users.all_cooks') }}" 
+				title="Ver todas los cocineros">
+				aquí</a>.
+		</h4>
+	</div>
+</center>
+{% endblock content %}

@@ -38,8 +38,7 @@ def get_season_nr(season_name):
     season = Season.query.filter_by(name=season_name).first()
     if season is not None:
         return season.id
-    else:
-        return abort(404)
+    return abort(404)
 
 
 def get_current_season():

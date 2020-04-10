@@ -24,7 +24,7 @@ def sort_by_name(arg):
             'subrecipes.search_by_name', arg=form.name.data
         ))
     return render_template(
-        'subrecipes.html',
+        'overview_subrecipe.html',
         title='Subrecetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -38,7 +38,7 @@ def sort_by_name(arg):
 @login_required
 def search_by_name(arg):
     return render_template(
-        'subrecipes.html',
+        'overview_subrecipe.html',
         title='Subrecetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -53,7 +53,7 @@ def search_by_name(arg):
 def sort_by_date(arg):
     """ Shows a list with all subrecipes of the user, ordered by date. """
     return render_template(
-        "subrecipes.html",
+        "overview_subrecipe.html",
         title="Subrecetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -68,7 +68,7 @@ def sort_by_date(arg):
 def edit_subrecipe(subrecipe_url):
     subrecipe = utils.get_subrecipe_by_url(subrecipe_url)
     if subrecipe.id_user != current_user.id:
-        return abort(404)
+        return abort(403)
     form = SubrecipeForm(obj=subrecipe)
     for subform in form.ingredients:
         subform.unit.choices = [
@@ -104,7 +104,7 @@ def edit_subrecipe(subrecipe_url):
 def delete_subrecipe(subrecipe_url):
     subrecipe = utils.get_subrecipe_by_url(subrecipe_url)
     if subrecipe.id_user != current_user.id:
-        return abort(404)
+        return abort(403)
     if subrecipe.uses() > 0:
         flash('La subreceta no se puede borrar. Hay recetas que la usan.', 'danger')
     else:

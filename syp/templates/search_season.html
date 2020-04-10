@@ -28,11 +28,25 @@
 
         {% for recipe in recipes.items %}
           <article>
-      			<a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="image"><img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" /></a>
+      			<a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="image"><img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" /></a>
       			<h3>{{ recipe.name }}</h3>
       			<p>{{ recipe.intro }}</p>
+            <table class="recipe_info_box">
+              <tr>
+                <td>
+                  <a href="{{ url_for('users.view_profile', username=recipe.user.username) }}">
+                    {{ recipe.user.username | upper }}
+                  </a>
+                </td>
+                <td>
+                  <a href="{{ url_for('times.search_time', time=recipe.time_cook + recipe.time_prep) }}">
+                    {{ recipe.time_cook + recipe.time_prep }} MIN.
+                  </a>
+                </td>
+              </tr>
+            </table>
       			<ul class="actions">
-      				<li><a href="{{ url_for('recipes.get_recipe', recipe_url=recipe.url) }}" class="button">Abrir</a></li>
+      				<li><a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="button">Abrir</a></li>
       			</ul>
       		</article>
         {% endfor %}
@@ -43,7 +57,7 @@
       {% for page_num in recipes.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
           {% if recipes.page == page_num %}
-            <a class="btn btn-danger mb-4" href="{{ url_for('seasons.search_season', season_name=season_name, page=page_num) }}">{{ page_num }}</a>
+            <a class="btn btn-danger mb-4">{{ page_num }}</a>
           {% else %}
             <a class="btn btn-outline-danger mb-4" href="{{ url_for('seasons.search_season', season_name=season_name, page=page_num) }}">{{ page_num }}</a>
           {% endif %}

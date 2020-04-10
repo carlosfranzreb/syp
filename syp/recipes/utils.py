@@ -5,7 +5,7 @@
 from flask import abort, request
 from flask_login import current_user
 
-from syp.recipes.images import delete_image
+from syp.utils.images import delete_image
 from syp.search.utils import get_default_keywords
 from syp.models.recipe import Recipe
 from syp.models.subrecipe import Subrecipe
@@ -53,11 +53,10 @@ def discard_duplicates(recipe):
 def get_last_recipes(limit=None):
     """ returns published recipes starting with the most recent one
         Images are sized 300 (small)"""
-    recipes = Recipe.query \
+    return Recipe.query \
         .filter_by(id_state=3) \
         .order_by(Recipe.created_at.desc()) \
         .limit(limit).all()
-    return recipes
 
 
 def get_paginated_recipes(limit=None, items=9):
@@ -116,7 +115,7 @@ def delete_recipe(recipe_id):
     """ Delete recipe by changing its state. Do delete the images
     as they take too much space. """
     recipe = Recipe.query.filter_by(id=recipe_id).first()
-    delete_image(recipe.url)
+    delete_image(recipe.url, 'recipes')
     db.session.delete(recipe)
     db.session.commit()
 

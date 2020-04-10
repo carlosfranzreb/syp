@@ -21,6 +21,7 @@ class Recipe(db.Model):
     health = db.Column(db.Text)
     created_at = db.Column(db.DateTime, nullable=False, default=dt.now())
     changed_at = db.Column(db.DateTime)
+    published_at = db.Column(db.DateTime)
     id_season = db.Column(db.Integer, db.ForeignKey('seasons.id'))
     id_state = db.Column(db.Integer, db.ForeignKey('recipe_states.id'), nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

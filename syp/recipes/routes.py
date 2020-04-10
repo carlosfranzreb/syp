@@ -14,12 +14,12 @@ from syp.recipes.forms import RecipeForm, NewRecipeForm, SearchForm
 recipes = Blueprint('recipes', __name__)
 
 
-@recipes.route('/receta/<recipe_url>', methods=['GET', 'POST'])
-def get_recipe(recipe_url):
+@recipes.route('/<username>/receta/<recipe_url>', methods=['GET', 'POST'])
+def get_recipe(username, recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     desc = f'Receta vegana y saludable: {recipe.name}. {recipe.intro}'
     return render_template(
-        'recipe.html',
+        'view_recipe.html',
         title=recipe.name,
         recipe_form=SearchRecipeForm(),
         recipe=recipe,
@@ -42,7 +42,7 @@ def sort_by_name(arg):
             'recipes.search_by_name', arg=form.name.data
         ))
     return render_template(
-        'recipes.html',
+        'overview_recipe.html',
         title='Recetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -56,7 +56,7 @@ def sort_by_name(arg):
 @login_required
 def search_by_name(arg):
     return render_template(
-        'recipes.html',
+        'overview_recipe.html',
         title='Recetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -71,7 +71,7 @@ def search_by_name(arg):
 def sort_by_date(arg):
     """ Shows a list with all recipes of the user, ordered by date. """
     return render_template(
-        "recipes.html",
+        "overview_recipe.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -86,7 +86,7 @@ def sort_by_date(arg):
 def sort_by_state(arg):
     """ Shows a list with all recipes of the user, ordered by state. """
     return render_template(
-        "recipes.html",
+        "overview_recipe.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -112,7 +112,7 @@ def edit_recipe(recipe_url, state=None):
     should proceed, instead of redirecting to edit_new_recipe. """
     recipe = utils.get_recipe_by_url(recipe_url)
     if recipe.id_user != current_user.id:
-        return abort(404)
+        return abort(403)
     if state is None and recipe.id_state == 1:  # unfinished recipe
         return redirect(url_for(
             'recipes.edit_new_recipe',
@@ -156,7 +156,7 @@ def edit_new_recipe(recipe_url):
     """ Recipe state = 'Unfinished'. Validation is not thorough. """
     recipe = utils.get_recipe_by_url(recipe_url)
     if recipe.id_user != current_user.id:
-        return abort(404)
+        return abort(403)
     form = utils.add_choices(NewRecipeForm(obj=recipe))
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe)

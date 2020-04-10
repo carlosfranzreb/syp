@@ -1,9 +1,11 @@
 """ User object """
 # pylint: disable=no-member, missing-class-docstring, too-few-public-methods
 
+from flask import url_for
 from flask_login import UserMixin
 
 from syp import db, login_manager
+from syp.models.social_media import SocialMedia
 
 
 @login_manager.user_loader
@@ -18,6 +20,14 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     pw = db.Column(db.String(60), nullable=False)
-    birth_date = db.Column(db.DateTime, nullable=False)
-    recipes = db.relationship('Recipe', backref='user', lazy=True)
+    birth_date = db.Column(db.DateTime)
+    intro = db.Column(db.Text)
 
+    recipes = db.relationship('Recipe', backref='user', lazy=True)
+    media = db.relationship('SocialMedia', backref='user', lazy=True)
+
+    def image_path(self):
+        """Returns the path for the user image. """
+        return url_for(
+            'static', filename=f'images/users/{self.username}.jpg'
+        )
