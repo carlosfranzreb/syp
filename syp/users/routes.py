@@ -39,6 +39,7 @@ def login():
         url=url
     )
 
+
 @users.route('/logout')
 def logout():
     """ Logout and return to previous page. If the page requires a login,
@@ -64,9 +65,11 @@ def edit_profile():
         'edit_profile.html',
         title='Editar perfil',
         form=form,
+        all_media=utils.all_media(),
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
     )
+
 
 @users.route('/<username>')
 def view_profile(username):

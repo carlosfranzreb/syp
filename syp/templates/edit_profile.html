@@ -45,15 +45,26 @@
         {{ form.intro(placeholder="Preséntate ante tus seguidores.", oninput="auto_grow(this)") }}     
         <br>
         <h3>Redes sociales</h3>
-        {% for subform in form.media %}           
-            {{ subform.web }}
-            {{ subform.username }}
-            <br>
-        {% endfor %}
+        <ul id="social_media">
+            {% for subform in form.media %}
+                <li style="margin-bottom: 2em">          
+                    {{ subform.web(style="margin-bottom: 0.5em") }}
+                    {{ subform.username }}
+                    <a onclick="remove_item(this)">Borrar cuenta</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <a class="button" onclick="add_item()">Añadir cuenta</a>
+        <select id="all_media" style="display: none" required>
+            <option value="" disabled selected>Escoge una red social</option>
+            {% for medium in all_media %}
+                <option value="{{ medium[0] }}">{{ medium[1] }}</option>
+            {% endfor %}
+        </select>
     </article>
 
     <center>
-        {{ form.save(id="save_btn", class="primary", style="margin-top: 1em") }}
+        {{ form.save(id="save_btn", class="primary", style="margin-top: 2em") }}
     </center>
 </form>
 

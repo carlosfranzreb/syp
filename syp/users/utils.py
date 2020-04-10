@@ -80,3 +80,11 @@ def add_choices(form, user):
                 subform.web.process_data(medium.id_web)
                 break
     return form
+
+
+def all_media():
+    """ Return ID and name of all media. Used when creating new
+    elements for the social media list of edit_profile. """
+    return Web.query \
+        .with_entities(Web.id, Web.name) \
+        .order_by(Web.name).all();
