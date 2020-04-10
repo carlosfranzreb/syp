@@ -3,7 +3,17 @@
 <section>
 	<header class="main" id="recipe_header">
         <h1> {{ user.username }} </h1>
-        <!-- TODO: Social media here -->
+		<ul class="icons">
+			{% for medium in user.media %}
+				<li>
+					<a class="{{ medium.web.icon }}"
+						href="{{ medium.web.link }}{{ medium.username }}"
+						title="Ir al {{ medium.web.name | lower }} de {{ user.username }}"
+						target="_blank"
+					><span class="label">{{ medium.web.name }}</span></a>
+				</li>
+			{% endfor %}
+		</ul>
 	</header>
 	<span class="image main">
         <img src="{{ user.image_path() }}" alt="{{ user.username }}" />
