@@ -5,6 +5,7 @@ from flask import url_for
 from flask_login import UserMixin
 
 from syp import db, login_manager
+from syp.models.social_media import SocialMedia
 
 
 @login_manager.user_loader
@@ -23,6 +24,7 @@ class User(db.Model, UserMixin):
     intro = db.Column(db.Text)
 
     recipes = db.relationship('Recipe', backref='user', lazy=True)
+    media = db.relationship('SocialMedia', backref='user', lazy=True)
 
     def image_path(self):
         """Returns the path for the user image. """
