@@ -37,11 +37,23 @@
               </a>
         			<h3>{{ recipe.name }}</h3>
         			<p>{{ recipe.intro }}</p>
-              <table style="font-size: 75%; text-align: center">
+             	<table class="recipe_info_box">
                 <tr>
-                  <td>{{ recipe.user.username | upper }}</td>
-                  <td>{{ recipe.season.name | upper }}</td>
-                  <td>{{ recipe.time_cook + recipe.time_prep }} MIN.</td>
+                  <td>
+                    <a href="{{ url_for('users.view_profile', username=recipe.user.username) }}">
+                      {{ recipe.user.username | upper }}
+                    </a>
+                  </td>
+                  <td>
+                    <a href="{{ url_for('seasons.search_season', season_name=recipe.season.name) }}">
+                      {{ recipe.season.name | upper }}
+                    </a>
+                  </td>
+                  <td>
+                    <a href="{{ url_for('times.search_time', time=recipe.time_cook + recipe.time_prep) }}">
+                      {{ recipe.time_cook + recipe.time_prep }} MIN.
+                    </a>
+                  </td>
                 </tr>
               </table>
         			<ul class="actions">
