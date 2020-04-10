@@ -23,6 +23,8 @@ class User(db.Model, UserMixin):
     intro = db.Column(db.Text)
     recipes = db.relationship('Recipe', backref='user', lazy=True)
 
+    media = db.relationship('SocialMedia', backref='user', lazy=True, cascade='delete')
+
     def image_path(self):
         """Returns the path for the user image. """
         return url_for(
