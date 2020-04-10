@@ -29,7 +29,7 @@
             {{ form.username }} 
         {% endif %}
         {{ form.password.label(style="margin-top: 1em") }}
-        {{ form.password(placeholder="Nueva contraseña", onchange="repeat_password(this)") }} 
+        {{ form.password(placeholder="Nueva contraseña", onchange="repeat_password(this)", autocomplete="new-password") }} 
     </article>
 
     <article style="margin-top: 2em">
@@ -42,11 +42,28 @@
           {% endfor %}
         {% endif %}
         {{ form.intro.label(style="margin-top: 1em") }}
-        {{ form.intro(placeholder="Preséntate ante tus seguidores (opcional)", oninput="auto_grow(this)") }}     
+        {{ form.intro(placeholder="Preséntate ante tus seguidores.", oninput="auto_grow(this)") }}     
+        <br>
+        <h3>Redes sociales</h3>
+        <ul id="social_media">
+            {% for subform in form.media %}
+                <li style="margin-bottom: 2em">          
+                    {{ subform.web(style="margin-bottom: 0.5em") }}
+                    {{ subform.username }}
+                    <a onclick="remove_item(this)">Borrar cuenta</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <a class="button" onclick="add_item()">Añadir cuenta</a>
+        <select id="all_media" style="display: none" required>
+            {% for medium in all_media %}
+                <option value="{{ medium[0] }}">{{ medium[1] }}</option>
+            {% endfor %}
+        </select>
     </article>
 
     <center>
-        {{ form.save(id="save_btn", class="primary", style="margin-top: 1em") }}
+        {{ form.save(id="save_btn", class="primary", style="margin-top: 2em") }}
     </center>
 </form>
 
