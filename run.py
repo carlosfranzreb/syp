@@ -10,10 +10,8 @@ app = create_app()
 
 @app.context_processor
 def accepts_cookies():
-    """
-    Checks if the cookie banner must be shown, and if cookies
-    can be installed.
-    """
+    """ Checks if the cookie banner must be shown, and if cookies
+    can be installed. """
     ip = ip_address(request.remote_addr)
     consent = GDPR.query.filter_by(ip=int(ip)).first()
     if consent is None or not consent.has_consented and \

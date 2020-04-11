@@ -31,7 +31,7 @@ def login():
             return redirect(url)
         flash('La contraseña es incorrecta. Vuelve a intentarlo.', 'danger')
     return render_template(
-        'view_login.html',
+        'view/login.html',
         title='Login',
         form=form,
         recipe_form=SearchRecipeForm(),
@@ -62,7 +62,7 @@ def edit_profile():
             for error in errors:
                 flash(error, 'danger')
     return render_template(
-        'edit_profile.html',
+        'edit/profile.html',
         title='Editar perfil',
         form=form,
         all_media=utils.all_media(),
@@ -78,7 +78,7 @@ def view_profile(username):
     if user is None:
         return abort(404)
     return render_template(
-        'view_profile.html',
+        'view/profile.html',
         title=username,
         user=user,
         user_recipes=utils.last_user_recipes(user.id),
@@ -100,7 +100,7 @@ def all_cooks():
     platos muy variados, algunas rápidas, otras más elaboradas, pero todas \
     bien explicadas y con vídeo incluido.'
     return render_template(
-        'search_cooks.html',
+        'search/cooks.html',
         title='Cocineros',
         cook_form=form,
         all_usernames=utils.all_usernames(),
@@ -125,7 +125,7 @@ def search_cook(username):
         flash(cooks, 'danger')
         return redirect(url_for('utils.all_cooks'))
     return render_template(
-        'search_cooks.html',
+        'search/cooks.html',
         title=username,
         cook_form=form,
         all_usernames=utils.all_usernames(),

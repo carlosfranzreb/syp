@@ -129,9 +129,10 @@ def create_recipe():
     )
 
 
-def add_choices(form):
+def add_choices(form, recipe):
     """Add choices for the select fields (state, season and units)
-    of the form. Retrieve them from the DB. """
+    of the form, retrieved from the DB. Also select the units of
+    the chosen ingredients, as found in the recipe object. """
     form.season.choices = [
         (s.id, s.name) for s in Season.query.order_by(Season.id.desc())
     ]
@@ -142,6 +143,10 @@ def add_choices(form):
         subform.unit.choices = [
             (u.id, u.singular) for u in Unit.query.order_by(Unit.singular)
         ]
+        for quantity in recipe.ingredients:
+            if quantity.ingredient.name == str(subform.ingredient.data):
+                subform.unit.process_data(quantity.unit.id)
+                break
     return form
 
 

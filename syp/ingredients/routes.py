@@ -21,7 +21,7 @@ def sort_by_name(arg):
             'ingredients.search_by_name', arg=form.name.data
         ))
     return render_template(
-        'overview_ingredient.html',
+        'overview/ingredient.html',
         title='Ingredientes',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -35,7 +35,7 @@ def sort_by_name(arg):
 @login_required
 def search_by_name(arg):
     return render_template(
-        'overview_ingredient.html',
+        'overview/ingredient.html',
         title='Ingredientes',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -50,7 +50,7 @@ def search_by_name(arg):
 def sort_by_date(arg):
     """ Shows a list with all ingredients of the user, ordered by date. """
     return render_template(
-        "overview_ingredient.html",
+        "overview/ingredient.html",
         title="Ingredientes",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -65,7 +65,7 @@ def sort_by_date(arg):
 def sort_by_creator(arg):
     """ Shows a list with all ingredients of the user, ordered by creator. """
     return render_template(
-        "overview_ingredient.html",
+        "overview/ingredient.html",
         title="Ingredientes",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -89,7 +89,7 @@ def search_all_ingredients():
         Por si tienes algún capricho, o un ingrediente con el que no \
         sabes qué hacer.'
     return render_template(
-        'search_ingredient.html',
+        'search/ingredient.html',
         title='Ingredientes',
         recipe_form=SearchRecipeForm(),
         form=form,
@@ -118,7 +118,7 @@ def search_ingredient(ing_url):
     desc = f'Recetas veganas y saludables con {ing.name}. Por si se te antoja \
         {ing.name}, o lo compraste y buscas inspiración.'
     return render_template(
-        'search_ingredient.html',
+        'search/ingredient.html',
         title=ing.name,
         chosen_url=ing_url,
         recipe_form=SearchRecipeForm(),
@@ -148,7 +148,7 @@ def edit_ingredient(ingredient_url):
             flash("Los cambios han sido guardados.", "success")
             return redirect(url_for('ingredients.sort_by_date', arg='True'))
     return render_template(
-        "edit_ingredient.html",
+        "edit/ingredient.html",
         title="Editar ingrediente",
         form=form,
         recipe_form=SearchRecipeForm(),
@@ -173,7 +173,7 @@ def create_ingredient():
             flash('El ingrediente ha sido creado.', 'success')
             return redirect(url_for('ingredients.sort_by_date', arg='True'))
     return render_template(
-        "edit_ingredient.html",
+        "edit/ingredient.html",
         title="Crear ingrediente",
         ingredient=ingredient,
         recipe_form=SearchRecipeForm(),

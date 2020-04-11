@@ -89,11 +89,6 @@
 
 		<ul class="ul_pepper" id="ingredients_list">
 			{% for subform in form.ingredients %}
-        {% for q in recipe.ingredients %}
-          {% if q.ingredient.name in subform.ingredient|string %}
-            {% set f = subform.unit.process_data(q.unit.id) %}
-          {% endif %}
-        {% endfor %}
 				<li class="ingredient_item">
           {% if subform.ingredient.errors %}
           {{ subform.ingredient(class="is-invalid") }}

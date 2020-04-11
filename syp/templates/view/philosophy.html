@@ -1,0 +1,55 @@
+{% extends 'main_layout.html' %}
+{% block content %}
+
+<section>
+  <header class="main">
+    <h1>Nuestra filosofía</h1>
+  </header>
+  <h2>Recetas veganas y saludables</h2>
+</section>
+<section>
+  <div id="philo-container">
+    <div id="text">
+      <p>
+        El objetivo de esta página es normalizar el veganismo. Hay gente que le gustaría probar 
+        durante un tiempo, o averiguar qué comen los veganos a parte de ensalada. También hay 
+        algunos que, tras saturarse a comer los tres platos de su menú que no llevaban queso, 
+        buscan nuevas recetas. Para todos aquellos, esta página es un lugar en el que aprender 
+        sobre este estilo de vida y, sobre todo, aprender a disfrutarlo. Como bien dijo mi madre, 
+        la propulsora de este blog, la pimienta del nombre representa el sabor y la diversión que 
+        todos buscamos en la cocina.
+      </p>
+      <p>
+        El nombre de la página también incluye el segundo pilar en el que centramos nuestros esfuerzos: 
+        la salud. La nutrición tiene un papel esencial en el desarrollo de nuestra vida, como ya 
+        proclamaba Hipócrates hace 2500 años, y esta sencilla lección está empezando a calar en la 
+        sociedad. Venimos de una época en la que el consumismo nos ha llevado a ver la alimentación como 
+        otra más de sus mil caras, ignorando el aspecto nutricional de nuestras comidas. Ahora nos 
+        empezamos a dar cuenta de su relevancia, y esta página se propone difundir el conocimiento vamos 
+        acumulando desde hace milenios.
+      </p>
+      <p>
+        Por último, aunque ya venga incluido dentro del estilo de vida que promulgamos, Salud y Pimienta 
+        trabaja en pos de la sostenibilidad. Al igual que ignoramos los aspectos nutritivos de lo que 
+        comemos, también solemos desconocer su procedencia. Aquí queremos promover dietas más coherentes, 
+        basadas en productos regionales. Esta actitud, a parte de ser más respetuosa con el medio ambiente, 
+        refuerza las economías locales, despojándonos de dependencias mercantiles innecesarias.
+      </p>
+      <p>
+        Queremos aprovecharnos de las ventajas que ofrece internet para divulgar información acerca del veganismo. 
+        Somos conscientes de que internet, y la tecnología en general, posibilita una interacción mucho mayor entre 
+        cocineros y lectores que la que actualmente ofrecemos, y esa es la dirección en la que queremos extender 
+        esta página. Mientras tanto, si tenéis alguna sugerencia sobre cómo mejorar la web, habéis encontrado algún 
+        error, tanto de contenido como gramático, o tenéis cualquier duda, no dudéis en 
+        <a 
+          href="mailto:saludypimienta@outlook.com?Subject=Duda o sugerencia" 
+          target="_blank" 
+          title="Enviar Email a saludypimienta@outlook.com">contactarnos</a>. 
+      </p>
+    </div>
+    <img id="leaves" src="{{ url_for('static', filename='images/icons/leaf-column.svg') }}" alt="Hojas"/>
+  </div>
+</section>
+
+
+{% endblock content %}
