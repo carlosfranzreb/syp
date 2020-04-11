@@ -24,7 +24,7 @@ def sort_by_name(arg):
             'subrecipes.search_by_name', arg=form.name.data
         ))
     return render_template(
-        'overview_subrecipe.html',
+        'overview/subrecipe.html',
         title='Subrecetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -38,7 +38,7 @@ def sort_by_name(arg):
 @login_required
 def search_by_name(arg):
     return render_template(
-        'overview_subrecipe.html',
+        'overview/subrecipe.html',
         title='Subrecetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -53,7 +53,7 @@ def search_by_name(arg):
 def sort_by_date(arg):
     """ Shows a list with all subrecipes of the user, ordered by date. """
     return render_template(
-        "overview_subrecipe.html",
+        "overview/subrecipe.html",
         title="Subrecetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=get_last_recipes(4),
@@ -88,7 +88,7 @@ def edit_subrecipe(subrecipe_url):
             flash("Los cambios han sido guardados.", "success")
             return redirect(url_for("subrecipes.sort_by_date", arg='True'))
     return render_template(
-        "edit_subrecipe.html",
+        "edit/subrecipe.html",
         title="Editar subreceta",
         subrecipe=subrecipe,
         recipe_form=SearchRecipeForm(),
@@ -133,7 +133,7 @@ def create_subrecipe():
             flash('La subreceta ha sido creada.', 'success')
             return redirect(url_for("subrecipes.sort_by_date", arg='True'))
     return render_template(
-        "edit_subrecipe.html",
+        "edit/subrecipe.html",
         title="Crear subreceta",
         subrecipe=subrecipe,
         recipe_form=SearchRecipeForm(),

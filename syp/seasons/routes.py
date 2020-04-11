@@ -35,7 +35,7 @@ def search_season(season_name):
              negocios y agricultores de tu ciudad mientras que le echas una \
              mano al medio ambiente.'
     return render_template(
-        'search_season.html',
+        'search/season.html',
         title=season_name,
         recipe_form=SearchRecipeForm(),
         form=form,
