@@ -118,7 +118,7 @@ def edit_recipe(recipe_url, state=None):
             'recipes.edit_new_recipe',
             recipe_url=recipe_url
         ))
-    form = utils.add_choices(RecipeForm(obj=recipe))
+    form = utils.add_choices(RecipeForm(obj=recipe), recipe)
     if state is not None and state != 'edit':  # Add new state to form.
         form.state.process_data(int(state))
         form.validate()
@@ -157,7 +157,7 @@ def edit_new_recipe(recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     if recipe.id_user != current_user.id:
         return abort(403)
-    form = utils.add_choices(NewRecipeForm(obj=recipe))
+    form = utils.add_choices(NewRecipeForm(obj=recipe), recipe)
     if form.validate_on_submit():
         errors = validate.validate_name(form, recipe)
         if len(errors) == 0:
@@ -194,7 +194,7 @@ def edit_new_recipe(recipe_url):
 def create_recipe():
     """ NewRecipeForm doesn't have requirements, so it can be saved unfinished. """
     recipe = utils.create_recipe()
-    form = utils.add_choices(NewRecipeForm(obj=recipe))
+    form = utils.add_choices(NewRecipeForm(obj=recipe), recipe)
     if form.validate_on_submit():
         errors = validate.validate_name(form)
         if len(errors) == 0:
