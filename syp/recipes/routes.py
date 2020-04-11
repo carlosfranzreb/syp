@@ -19,7 +19,7 @@ def get_recipe(username, recipe_url):
     recipe = utils.get_recipe_by_url(recipe_url)
     desc = f'Receta vegana y saludable: {recipe.name}. {recipe.intro}'
     return render_template(
-        'view_recipe.html',
+        'view/recipe.html',
         title=recipe.name,
         recipe_form=SearchRecipeForm(),
         recipe=recipe,
@@ -42,7 +42,7 @@ def sort_by_name(arg):
             'recipes.search_by_name', arg=form.name.data
         ))
     return render_template(
-        'overview_recipe.html',
+        'overview/recipe.html',
         title='Recetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -56,7 +56,7 @@ def sort_by_name(arg):
 @login_required
 def search_by_name(arg):
     return render_template(
-        'overview_recipe.html',
+        'overview/recipe.html',
         title='Recetas',
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -71,7 +71,7 @@ def search_by_name(arg):
 def sort_by_date(arg):
     """ Shows a list with all recipes of the user, ordered by date. """
     return render_template(
-        "overview_recipe.html",
+        "overview/recipe.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -86,7 +86,7 @@ def sort_by_date(arg):
 def sort_by_state(arg):
     """ Shows a list with all recipes of the user, ordered by state. """
     return render_template(
-        "overview_recipe.html",
+        "overview/recipe.html",
         title="Recetas",
         recipe_form=SearchRecipeForm(),
         last_recipes=utils.get_last_recipes(4),
@@ -134,7 +134,7 @@ def edit_recipe(recipe_url, state=None):
         for error in errors:
             flash(error, 'danger')
     return render_template(
-        'edit_recipe.html',
+        'edit/recipe.html',
         form=form,
         title=recipe.name,
         recipe_form=SearchRecipeForm(),
@@ -173,7 +173,7 @@ def edit_new_recipe(recipe_url):
         for error in errors:
             flash(error, 'danger')
     return render_template(
-        'edit_recipe.html',
+        'edit/recipe.html',
         form=form,
         title=recipe.name,
         recipe_form=SearchRecipeForm(),
@@ -210,7 +210,7 @@ def create_recipe():
         for error in errors:
             flash(error, 'danger')
     return render_template(
-        "edit_recipe.html",
+        "edit/recipe.html",
         title="Crear receta",
         recipe=recipe,
         recipe_form=SearchRecipeForm(),
