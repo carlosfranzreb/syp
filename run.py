@@ -1,11 +1,14 @@
 from ipaddress import ip_address
 import datetime as dt
 from flask import request
+from werkzeug.contrib.fixers import ProxyFix
+
 from syp import create_app
 from syp.models.gdpr_consents import GDPR
 
 
 app = create_app()
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 
 @app.context_processor
@@ -18,6 +21,7 @@ def accepts_cookies():
             consent.asked_at < dt.datetime.now() - dt.timedelta(days=30):
         return dict(cookies=None)
     return dict(cookies=consent.has_consented)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
