@@ -18,7 +18,11 @@
 	<span class="image main">
         <img src="{{ user.image_path() }}" alt="{{ user.username }}" />
     </span>
-	<p> {{ user.intro }} </p>
+	{% if user.intro %}
+		<p> {{ user.intro }} </p>
+	{% else %}
+		<p>¡Èchale un vistazo a mis recetas!</p>
+	{% endif %}
 </section>
 
 <section>
@@ -28,29 +32,29 @@
 	<div class="posts">
       {% for recipe in user_recipes %}
         <article>
-    			<a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="image">
-					<img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
-				</a>
-    			<h3>{{ recipe.name }}</h3>
-    			<p>{{ recipe.intro }}</p>
-				<table class="recipe_info_box">
-					<tr>
-						<td>
-							<a href="{{ url_for('seasons.search_season', season_name=recipe.season.name) }}">
-								{{ recipe.season.name | upper }}
-							</a>
-						</td>
-						<td>
-							<a href="{{ url_for('times.search_time', time=recipe.time_cook + recipe.time_prep) }}">
-								{{ recipe.time_cook + recipe.time_prep }} MIN.
-							</a>
-						</td>
-					</tr>
-				</table>
-    			<ul class="actions">
-    				<li><a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="button">Abrir</a></li>
-    			</ul>
-    		</article>
+			<a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="image">
+				<img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
+			</a>
+			<h3>{{ recipe.name }}</h3>
+			<p>{{ recipe.intro }}</p>
+			<table class="recipe_info_box">
+				<tr>
+					<td>
+						<a href="{{ url_for('seasons.search_season', season_name=recipe.season.name) }}">
+							{{ recipe.season.name | upper }}
+						</a>
+					</td>
+					<td>
+						<a href="{{ url_for('times.search_time', time=recipe.time_cook + recipe.time_prep) }}">
+							{{ recipe.time_cook + recipe.time_prep }} MIN.
+						</a>
+					</td>
+				</tr>
+			</table>
+			<ul class="actions">
+				<li><a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="button">Abrir</a></li>
+			</ul>
+		</article>
       {% endfor %}
 	</div>
     <!-- TODO: Option to view all user recipes. 
