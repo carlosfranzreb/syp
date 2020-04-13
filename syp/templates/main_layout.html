@@ -99,12 +99,13 @@
                 <div class="inner">
                     <header id="header">
                         <div>
-                            <img id="logo" alt="Logo de SyP"
-                                src="{{ url_for('static', filename='images/icons/syp.png') }}"
-                            />
-                            <a class="logo" href="{{ url_for('main.get_home') }}"
-                                style='font-weight: bold; color: #599A00; font-family: "Comic Sans MS", sans-serif'
-                                >Salud y pimienta
+                            <a href="{{ url_for('main.get_home') }}" style="border-bottom: none">
+                                <img id="logo" alt="Logo de SyP"
+                                    src="{{ url_for('static', filename='images/icons/syp.png') }}"
+                                />
+                                <img id="syp_written" alt="Salud y pimienta"
+                                    src="{{ url_for('static', filename='images/icons/syp_written.svg') }}"
+                                />
                             </a>
                         </div>
                         <ul class="icons">
