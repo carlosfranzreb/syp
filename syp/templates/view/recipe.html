@@ -120,12 +120,14 @@
 </div>
 
 <div id="second-posts-recipe" class="posts">
-	<article id="video">
-		<h2>Vídeo</h2>
-			<div class="video-container">
-				<iframe class="video-item" allowfullscreen src="{{ recipe.link_video }}"></iframe>
-			</div>
-	</article>
+	{% if recipe.link_video %}
+		<article id="video">
+			<h2>Vídeo</h2>
+				<div class="video-container">
+					<iframe class="video-item" allowfullscreen src="{{ recipe.link_video }}"></iframe>
+				</div>
+		</article>
+	{% endif %}
 
 	<article id="health">
 		<h2>Beneficios para la salud</h2>
