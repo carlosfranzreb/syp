@@ -16,7 +16,7 @@ recipes = Blueprint('recipes', __name__)
 
 @recipes.route('/<username>/receta/<recipe_url>', methods=['GET', 'POST'])
 def get_recipe(username, recipe_url):
-    recipe = utils.get_recipe_by_url(recipe_url)
+    recipe = utils.get_recipe_with_username(recipe_url, username)
     desc = f'Receta vegana y saludable: {recipe.name}. {recipe.intro}'
     return render_template(
         'view/recipe.html',
@@ -110,9 +110,7 @@ def edit_recipe(recipe_url, state=None):
     only enters the DB if the recipe is valid. 
     State is set to 'edit' when the RecipeForm is posted and the validation
     should proceed, instead of redirecting to edit_new_recipe. """
-    recipe = utils.get_recipe_by_url(recipe_url)
-    if recipe.id_user != current_user.id:
-        return abort(403)
+    recipe = utils.get_recipe_with_id(recipe_url, current_user.id)
     if state is None and recipe.id_state == 1:  # unfinished recipe
         return redirect(url_for(
             'recipes.edit_new_recipe',
@@ -129,6 +127,7 @@ def edit_recipe(recipe_url, state=None):
             flash('Los cambios han sido guardados.', 'success')
             return redirect(url_for(
                 'recipes.get_recipe',
+                username=current_user.username,
                 recipe_url=update.update_recipe(recipe, form)
             ))
         for error in errors:

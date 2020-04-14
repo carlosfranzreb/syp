@@ -3,11 +3,11 @@
     height: auto;
 }
 
-#filo-text {
+.section-text {
     width: 90%;
 }
 
-#filo-img {
+.section-img {
     display: none;
     width: 10%;
 }
@@ -19,7 +19,7 @@
 }
 
 @media screen and (min-width: 600px) {
-    #filo-img {
+    .section-img {
         display: block;
     }
 }
