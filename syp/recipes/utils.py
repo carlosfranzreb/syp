@@ -12,6 +12,7 @@ from syp.models.subrecipe import Subrecipe
 from syp.models.season import Season
 from syp.models.unit import Unit
 from syp.models.recipe_state import RecipeState
+from syp.models.user import User
 
 from syp import db
 
@@ -24,15 +25,26 @@ def get_recipe_by_name(recipe_name):
     return discard_duplicates(recipe)
 
 
-def get_recipe_by_url(recipe_url):
+def get_recipe_with_id(recipe_url, user_id):
+    """ Get recipe by URL and user ID, which makes it unique. """
     recipe = Recipe.query \
+        .filter_by(id_user=user_id) \
         .filter_by(url=recipe_url) \
         .first()
     recipe.subrecipes = get_subrecipes(recipe)
     return discard_duplicates(recipe)
 
 
+def get_recipe_with_username(recipe_url, username):
+    """ Retrieve user ID and call get_recipe_with_id(). """
+    user = User.query.filter_by(username=username).first()
+    return get_recipe_with_id(recipe_url, user.id)
+
+
 def discard_duplicates(recipe):
+    """ Discard duplicate ingredients. This happens when an
+    ingredient appears in both the recipe and one subrecipe, or in
+    multiple subrecipes. Required for the health comments. """
     if recipe is None:
         return abort(404)
     ingredient_ids = []
