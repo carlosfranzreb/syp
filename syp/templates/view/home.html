@@ -23,14 +23,14 @@
 		<h1 style="font-size: 1.75em">Recetas veganas y saludables</h1>
 	</header>
 	<div style="display: flex">
-		<p id="filo-text">
+		<p class="section-text">
 			El objetivo de esta página es normalizar el veganismo. Hay gente que le gustaría probar 
 			durante un tiempo, o averiguar qué comen los veganos a parte de ensalada. También hay 
 			algunos que, tras saturarse a comer los tres platos de su menú que no llevaban queso, 
 			buscan nuevas recetas. Para todos aquellos, esta página es un lugar en el que aprender 
 			sobre este estilo de vida y, sobre todo, aprender a disfrutarlo...
 		</p>
-		<img id="filo-img" src="{{ url_for('static', filename='images/icons/pepper_w18.svg') }}" alt="Pimentero de SyP"/>
+		<img class="section-img" src="{{ url_for('static', filename='images/icons/pepper_w18.svg') }}" alt="Pimentero de SyP"/>
 	</div>
 	<a href="{{ url_for('main.get_philosophy') }}" class="button">Más</a>
 </section>
@@ -91,6 +91,22 @@
 		</article>
 
 	</div>
+</section>
+
+<section>
+	<header class="major">
+		<h1 style="font-size: 1.75em">Veganiza tu receta favorita</h1>
+	</header>
+	<div style="display: flex">
+		<p class="section-text">
+			Cuando dejamos atrás los productos animales, a veces hay algún plato favorito
+			que cae en el olvido. Eso no tiene por qué ser así: nosotros nos esforzaremos
+			en idear una versión vegana, para que las viejas costumbres no desaparezcan.
+			No te cortes, ¡nos encantan los retos!
+		</p>
+		<img class="section-img" src="{{ url_for('static', filename='images/icons/syp_knife.svg') }}" alt="Logo de SyP"/>
+	</div>
+	<a href="{{ url_for('veganizer.get_veganizer') }}" class="button">Abrir</a>
 </section>
 
 <!-- Section -->
