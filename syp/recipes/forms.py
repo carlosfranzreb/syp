@@ -24,8 +24,8 @@ class RecipeForm(FlaskForm):
         validators=[DataRequired(), Length(max=100)]
     )
     image = FileField('Foto del plato.', validators=[FileAllowed(['jpg', 'png'])])
-    time_prep = IntegerField('Tiempo de preparación.', validators=[DataRequired()])
-    time_cook = IntegerField('Tiempo de cocción.', validators=[DataRequired()])
+    time_prep = IntegerField('Tiempo de preparación.', validators=[InputRequired()])
+    time_cook = IntegerField('Tiempo de cocción.', validators=[InputRequired()])
     season = SelectField('Temporada.', coerce=int)
     state = SelectField('Estado:', coerce=int)
     intro = TextAreaField(
