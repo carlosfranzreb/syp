@@ -1,0 +1,83 @@
+{% extends 'main_layout.html' %}
+{% block content %}
+<section>
+  <header class="main">
+      <h1>Las recetas de {{ username }}</h1>
+    {% if "Recetas" not in title %}
+      <h3>Llamadas "{{ title }}" o parecido.</h3>
+    {% endif %}
+  </header>
+  <div class="container" style="max-width: 400px">
+    <form method="post" action="{{ url_for('search.all_cook_recipes', username=username) }}">
+      <div class="row">
+        <div class="col-sm">
+          {{ form.recipe(list="user_recipes", autocomplete="off", placeholder="Buscar receta.", style="margin: 0 0 5px 0; min-width: 140px") }}
+          <datalist id="user_recipes">
+            {% for rec in cook_recipes %} <!-- TODO: offer all recipes, not only last ones.-->
+              <option value="{{ rec.name }}"></option>
+            {% endfor %}
+          </datalist>
+        </div>
+        <div class="col-sm">
+          {{ form.submit }}
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+  <section>
+  	<div class="posts">
+
+        {% for recipe in recipes.items %}
+            <article>
+                <a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="image">
+                    <img src="{{ recipe.image_path('600') }}" alt="{{ recipe.name }}" />
+                </a>
+                <h3>{{ recipe.name }}</h3>
+                <p>{{ recipe.intro }}</p>
+                <table class="recipe_info_box">
+                    <tr>
+                    <td>
+                        <a href="{{ url_for('seasons.search_season', season_name=recipe.season.name) }}">
+                        {{ recipe.season.name | upper }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('times.search_time', time=recipe.time_cook + recipe.time_prep) }}">
+                        {{ recipe.time_cook + recipe.time_prep }} MIN.
+                        </a>
+                    </td>
+                    </tr>
+                </table>
+                <ul class="actions">
+                    <li><a href="{{ url_for('recipes.get_recipe', username=recipe.user.username, recipe_url=recipe.url) }}" class="button">Abrir</a></li>
+                </ul>
+            </article>
+      {% endfor %}
+    </div>
+
+    <center>
+      {% for page_num in recipes.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+          {% if recipes.page == page_num %}
+            {% if title == 'Recetas' %}
+              <a class="btn btn-danger mb-4">{{ page_num }}</a>
+            {% else %}
+              <a class="btn btn-danger mb-4">{{ page_num }}</a>
+            {% endif %}
+          {% else %}
+            {% if title == 'Recetas' %}
+              <a class="btn btn-outline-danger mb-4" href="{{ url_for('search.search_all_recipes', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+              <a class="btn btn-outline-danger mb-4" href="{{ url_for('search.search_recipe', recipe_name=title, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+          {% endif %}
+        {% else %}
+          ...
+        {% endif %}
+      {% endfor %}
+    </center>
+
+  </section>
+{% endblock %}
