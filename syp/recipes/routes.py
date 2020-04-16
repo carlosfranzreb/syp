@@ -153,7 +153,7 @@ def edit_recipe(recipe_url, state=None):
 @login_required
 def edit_new_recipe(recipe_url):
     """ Recipe state = 'Unfinished'. Validation is not thorough. """
-    recipe = utils.get_recipe_by_url(recipe_url)
+    recipe = utils.get_recipe_with_id(recipe_url, current_user.id)
     if recipe.id_user != current_user.id:
         return abort(403)
     form = utils.add_choices(NewRecipeForm(obj=recipe), recipe)
@@ -225,7 +225,7 @@ def create_recipe():
 @recipes.route("/borrar_receta/<recipe_url>")
 @login_required
 def delete_recipe(recipe_url):
-    recipe = utils.get_recipe_by_url(recipe_url)
+    recipe = utils.get_recipe_with_id(recipe_url, current_user.id)
     utils.delete_recipe(recipe.id)
     flash('La receta ha sido borrada.', 'success')
     return redirect(url_for('recipes.sort_by_date', arg='True'))
