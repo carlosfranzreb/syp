@@ -38,7 +38,7 @@ def all_cook_recipes(username, items=9):
         .paginate(page=page, per_page=items)
     if recipes.items == []:
         recipes = Template(
-            '$name no ha publicado una receta todavía. ¡Prueba con otro cocinero!'
+            '$name todavíano ha publicado una receta. ¡Prueba con otro cocinero!'
         ).substitute(name=username)
     return (page, recipes)
 
