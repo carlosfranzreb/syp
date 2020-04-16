@@ -68,11 +68,7 @@
       {% for page_num in recipes.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
           {% if recipes.page == page_num %}
-            {% if title == 'Recetas' %}
-              <a class="btn btn-danger mb-4">{{ page_num }}</a>
-            {% else %}
-              <a class="btn btn-danger mb-4">{{ page_num }}</a>
-            {% endif %}
+            <a class="btn btn-danger mb-4">{{ page_num }}</a>
           {% else %}
             {% if title == 'Recetas' %}
               <a class="btn btn-outline-danger mb-4" href="{{ url_for('search.search_all_recipes', page=page_num) }}">{{ page_num }}</a>
