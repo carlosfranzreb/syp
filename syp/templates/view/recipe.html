@@ -30,10 +30,8 @@
       </ul>
     </div>
 	{% if recipe.id_state == 3 %}
-		<h5>
-			Receta de <a href="{{ url_for('users.view_profile', username=recipe.user.username) }}">{{ recipe.user.username }}</a>,
-			publicada el {{ recipe.published_at.strftime("%d-%m-%Y") }}
-		</h5>
+		<h4>Receta de <a style="border-bottom: 2px solid #f56a6a" href="{{ url_for('users.view_profile', username=recipe.user.username) }}">{{ recipe.user.username }}</a></h4>
+		<p style="text-transform: none">Publicada el {{ recipe.published_at.strftime("%d-%m-%Y") }}</p>
 	{% endif %}
 	</header>
 

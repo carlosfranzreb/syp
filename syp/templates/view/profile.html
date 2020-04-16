@@ -57,8 +57,9 @@
 		</article>
       {% endfor %}
 	</div>
-    <!-- TODO: Option to view all user recipes. 
-    Include search by user in search options, and redirect there. -->
+	<center>
+		<a class="button primary" href="{{ url_for('search.all_cook_recipes', username=user.username) }}">Ver más</a>
+	</center>
 </section>
 
 <center>
