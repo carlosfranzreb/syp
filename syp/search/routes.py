@@ -62,8 +62,10 @@ def all_cook_recipes(username):
             username=username,
             recipe_name=form.recipe.data
         ))
-
     page, recs = utils.all_cook_recipes(username)
+    if isinstance(recs, str):
+        flash(recs, 'danger')
+        return redirect(url_for('users.all_cooks'))
     desc = 'Todas nuestras recetas, veganas y saludables. Aquí encontrarás \
     platos muy variados, algunas rápidas, otras más elaboradas, pero todas \
     bien explicadas y con vídeo incluido.'
