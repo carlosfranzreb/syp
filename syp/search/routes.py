@@ -58,7 +58,7 @@ def all_cook_recipes(username):
     form = SearchRecipeForm()
     if form.is_submitted():
         return redirect(url_for(
-            'search.search_cook_recipe',
+            'search.cook_recipe',
             username=username,
             recipe_name=form.recipe.data
         ))
@@ -82,7 +82,7 @@ def all_cook_recipes(username):
 
 
 @search.route('/<username>/recetas/<recipe_name>', methods=['GET', 'POST'])
-def search_cook_recipe(username, recipe_name):
+def cook_recipe(username, recipe_name):
     page, recs = utils.cook_recipes(username, recipe_name)
     if isinstance(recs, str):
         flash(recs, 'danger')
