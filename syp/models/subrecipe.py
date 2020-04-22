@@ -3,7 +3,7 @@ It is not a recipe itself; it belongs to a recipe. """
 # pylint: disable=no-member, missing-class-docstring, too-few-public-methods
 
 
-from datetime import datetime as dt
+from sqlalchemy.sql.functions import now
 
 from syp import db
 from syp.models.subrecipe_step import SubrecipeStep
@@ -16,7 +16,7 @@ class Subrecipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     url = db.Column(db.String(100), nullable=False, unique=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=dt.now())
+    created_at = db.Column(db.DateTime, nullable=False, default=now())
     changed_at = db.Column(db.DateTime)
     is_feminine = db.Column(db.Boolean, nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

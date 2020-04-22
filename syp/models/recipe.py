@@ -1,8 +1,8 @@
 """ Recipe. """
 # pylint: disable=no-member, missing-class-docstring, too-few-public-methods
 
-from datetime import datetime as dt
 from flask import url_for
+from sqlalchemy.sql.functions import now
 
 from syp import db
 from syp.models.recipe_state import RecipeState
@@ -19,7 +19,7 @@ class Recipe(db.Model):
     text = db.Column(db.Text)
     link_video = db.Column(db.String(100))
     health = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, nullable=False, default=dt.now())
+    created_at = db.Column(db.DateTime, nullable=False, default=now())
     changed_at = db.Column(db.DateTime)
     published_at = db.Column(db.DateTime)
     id_season = db.Column(db.Integer, db.ForeignKey('seasons.id'))
