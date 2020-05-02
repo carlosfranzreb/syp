@@ -108,24 +108,22 @@
 	  <h2>Pasos</h2>
 		<ol>
 			{% for step in recipe.steps %}
-
-        {% if step.step|int > 0 %}
-          {% for sub in recipe.subrecipes if sub.id == step.step|int %}
-            {% if sub.is_feminine %}
-              <li>Preparamos la {{ sub.name.lower() }}
-            {% else %}
-              <li>Preparamos el {{ sub.name.lower() }}
-            {% endif %}
-            <ol>
-            {% for substep in sub.steps %}
-              <li>{{ substep.step }}</li>
-            {% endfor %}
-            </ol></li>
-          {% endfor %}
-
-        {% else %}
-		      <li>{{ step.step }}</li>
-        {% endif %}
+        		{% if step.step|int > 0 %}
+          			{% for sub in recipe.subrecipes if sub.id == step.step|int %}
+            			{% if sub.is_feminine %}
+              				<li>Preparamos la {{ sub.name.lower() }}
+            			{% else %}
+              				<li>Preparamos el {{ sub.name.lower() }}
+            			{% endif %}
+            			<ol>
+            				{% for substep in sub.steps %}
+              					<li>{{ substep.step }}</li>
+							{% endfor %}
+            			</ol></li>
+          			{% endfor %}
+        		{% else %}
+		      		<li>{{ step.step }}</li>
+        		{% endif %}
 		  {% endfor %}
 	  </ol>
 		<br />
