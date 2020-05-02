@@ -2,7 +2,7 @@
 #pylint: disable = missing-function-docstring
 
 
-from flask import abort, request
+from flask import request
 from flask_login import current_user
 
 from syp.utils.images import delete_image
@@ -13,53 +13,30 @@ from syp.models.season import Season
 from syp.models.unit import Unit
 from syp.models.recipe_state import RecipeState
 from syp.models.user import User
-
+from syp.recipes.decorators import prepare_recipe
 from syp import db
 
 
+@prepare_recipe
 def get_recipe_by_name(recipe_name):
-    recipe = Recipe.query \
+    return Recipe.query \
         .filter_by(name=recipe_name) \
         .first()
-    recipe.subrecipes = get_subrecipes(recipe)
-    return discard_duplicates(recipe)
 
 
+@prepare_recipe
 def get_recipe_with_id(recipe_url, user_id):
     """ Get recipe by URL and user ID, which makes it unique. """
-    recipe = Recipe.query \
+    return Recipe.query \
         .filter_by(id_user=user_id) \
         .filter_by(url=recipe_url) \
         .first()
-    recipe.subrecipes = get_subrecipes(recipe)
-    return discard_duplicates(recipe)
 
 
 def get_recipe_with_username(recipe_url, username):
     """ Retrieve user ID and call get_recipe_with_id(). """
     user = User.query.filter_by(username=username).first()
     return get_recipe_with_id(recipe_url, user.id)
-
-
-def discard_duplicates(recipe):
-    """ Discard duplicate ingredients. This happens when an
-    ingredient appears in both the recipe and one subrecipe, or in
-    multiple subrecipes. Required for the health comments. """
-    if recipe is None:
-        return abort(404)
-    ingredient_ids = []
-    for quantity in recipe.ingredients:
-        quantity.duplicate = False
-        ingredient_ids.append(quantity.ingredient.id)
-    for sub in recipe.subrecipes:
-        for quantity in sub.ingredients:
-            ingredient_id = quantity.ingredient.id
-            if ingredient_id not in ingredient_ids:
-                quantity.duplicate = False
-                ingredient_ids.append(ingredient_id)
-            else:
-                quantity.duplicate = True
-    return recipe
 
 
 def get_last_recipes(limit=None):
@@ -108,21 +85,6 @@ def get_all_units():
         .all()
 
 
-def get_subrecipes(recipe):
-    """ Get subrecipes used in the given recipe. If the step consists
-    only of one int, then it is a reference to a subrecipe. """
-    subrecipes = list()
-    for step in recipe.steps:
-        try:  # if the step is an int, it is a subrecipe.
-            subrecipe_id = int(step.step)
-            subrecipes.append(
-                Subrecipe.query.filter_by(id=subrecipe_id).first()
-            )
-        except ValueError:  # Step is not a subrecipe.
-            continue
-    return subrecipes
-
-
 def delete_recipe(recipe_id):
     """ Delete recipe by changing its state. Do delete the images
     as they take too much space. """
@@ -141,7 +103,7 @@ def create_recipe():
     )
 
 
-def add_choices(form, recipe):
+def prepare_form(form, recipe):
     """Add choices for the select fields (state, season and units)
     of the form, retrieved from the DB. Also select the units of
     the chosen ingredients, as found in the recipe object. """
