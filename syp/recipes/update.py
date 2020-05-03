@@ -87,40 +87,20 @@ def update_ingredients(recipe, form):
 def update_steps(recipe, form):
     """ Update steps. """
     old_steps = [s.step for s in recipe.steps]
-    deleted_steps = old_steps.copy()
+    for step_data in old_steps:  # remove old steps
+        for step in recipe.steps:
+            if step.step == step_data:
+                db.session.delete(step)
     for idx, subform in enumerate(form.steps):
         step_data = subform.step.data
         if 'Receta: ' in step_data:  # step is a subrecipe
             step_data = step_data[8:]  # Remove 'Receta: '
             subrecipe = Subrecipe.query.filter_by(
-                name=step_data
+                name=step_data[8:]  # Remove 'Receta: '
             ).first()
-            if subrecipe.id in old_steps:  # change step nr
-                step = recipe.steps[old_steps.index(step_data)]
-                deleted_steps.remove(step_data)
-                step.step_nr = idx + 1
-            else:  # create new step for subrecipe
-                new_step = RecipeStep(
-                    step_nr=idx+1,
-                    step=subrecipe.id,
-                    id_recipe=recipe.id
-                )
-                db.session.add(new_step)
-                recipe.steps.append(new_step)
-        else:  # step is not a subrecipe
-            if step_data in old_steps:  # change step_nr
-                step = recipe.steps[old_steps.index(step_data)]
-                deleted_steps.remove(step_data)
-                step.step_nr = idx + 1
-            else:  # create new step
-                new_step = RecipeStep(
-                    step_nr=idx+1,
-                    step=step_data,
-                    id_recipe=recipe.id
-                )
-                db.session.add(new_step)
-                recipe.steps.append(new_step)
-    for step_data in deleted_steps:  # remove deleted steps
-        for step in recipe.steps:
-            if step.step == step_data:
-                db.session.delete(step)
+            step_data = subrecipe.id
+        db.session.add(RecipeStep(
+            step_nr=idx+1,
+            step=step_data,
+            id_recipe=recipe.id
+        ))
